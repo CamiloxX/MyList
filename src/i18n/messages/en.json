@@ -1,0 +1,297 @@
+{
+  "app": {
+    "title": "MyList",
+    "tagline": "Your personal library for movies, series and anime",
+    "signOut": "Sign out"
+  },
+  "nav": {
+    "library": "Library",
+    "search": "Search",
+    "discover": "Discover",
+    "month": "Month",
+    "stats": "Stats",
+    "settings": "Settings",
+    "primary": "Main navigation"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "remove": "Remove",
+    "back": "Back",
+    "noPoster": "No poster",
+    "or": "or",
+    "optional": "Optional",
+    "today": "Today"
+  },
+  "kinds": {
+    "movie": "Movie",
+    "tv": "Series",
+    "anime": "Anime"
+  },
+  "statuses": {
+    "watching": "Watching",
+    "watched": "Watched",
+    "pending": "Pending",
+    "dropped": "Dropped"
+  },
+  "auth": {
+    "brand": {
+      "tagline": "Your series diary was waiting for you.",
+      "headlinePart1": "What you've watched,",
+      "headlinePart2": "what you're watching,",
+      "headlinePart3": "what's next.",
+      "description": "Track every series, every season, every episode. No algorithms. No spoilers. Just your list.",
+      "statsSeries": "series catalogued",
+      "statsEpisodes": "episodes watched",
+      "statsUsers": "active users"
+    },
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Welcome back.",
+      "eyebrow": "Sign in",
+      "welcomeLine1": "Welcome",
+      "welcomeLine2": "back",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "submitArrow": "Sign in",
+      "submittingArrow": "Signing in…",
+      "forgotPassword": "Forgot?",
+      "rememberMe": "Keep me signed in",
+      "continueWith": "or continue with",
+      "dividerOr": "or",
+      "noAccountPrompt": "Don't have an account?",
+      "registerLink": "Sign up",
+      "registerLinkLong": "Sign up free",
+      "newHerePrompt": "New here?",
+      "createAccount": "Create your account",
+      "termsPrefix": "By continuing you accept the",
+      "termsAnd": "and",
+      "termsLink": "terms",
+      "privacyLink": "privacy"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Start logging what you watch in seconds.",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "passwordHint": "Minimum 8 characters.",
+      "haveAccountPrompt": "Already have an account?",
+      "loginLink": "Sign in",
+      "confirmationSentTitle": "Check your email",
+      "confirmationSentBody": "We sent you a confirmation link. Once your account is confirmed you can sign in.",
+      "backToLogin": "Back to sign in",
+      "successToast": "Account created!",
+      "confirmationSentToast": "We sent you an email to confirm your account"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "displayName": "Name"
+    },
+    "google": {
+      "continue": "Continue with Google",
+      "register": "Sign up with Google",
+      "connecting": "Connecting..."
+    },
+    "errors": {
+      "invalidEmail": "Invalid email",
+      "passwordRequired": "Enter your password",
+      "passwordMin": "Minimum 8 characters",
+      "nameRequired": "Enter your name",
+      "nameMax": "Maximum 50 characters",
+      "reviewFields": "Check the form fields",
+      "invalidCredentials": "Wrong email or password",
+      "emailNotConfirmed": "Confirm your email before signing in",
+      "userAlreadyRegistered": "An account with that email already exists",
+      "weakPassword": "Password is too weak",
+      "googleConnect": "We couldn't connect to Google"
+    }
+  },
+  "library": {
+    "title": "My library",
+    "hello": "Hi{name}.",
+    "empty": " You haven't added anything yet.",
+    "count": " {count, plural, =1 {1 item} other {# items}}.",
+    "emptyTitle": "Your library is empty. Search something to start.",
+    "emptyAction": "Go to search",
+    "emptyFiltered": "No items match these filters.",
+    "loadError": "We couldn't load your library: {message}",
+    "filters": {
+      "status": "Status",
+      "kind": "Type",
+      "all": "All"
+    },
+    "remove": {
+      "button": "Remove",
+      "confirm": "Confirm",
+      "removing": "...",
+      "successToast": "\"{title}\" removed"
+    },
+    "addToLibrary": {
+      "add": "Add",
+      "adding": "Adding...",
+      "added": "Added",
+      "successToast": "Added to your library"
+    },
+    "detail": {
+      "back": "← Back to library",
+      "history": "History",
+      "entriesCount": "{count, plural, =0 {No views} =1 {1 view logged} other {# views logged}}.",
+      "emptyHistory": "No views logged yet."
+    },
+    "watchEntry": {
+      "title": "Log a view",
+      "date": "Date",
+      "rating": "Rating",
+      "ratingAriaLabel": "Rating for this view",
+      "platform": "Platform",
+      "otherPlaceholder": "Specify...",
+      "notes": "Notes",
+      "successToast": "View logged",
+      "removedToast": "View removed"
+    },
+    "starRating": {
+      "ariaLabel": "Rating",
+      "clear": "Clear",
+      "unrated": "Unrated",
+      "value": "{value} / {max}",
+      "stars": "{value} stars",
+      "readonlyAriaLabel": "{value} out of {max} stars"
+    },
+    "errors": {
+      "invalidAdd": "Invalid data when adding to library",
+      "signInFirst": "Sign in first",
+      "invalidData": "Invalid data",
+      "invalidWatchEntry": "Invalid data when logging the view",
+      "saveWatchEntry": "We couldn't save the view"
+    }
+  },
+  "discover": {
+    "title": "Discover",
+    "subtitle": "Browse movies, series and anime to watch next.",
+    "emptyResults": "Nothing matches those filters.",
+    "tabs": {
+      "aria": "Discovery mode",
+      "trending": "Trending",
+      "genre": "By genre",
+      "for-you": "For you"
+    },
+    "types": {
+      "aria": "Content type",
+      "movie": "Movies",
+      "tv": "Series",
+      "anime": "Anime"
+    },
+    "filters": {
+      "genre": "Genre",
+      "anyGenre": "All genres"
+    },
+    "forYou": {
+      "empty": "Not enough data yet. Add something to your library so we can recommend titles tailored to you.",
+      "fallbackNotice": "Your library is empty — here's what's trending right now.",
+      "sectionMovies": "Movies for you",
+      "sectionTv": "Series for you",
+      "sectionAnime": "Anime for you"
+    }
+  },
+  "search": {
+    "title": "Search",
+    "subtitleTmdb": "Movies and series from TMDB.",
+    "subtitleAnime": "Anime from AniList.",
+    "placeholder": "Search movies or series...",
+    "headerPlaceholder": "Search...",
+    "emptyPrompt": "Type something to start.",
+    "noResultsTmdb": "We found nothing for \"{query}\".",
+    "noResultsAnime": "We found no anime for \"{query}\".",
+    "tabs": {
+      "aria": "Search type",
+      "tmdb": "Movies & series",
+      "anime": "Anime"
+    }
+  },
+  "month": {
+    "stats": "{entries, plural, =1 {1 view} other {# views}} · {hours} estimated hours",
+    "empty": "You have no views logged this month.",
+    "invalid": "Invalid month.",
+    "loadError": "Error loading month view: {message}",
+    "picker": {
+      "trigger": "Calendar",
+      "pickMonth": "Pick a month",
+      "pickYear": "Pick a year",
+      "prevYear": "Previous year",
+      "nextYear": "Next year",
+      "prevPage": "Previous years page",
+      "nextPage": "Next years page",
+      "goToCurrentMonth": "Go to current month",
+      "goToCurrentYear": "Go to current year"
+    }
+  },
+  "year": {
+    "stats": "{entries, plural, =1 {1 view} other {# views}} · {hours} estimated hours",
+    "currentYear": "Current year",
+    "monthStats": "{entries, plural, =1 {1 view} other {# views}} · {hours} h"
+  },
+  "stats": {
+    "title": "Stats",
+    "subtitle": "Overview of what you've watched.",
+    "empty": "Not enough views logged yet to show stats. Log one from an item's detail page.",
+    "summaryTitle": "Summary",
+    "totalEntries": "{entries, plural, =1 {1 view} other {# views}}",
+    "totalHours": "{hours} estimated hours",
+    "byKindTitle": "Hours by type",
+    "topRatedTitle": "Top rated",
+    "topRatedEmpty": "You haven't rated anything yet.",
+    "topOfYearTitle": "Top of {year}",
+    "topOfYearEmpty": "Nothing rated in {year} yet.",
+    "rating": "{rating}/10",
+    "noRating": "Unrated"
+  },
+  "settings": {
+    "title": "Settings",
+    "account": "Account",
+    "email": "Email",
+    "name": "Name",
+    "signOut": "Sign out",
+    "language": "Language",
+    "languageDescription": "Choose the interface language.",
+    "languages": {
+      "es": "Español",
+      "en": "English"
+    }
+  },
+  "platforms": {
+    "Netflix": "Netflix",
+    "Prime Video": "Prime Video",
+    "Disney+": "Disney+",
+    "HBO Max": "HBO Max",
+    "Apple TV+": "Apple TV+",
+    "Crunchyroll": "Crunchyroll",
+    "YouTube": "YouTube",
+    "Cine": "Theater",
+    "Otra": "Other"
+  },
+  "platformsAlt": {
+    "Cine": "Theater",
+    "Otra": "Other"
+  },
+  "months": {
+    "shortJan": "Jan",
+    "shortFeb": "Feb",
+    "shortMar": "Mar",
+    "shortApr": "Apr",
+    "shortMay": "May",
+    "shortJun": "Jun",
+    "shortJul": "Jul",
+    "shortAug": "Aug",
+    "shortSep": "Sep",
+    "shortOct": "Oct",
+    "shortNov": "Nov",
+    "shortDec": "Dec"
+  },
+  "posters": {
+    "alt": "Poster of {title}"
+  }
+}

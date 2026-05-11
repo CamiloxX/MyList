@@ -1,0 +1,297 @@
+{
+  "app": {
+    "title": "MyList",
+    "tagline": "Tu biblioteca personal de pelis, series y anime",
+    "signOut": "Salir"
+  },
+  "nav": {
+    "library": "Biblioteca",
+    "search": "Buscar",
+    "discover": "Descubrir",
+    "month": "Mes",
+    "stats": "Stats",
+    "settings": "Ajustes",
+    "primary": "Navegación principal"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "remove": "Eliminar",
+    "back": "Volver",
+    "noPoster": "Sin póster",
+    "or": "o",
+    "optional": "Opcional",
+    "today": "Hoy"
+  },
+  "kinds": {
+    "movie": "Película",
+    "tv": "Serie",
+    "anime": "Anime"
+  },
+  "statuses": {
+    "watching": "Viendo",
+    "watched": "Vista",
+    "pending": "Pendiente",
+    "dropped": "Abandonada"
+  },
+  "auth": {
+    "brand": {
+      "tagline": "Tu diario de series te esperaba.",
+      "headlinePart1": "Lo que viste,",
+      "headlinePart2": "lo que ves,",
+      "headlinePart3": "lo que verás.",
+      "description": "Lleva el registro de cada serie, cada temporada y cada episodio. Sin algoritmos. Sin spoilers. Solo tu lista.",
+      "statsSeries": "series catalogadas",
+      "statsEpisodes": "episodios vistos",
+      "statsUsers": "usuarios activos"
+    },
+    "login": {
+      "title": "Iniciar sesión",
+      "subtitle": "Bienvenido de vuelta.",
+      "eyebrow": "Inicia sesión",
+      "welcomeLine1": "Bienvenido",
+      "welcomeLine2": "de vuelta",
+      "submit": "Entrar",
+      "submitting": "Entrando...",
+      "submitArrow": "Ingresar",
+      "submittingArrow": "Ingresando…",
+      "forgotPassword": "¿Olvidaste?",
+      "rememberMe": "Mantener sesión iniciada",
+      "continueWith": "o continúa con",
+      "dividerOr": "o",
+      "noAccountPrompt": "¿No tienes cuenta?",
+      "registerLink": "Regístrate",
+      "registerLinkLong": "Regístrate gratis",
+      "newHerePrompt": "¿Nuevo por aquí?",
+      "createAccount": "Crea tu cuenta",
+      "termsPrefix": "Al continuar aceptas los",
+      "termsAnd": "y",
+      "termsLink": "términos",
+      "privacyLink": "privacidad"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "subtitle": "Empieza a registrar lo que ves en segundos.",
+      "submit": "Crear cuenta",
+      "submitting": "Creando cuenta...",
+      "passwordHint": "Mínimo 8 caracteres.",
+      "haveAccountPrompt": "¿Ya tienes cuenta?",
+      "loginLink": "Inicia sesión",
+      "confirmationSentTitle": "Revisa tu email",
+      "confirmationSentBody": "Te enviamos un enlace de confirmación. Una vez confirmada tu cuenta podrás iniciar sesión.",
+      "backToLogin": "Volver a iniciar sesión",
+      "successToast": "¡Cuenta creada!",
+      "confirmationSentToast": "Te enviamos un email para confirmar tu cuenta"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Contraseña",
+      "displayName": "Nombre"
+    },
+    "google": {
+      "continue": "Continuar con Google",
+      "register": "Registrarse con Google",
+      "connecting": "Conectando..."
+    },
+    "errors": {
+      "invalidEmail": "Email inválido",
+      "passwordRequired": "Ingresa tu contraseña",
+      "passwordMin": "Mínimo 8 caracteres",
+      "nameRequired": "Ingresa tu nombre",
+      "nameMax": "Máximo 50 caracteres",
+      "reviewFields": "Revisa los campos del formulario",
+      "invalidCredentials": "Email o contraseña incorrectos",
+      "emailNotConfirmed": "Confirma tu email antes de iniciar sesión",
+      "userAlreadyRegistered": "Ya existe una cuenta con ese email",
+      "weakPassword": "La contraseña es muy débil",
+      "googleConnect": "No pudimos conectar con Google"
+    }
+  },
+  "library": {
+    "title": "Mi biblioteca",
+    "hello": "Hola{name}.",
+    "empty": " Aún no has agregado nada.",
+    "count": " {count, plural, =1 {1 item} other {# items}}.",
+    "emptyTitle": "Tu biblioteca está vacía. Busca algo para empezar.",
+    "emptyAction": "Ir a buscar",
+    "emptyFiltered": "No hay items con esos filtros.",
+    "loadError": "No pudimos cargar tu biblioteca: {message}",
+    "filters": {
+      "status": "Estado",
+      "kind": "Tipo",
+      "all": "Todos"
+    },
+    "remove": {
+      "button": "Eliminar",
+      "confirm": "Confirmar",
+      "removing": "...",
+      "successToast": "\"{title}\" eliminado"
+    },
+    "addToLibrary": {
+      "add": "Agregar",
+      "adding": "Agregando...",
+      "added": "Agregado",
+      "successToast": "Agregado a tu biblioteca"
+    },
+    "detail": {
+      "back": "← Volver a la biblioteca",
+      "history": "Historial",
+      "entriesCount": "{count, plural, =0 {Sin visualizaciones} =1 {1 visualización registrada} other {# visualizaciones registradas}}.",
+      "emptyHistory": "Sin visualizaciones registradas todavía."
+    },
+    "watchEntry": {
+      "title": "Registrar visualización",
+      "date": "Fecha",
+      "rating": "Calificación",
+      "ratingAriaLabel": "Calificación de la visualización",
+      "platform": "Plataforma",
+      "otherPlaceholder": "Especifica...",
+      "notes": "Notas",
+      "successToast": "Visualización registrada",
+      "removedToast": "Visualización eliminada"
+    },
+    "starRating": {
+      "ariaLabel": "Calificación",
+      "clear": "Limpiar",
+      "unrated": "Sin calificar",
+      "value": "{value} / {max}",
+      "stars": "{value} estrellas",
+      "readonlyAriaLabel": "{value} de {max} estrellas"
+    },
+    "errors": {
+      "invalidAdd": "Datos inválidos al agregar a la biblioteca",
+      "signInFirst": "Inicia sesión primero",
+      "invalidData": "Datos inválidos",
+      "invalidWatchEntry": "Datos inválidos al registrar visualización",
+      "saveWatchEntry": "No pudimos guardar la visualización"
+    }
+  },
+  "discover": {
+    "title": "Descubrir",
+    "subtitle": "Explora pelis, series y anime para ver a continuación.",
+    "emptyResults": "No encontramos nada con esos filtros.",
+    "tabs": {
+      "aria": "Modo de descubrimiento",
+      "trending": "Tendencias",
+      "genre": "Por género",
+      "for-you": "Para ti"
+    },
+    "types": {
+      "aria": "Tipo de contenido",
+      "movie": "Películas",
+      "tv": "Series",
+      "anime": "Anime"
+    },
+    "filters": {
+      "genre": "Género",
+      "anyGenre": "Todos los géneros"
+    },
+    "forYou": {
+      "empty": "Aún no tenemos suficientes datos. Agrega algo a tu biblioteca para que aparezcan recomendaciones personalizadas.",
+      "fallbackNotice": "Tu biblioteca está vacía: te mostramos lo más popular para empezar.",
+      "sectionMovies": "Películas para ti",
+      "sectionTv": "Series para ti",
+      "sectionAnime": "Anime para ti"
+    }
+  },
+  "search": {
+    "title": "Buscar",
+    "subtitleTmdb": "Pelis y series desde TMDB.",
+    "subtitleAnime": "Anime desde AniList.",
+    "placeholder": "Buscar pelis o series...",
+    "headerPlaceholder": "Buscar...",
+    "emptyPrompt": "Escribe el nombre de algo para empezar.",
+    "noResultsTmdb": "No encontramos nada para \"{query}\".",
+    "noResultsAnime": "No encontramos anime para \"{query}\".",
+    "tabs": {
+      "aria": "Tipo de búsqueda",
+      "tmdb": "Pelis y series",
+      "anime": "Anime"
+    }
+  },
+  "month": {
+    "stats": "{entries, plural, =1 {1 visualización} other {# visualizaciones}} · {hours} horas estimadas",
+    "empty": "No tienes visualizaciones registradas este mes.",
+    "invalid": "Mes inválido.",
+    "loadError": "Error cargando vista mensual: {message}",
+    "picker": {
+      "trigger": "Calendario",
+      "pickMonth": "Elegir mes",
+      "pickYear": "Elegir año",
+      "prevYear": "Año anterior",
+      "nextYear": "Año siguiente",
+      "prevPage": "Página de años anterior",
+      "nextPage": "Página de años siguiente",
+      "goToCurrentMonth": "Ir al mes actual",
+      "goToCurrentYear": "Ir al año actual"
+    }
+  },
+  "year": {
+    "stats": "{entries, plural, =1 {1 visualización} other {# visualizaciones}} · {hours} horas estimadas",
+    "currentYear": "Año actual",
+    "monthStats": "{entries, plural, =1 {1 visualización} other {# visualizaciones}} · {hours} h"
+  },
+  "stats": {
+    "title": "Estadísticas",
+    "subtitle": "Resumen de lo que has visto.",
+    "empty": "Todavía no tienes suficientes visualizaciones para mostrar estadísticas. Registra alguna desde la ficha de un item.",
+    "summaryTitle": "Resumen",
+    "totalEntries": "{entries, plural, =1 {1 visualización} other {# visualizaciones}}",
+    "totalHours": "{hours} horas estimadas",
+    "byKindTitle": "Horas por tipo",
+    "topRatedTitle": "Mejor calificadas",
+    "topRatedEmpty": "Aún no has calificado nada.",
+    "topOfYearTitle": "Top de {year}",
+    "topOfYearEmpty": "Nada calificado en {year} todavía.",
+    "rating": "{rating}/10",
+    "noRating": "Sin calificar"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "account": "Cuenta",
+    "email": "Email",
+    "name": "Nombre",
+    "signOut": "Cerrar sesión",
+    "language": "Idioma",
+    "languageDescription": "Elige el idioma de la interfaz.",
+    "languages": {
+      "es": "Español",
+      "en": "English"
+    }
+  },
+  "platforms": {
+    "Netflix": "Netflix",
+    "Prime Video": "Prime Video",
+    "Disney+": "Disney+",
+    "HBO Max": "HBO Max",
+    "Apple TV+": "Apple TV+",
+    "Crunchyroll": "Crunchyroll",
+    "YouTube": "YouTube",
+    "Cine": "Cine",
+    "Otra": "Otra"
+  },
+  "platformsAlt": {
+    "Cine": "Cine",
+    "Otra": "Otra"
+  },
+  "months": {
+    "shortJan": "Ene",
+    "shortFeb": "Feb",
+    "shortMar": "Mar",
+    "shortApr": "Abr",
+    "shortMay": "May",
+    "shortJun": "Jun",
+    "shortJul": "Jul",
+    "shortAug": "Ago",
+    "shortSep": "Sep",
+    "shortOct": "Oct",
+    "shortNov": "Nov",
+    "shortDec": "Dic"
+  },
+  "posters": {
+    "alt": "Póster de {title}"
+  }
+}
