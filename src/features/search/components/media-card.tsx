@@ -1,11 +1,20 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
+import { RatingsBadge } from "@/features/discover/components/ratings-badge";
 import { AddToLibraryButton } from "@/features/library/components/add-to-library-button";
+import type { OmdbRatings } from "@/lib/omdb/schemas";
 import { tmdbImage } from "@/lib/tmdb/client";
 import { type TmdbSearchResult, tmdbOriginalTitle, tmdbTitle, tmdbYear } from "@/lib/tmdb/search";
 
-export async function MediaCard({ item }: { item: TmdbSearchResult }) {
+export async function MediaCard({
+  item,
+  ratings,
+}: {
+  item: TmdbSearchResult;
+  /** Optional OMDb ratings (RT / IMDb / Meta). Discover passes them; Search omits. */
+  ratings?: OmdbRatings | null;
+}) {
   const title = tmdbTitle(item);
   const originalTitle = tmdbOriginalTitle(item);
   const year = tmdbYear(item);
@@ -41,6 +50,7 @@ export async function MediaCard({ item }: { item: TmdbSearchResult }) {
             <p className="truncate text-xs text-muted-foreground">{originalTitle}</p>
           ) : null}
         </header>
+        {ratings ? <RatingsBadge ratings={ratings} /> : null}
         {overview ? <p className="line-clamp-3 text-sm text-muted-foreground">{overview}</p> : null}
         <div className="mt-auto pt-1">
           <AddToLibraryButton

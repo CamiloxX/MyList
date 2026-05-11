@@ -1,6 +1,10 @@
+export { DiscoverGrid } from "./components/discover-grid";
 export { DiscoverTabs } from "./components/discover-tabs";
 export { GenreFilter } from "./components/genre-filter";
 export { MediaTypeTabs } from "./components/media-type-tabs";
-export { DiscoverGrid } from "./components/discover-grid";
+export { PaginationControls } from "./components/pagination-controls";
+export { ProviderFilter } from "./components/provider-filter";
+export { RatingsBadge } from "./components/ratings-badge";
+export { RegionFilter } from "./components/region-filter";
 export { discoverFiltersSchema } from "./schemas";
-export type { DiscoverTab, DiscoverType } from "./schemas";
+export type { DiscoverRegion, DiscoverTab, DiscoverType } from "./schemas";

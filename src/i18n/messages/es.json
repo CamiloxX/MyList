@@ -187,7 +187,25 @@
     },
     "filters": {
       "genre": "Género",
-      "anyGenre": "Todos los géneros"
+      "anyGenre": "Todos los géneros",
+      "region": "Región",
+      "provider": "Plataforma",
+      "anyProvider": "Cualquier plataforma",
+      "regions": {
+        "CO": "Colombia",
+        "MX": "México",
+        "AR": "Argentina",
+        "CL": "Chile",
+        "BR": "Brasil",
+        "US": "Estados Unidos",
+        "ES": "España"
+      }
+    },
+    "pagination": {
+      "aria": "Navegación de páginas",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {page}"
     },
     "forYou": {
       "empty": "Aún no tenemos suficientes datos. Agrega algo a tu biblioteca para que aparezcan recomendaciones personalizadas.",

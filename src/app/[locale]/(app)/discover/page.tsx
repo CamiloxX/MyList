@@ -5,9 +5,19 @@ import { DiscoverGrid } from "@/features/discover/components/discover-grid";
 import { DiscoverTabs } from "@/features/discover/components/discover-tabs";
 import { GenreFilter } from "@/features/discover/components/genre-filter";
 import { MediaTypeTabs } from "@/features/discover/components/media-type-tabs";
-import { getByGenreFor, getGenresFor, getTrendingFor } from "@/features/discover/queries";
+import { PaginationControls } from "@/features/discover/components/pagination-controls";
+import { ProviderFilter } from "@/features/discover/components/provider-filter";
+import { RegionFilter } from "@/features/discover/components/region-filter";
+import {
+  getByGenreFor,
+  getGenresFor,
+  getProvidersFor,
+  getTrendingFor,
+} from "@/features/discover/queries";
+import { fetchRatingsForTmdbItems } from "@/features/discover/ratings";
 import { getForYou } from "@/features/discover/recommend";
 import {
+  type DiscoverRegion,
   type DiscoverTab,
   type DiscoverType,
   discoverFiltersSchema,
@@ -16,6 +26,12 @@ import { AnimeCard } from "@/features/search/components/anime-card";
 import { MediaCard } from "@/features/search/components/media-card";
 
 export const dynamic = "force-dynamic";
+
+/**
+ * TMDB and Jikan return up to 20-25 items per page. We use the result count
+ * as a heuristic for "is there a next page?" — works for the prev/next UX.
+ */
+const PAGE_SIZE_THRESHOLD = 20;
 
 type DiscoverPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -28,8 +44,12 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
     type: raw.type,
     genre: raw.genre,
     year: raw.year,
+    provider: raw.provider,
+    region: raw.region,
+    page: raw.page,
   });
   const t = await getTranslations("discover");
+  const showStreamingFilters = filters.type !== "anime" && filters.tab !== "for-you";
 
   return (
     <div className="flex flex-col gap-6">
@@ -47,13 +67,33 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
       ) : (
         <>
           <MediaTypeTabs current={filters.type} />
-          {filters.tab === "genre" ? (
-            <Suspense key={`genres:${filters.type}`} fallback={<FilterSkeleton />}>
-              <GenrePicker type={filters.type} current={filters.genre} />
-            </Suspense>
-          ) : null}
+
+          <div className="flex flex-wrap items-end gap-3">
+            {filters.tab === "genre" ? (
+              <Suspense key={`genres:${filters.type}`} fallback={<FilterSkeleton />}>
+                <GenrePicker type={filters.type} current={filters.genre} />
+              </Suspense>
+            ) : null}
+
+            {showStreamingFilters ? (
+              <>
+                <RegionFilter current={filters.region} />
+                <Suspense
+                  key={`providers:${filters.type}:${filters.region}`}
+                  fallback={<FilterSkeleton />}
+                >
+                  <ProviderPicker
+                    type={filters.type as Exclude<DiscoverType, "anime">}
+                    region={filters.region}
+                    current={filters.provider}
+                  />
+                </Suspense>
+              </>
+            ) : null}
+          </div>
+
           <Suspense
-            key={`${filters.tab}:${filters.type}:${filters.genre ?? ""}`}
+            key={`${filters.tab}:${filters.type}:${filters.genre ?? ""}:${filters.provider ?? ""}:${filters.region}:${filters.page}`}
             fallback={<ResultsSkeleton />}
           >
             <ResultsSection
@@ -61,6 +101,9 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
               type={filters.type}
               genre={filters.genre}
               year={filters.year}
+              provider={filters.provider}
+              region={filters.region}
+              page={filters.page}
             />
           </Suspense>
         </>
@@ -74,14 +117,30 @@ async function ResultsSection({
   type,
   genre,
   year,
+  provider,
+  region,
+  page,
 }: {
   tab: Exclude<DiscoverTab, "for-you">;
   type: DiscoverType;
   genre: number | undefined;
   year: number | undefined;
+  provider: number | undefined;
+  region: DiscoverRegion;
+  page: number;
 }) {
-  const list = tab === "trending" ? await getTrendingFor(type) : await getByGenreFor(type, genre, year);
-  return <DiscoverGrid list={list} />;
+  const list =
+    tab === "trending"
+      ? await getTrendingFor(type, { page, region, provider })
+      : await getByGenreFor(type, genre, year, { page, region, provider });
+  const hasMore = list.items.length >= PAGE_SIZE_THRESHOLD;
+
+  return (
+    <>
+      <DiscoverGrid list={list} />
+      <PaginationControls page={page} hasMore={hasMore} />
+    </>
+  );
 }
 
 async function GenrePicker({ type, current }: { type: DiscoverType; current: number | undefined }) {
@@ -89,10 +148,26 @@ async function GenrePicker({ type, current }: { type: DiscoverType; current: num
   return <GenreFilter genres={genres} current={current} />;
 }
 
+async function ProviderPicker({
+  type,
+  region,
+  current,
+}: {
+  type: Exclude<DiscoverType, "anime">;
+  region: DiscoverRegion;
+  current: number | undefined;
+}) {
+  const providers = await getProvidersFor(type, region);
+  return <ProviderFilter providers={providers} current={current} />;
+}
+
 async function ForYouSection() {
   const t = await getTranslations("discover.forYou");
   const result = await getForYou();
   const isEmpty = result.movies.length === 0 && result.tv.length === 0 && result.anime.length === 0;
+
+  // Enrich TMDB items with OMDb ratings in a single parallel pass.
+  const ratings = await fetchRatingsForTmdbItems([...result.movies, ...result.tv]);
 
   if (isEmpty) {
     return (
@@ -115,7 +190,7 @@ async function ForYouSection() {
           <ul className="flex flex-col gap-3">
             {result.movies.map((item) => (
               <li key={`movie-${item.id}`}>
-                <MediaCard item={item} />
+                <MediaCard item={item} ratings={ratings.get(item.id) ?? null} />
               </li>
             ))}
           </ul>
@@ -127,7 +202,7 @@ async function ForYouSection() {
           <ul className="flex flex-col gap-3">
             {result.tv.map((item) => (
               <li key={`tv-${item.id}`}>
-                <MediaCard item={item} />
+                <MediaCard item={item} ratings={ratings.get(item.id) ?? null} />
               </li>
             ))}
           </ul>
@@ -178,7 +253,7 @@ function ResultsSkeleton() {
 }
 
 function FilterSkeleton() {
-  return <Skeleton className="h-12 w-full max-w-sm rounded-lg" />;
+  return <Skeleton className="h-12 w-40 rounded-lg" />;
 }
 
 function MultiSectionSkeleton() {

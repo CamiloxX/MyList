@@ -187,7 +187,25 @@
     },
     "filters": {
       "genre": "Genre",
-      "anyGenre": "All genres"
+      "anyGenre": "All genres",
+      "region": "Region",
+      "provider": "Platform",
+      "anyProvider": "Any platform",
+      "regions": {
+        "CO": "Colombia",
+        "MX": "Mexico",
+        "AR": "Argentina",
+        "CL": "Chile",
+        "BR": "Brazil",
+        "US": "United States",
+        "ES": "Spain"
+      }
+    },
+    "pagination": {
+      "aria": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}"
     },
     "forYou": {
       "empty": "Not enough data yet. Add something to your library so we can recommend titles tailored to you.",

@@ -89,3 +89,21 @@ export type TmdbGenre = z.infer<typeof tmdbGenreSchema>;
 export const tmdbGenreListResponseSchema = z.object({
   genres: z.array(tmdbGenreSchema),
 });
+
+/** Subset of /external_ids we care about. TMDB returns more fields. */
+export const tmdbExternalIdsSchema = z.object({
+  imdb_id: z.string().nullable().optional(),
+});
+
+/** A streaming provider entry from /watch/providers/{movie|tv}. */
+export const tmdbWatchProviderSchema = z.object({
+  provider_id: z.number(),
+  provider_name: z.string(),
+  logo_path: z.string().nullable().optional(),
+  display_priority: z.number().optional(),
+});
+export type TmdbWatchProvider = z.infer<typeof tmdbWatchProviderSchema>;
+
+export const tmdbWatchProvidersResponseSchema = z.object({
+  results: z.array(tmdbWatchProviderSchema),
+});

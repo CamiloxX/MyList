@@ -14,8 +14,9 @@ import {
   getMovieGenres,
   getTrending,
   getTvGenres,
+  getWatchProviders,
 } from "@/lib/tmdb/discover";
-import type { TmdbGenre, TmdbSearchResult } from "@/lib/tmdb/schemas";
+import type { TmdbGenre, TmdbSearchResult, TmdbWatchProvider } from "@/lib/tmdb/schemas";
 import type { DiscoverType } from "./schemas";
 
 export type DiscoverGenre = { id: number; name: string };
@@ -49,14 +50,41 @@ export type DiscoverTmdbList = { kind: "tmdb"; items: TmdbSearchResult[] };
 export type DiscoverAnimeList = { kind: "anime"; items: JikanAnime[] };
 export type DiscoverList = DiscoverTmdbList | DiscoverAnimeList;
 
-/** Trending list for the active type. */
-export async function getTrendingFor(type: DiscoverType): Promise<DiscoverList> {
+export type CommonFetchParams = {
+  page?: number;
+  region?: string;
+  provider?: number;
+};
+
+/**
+ * Trending list for the active type. When a streaming provider is selected
+ * we fall back to /discover sorted by popularity, since /trending does not
+ * accept the watch_providers filter.
+ */
+export async function getTrendingFor(
+  type: DiscoverType,
+  params: CommonFetchParams = {},
+): Promise<DiscoverList> {
+  const { page, region, provider } = params;
+
   if (type === "anime") {
-    // "airing" returns what's emitting *this season*, ranked by score —
-    // closer in spirit to TMDB's weekly trending than MAL's all-time popularity.
-    const items = await getTopAnime({ filter: "airing", type: "tv" });
+    // Anime ignores region/provider — Jikan does not expose those filters.
+    const items = await getTopAnime({ filter: "airing", type: "tv", page });
     return { kind: "anime", items };
   }
+
+  if (provider && region) {
+    // Provider filter requires /discover; emulate "trending" via popularity sort.
+    const filters: DiscoverFilters = {
+      sortBy: "popularity.desc",
+      page,
+      region,
+      withWatchProviders: [provider],
+    };
+    const items = type === "movie" ? await discoverMovies(filters) : await discoverTv(filters);
+    return { kind: "tmdb", items };
+  }
+
   const items = await getTrending(type, "week");
   return { kind: "tmdb", items };
 }
@@ -70,12 +98,18 @@ export async function getByGenreFor(
   type: DiscoverType,
   genreId: number | undefined,
   year: number | undefined,
+  params: CommonFetchParams = {},
 ): Promise<DiscoverList> {
+  const { page, region, provider } = params;
+
   if (type === "movie") {
     const filters: DiscoverFilters = {
       withGenres: genreId ? [genreId] : undefined,
       year,
       sortBy: "popularity.desc",
+      page,
+      region,
+      withWatchProviders: provider ? [provider] : undefined,
     };
     const items = await discoverMovies(filters);
     return { kind: "tmdb", items };
@@ -85,6 +119,9 @@ export async function getByGenreFor(
       withGenres: genreId ? [genreId] : undefined,
       year,
       sortBy: "popularity.desc",
+      page,
+      region,
+      withWatchProviders: provider ? [provider] : undefined,
     };
     const items = await discoverTv(filters);
     return { kind: "tmdb", items };
@@ -92,7 +129,26 @@ export async function getByGenreFor(
   const filters: DiscoverAnimeFilters = {
     genres: genreId ? [genreId] : undefined,
     year,
+    page,
   };
   const items = await discoverAnime(filters);
   return { kind: "anime", items };
+}
+
+export type DiscoverProvider = { id: number; name: string; logoPath: string | null };
+
+/**
+ * Streaming providers available in `region` for the chosen kind. Anime is not
+ * supported (Jikan has no equivalent), so callers should skip the dropdown.
+ */
+export async function getProvidersFor(
+  type: Exclude<DiscoverType, "anime">,
+  region: string,
+): Promise<DiscoverProvider[]> {
+  const list = await getWatchProviders(type, region);
+  return list.map(normalizeProvider);
+}
+
+function normalizeProvider(p: TmdbWatchProvider): DiscoverProvider {
+  return { id: p.provider_id, name: p.provider_name, logoPath: p.logo_path ?? null };
 }

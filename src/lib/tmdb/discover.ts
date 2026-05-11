@@ -6,10 +6,13 @@ import {
   type TmdbMovie,
   type TmdbSearchResult,
   type TmdbTv,
+  type TmdbWatchProvider,
   tmdbDiscoverMovieResponseSchema,
   tmdbDiscoverTvResponseSchema,
+  tmdbExternalIdsSchema,
   tmdbGenreListResponseSchema,
   tmdbMultiResponseSchema,
+  tmdbWatchProvidersResponseSchema,
 } from "./schemas";
 
 export type DiscoverSort =
@@ -26,6 +29,14 @@ export type DiscoverFilters = {
   minVote?: number;
   sortBy?: DiscoverSort;
   page?: number;
+  /**
+   * Streaming provider id (TMDB internal id, e.g. 8 = Netflix). When set,
+   * `region` MUST also be provided — TMDB rejects watch-provider filters
+   * without a region.
+   */
+  withWatchProviders?: number[];
+  /** ISO-3166-1 alpha-2 region code (e.g. "CO"). Required when filtering by provider. */
+  region?: string;
 };
 
 const DEFAULT_DISCOVER_REVALIDATE = 60 * 60 * 6; // 6h: trending and discover lists move slowly.
@@ -52,6 +63,8 @@ export async function discoverMovies(filters: DiscoverFilters = {}): Promise<Tmd
       "vote_count.gte": filters.minVote ? 50 : undefined,
       sort_by: filters.sortBy ?? "popularity.desc",
       page: filters.page ?? 1,
+      with_watch_providers: joinGenres(filters.withWatchProviders),
+      watch_region: filters.region,
     },
     revalidate: DEFAULT_DISCOVER_REVALIDATE,
   });
@@ -73,6 +86,8 @@ export async function discoverTv(filters: DiscoverFilters = {}): Promise<TmdbTv[
       "vote_count.gte": filters.minVote ? 50 : undefined,
       sort_by: filters.sortBy ?? "popularity.desc",
       page: filters.page ?? 1,
+      with_watch_providers: joinGenres(filters.withWatchProviders),
+      watch_region: filters.region,
     },
     revalidate: DEFAULT_DISCOVER_REVALIDATE,
   });
@@ -143,3 +158,40 @@ async function getGenres(kind: "movie" | "tv"): Promise<TmdbGenre[]> {
 
 export const getMovieGenres = () => getGenres("movie");
 export const getTvGenres = () => getGenres("tv");
+
+/**
+ * Streaming providers available in `region` for the given media kind. Used to
+ * populate the Discover provider filter dropdown. The region matters because
+ * TMDB returns a different roster per country (e.g. Vix exists in MX, not US).
+ */
+export async function getWatchProviders(
+  kind: "movie" | "tv",
+  region: string,
+): Promise<TmdbWatchProvider[]> {
+  const raw = await tmdbFetch<unknown>(`/watch/providers/${kind}`, {
+    query: { watch_region: region },
+    revalidate: 60 * 60 * 24, // 1 day
+  });
+  const parsed = tmdbWatchProvidersResponseSchema.safeParse(raw);
+  if (!parsed.success) {
+    throw new Error(`TMDB /watch/providers/${kind} unexpected payload: ${parsed.error.message}`);
+  }
+  return parsed.data.results.sort(
+    (a, b) => (a.display_priority ?? 999) - (b.display_priority ?? 999),
+  );
+}
+
+/**
+ * Resolves the IMDb id for a TMDB title. Used to enrich Discover cards with
+ * Rotten Tomatoes / IMDb ratings via OMDb. Cached for a week — these never
+ * change once assigned.
+ */
+export async function getImdbId(tmdbId: number, kind: "movie" | "tv"): Promise<string | null> {
+  const raw = await tmdbFetch<unknown>(`/${kind}/${tmdbId}/external_ids`, {
+    revalidate: 60 * 60 * 24 * 7,
+  });
+  const parsed = tmdbExternalIdsSchema.safeParse(raw);
+  if (!parsed.success) return null;
+  const value = parsed.data.imdb_id;
+  return value && value !== "N/A" ? value : null;
+}
