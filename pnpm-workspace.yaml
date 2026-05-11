@@ -1,3 +1,11 @@
+# Lists which packages are allowed to run install-time scripts (postinstall, etc).
+# Two formats supported so the project works on both pnpm 10 (Vercel default) and
+# pnpm 11 (local). pnpm 11 reads `allowBuilds`; pnpm 10 reads `onlyBuiltDependencies`.
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - "@swc/core"
+  - sharp
+  - unrs-resolver
 allowBuilds:
   "@parcel/watcher": true
   "@swc/core": true
