@@ -1,7 +1,11 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/features/auth/actions";
+import { BADGE_BY_ID } from "@/features/badges/catalog";
+import { BadgeIcon } from "@/features/badges/components/badge-icon";
+import { getRecentEarnedBadges } from "@/features/badges/queries";
 import { LanguageSwitcher } from "@/features/settings/components/language-switcher";
+import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
 
@@ -14,7 +18,9 @@ export default async function SettingsPage() {
   } = await supabase.auth.getUser();
 
   const t = await getTranslations("settings");
+  const tBadges = await getTranslations("badges");
   const locale = (await getLocale()) as Locale;
+  const recentBadges = await getRecentEarnedBadges(3);
 
   return (
     <div className="flex flex-col gap-6">
@@ -35,6 +41,34 @@ export default async function SettingsPage() {
             {t("signOut")}
           </Button>
         </form>
+      </section>
+
+      <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-base font-medium">{tBadges("recentTitle")}</h2>
+          <Link href="/badges" className="text-xs text-muted-foreground hover:text-foreground">
+            {tBadges("seeAll")} →
+          </Link>
+        </div>
+        {recentBadges.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{tBadges("recentEmpty")}</p>
+        ) : (
+          <ul className="flex flex-wrap gap-2">
+            {recentBadges.map((earned) => {
+              const def = BADGE_BY_ID.get(earned.badgeId);
+              if (!def) return null;
+              return (
+                <li
+                  key={earned.badgeId}
+                  className="flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-xs"
+                >
+                  <BadgeIcon iconKey={def.iconKey} className="size-3.5" />
+                  {tBadges(`items.${def.i18nKey}.name`)}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </section>
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">

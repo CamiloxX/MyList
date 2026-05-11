@@ -10,12 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNotifyBadges } from "@/features/badges/notify";
 import { updateLibraryStatus } from "../actions";
 import { type MediaStatus, STATUS_OPTIONS } from "../status";
 
 export function StatusSelect({ id, current }: { id: string; current: MediaStatus }) {
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("statuses");
+  const notifyBadges = useNotifyBadges();
 
   const handleChange = (next: MediaStatus | null) => {
     if (!next || next === current) return;
@@ -23,7 +25,9 @@ export function StatusSelect({ id, current }: { id: string; current: MediaStatus
       const result = await updateLibraryStatus(id, next);
       if (!result.ok) {
         toast.error(result.error);
+        return;
       }
+      if (result.newBadges?.length) notifyBadges(result.newBadges);
     });
   };
 

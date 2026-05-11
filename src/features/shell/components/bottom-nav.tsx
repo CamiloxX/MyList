@@ -1,6 +1,12 @@
 "use client";
 
-import { CalendarIcon, CompassIcon, LibraryIcon, SearchIcon, SettingsIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  CompassIcon,
+  LibraryIcon,
+  SettingsIcon,
+  TrophyIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -8,8 +14,8 @@ import { cn } from "@/lib/utils";
 const ITEMS = [
   { href: "/library" as const, labelKey: "library", Icon: LibraryIcon },
   { href: "/discover" as const, labelKey: "discover", Icon: CompassIcon },
-  { href: "/search" as const, labelKey: "search", Icon: SearchIcon },
   { href: "/month" as const, labelKey: "month", Icon: CalendarIcon },
+  { href: "/badges" as const, labelKey: "badges", Icon: TrophyIcon },
   { href: "/settings" as const, labelKey: "settings", Icon: SettingsIcon },
 ] as const;
 

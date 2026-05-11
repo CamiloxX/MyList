@@ -10,6 +10,7 @@
     "discover": "Discover",
     "month": "Month",
     "stats": "Stats",
+    "badges": "Badges",
     "settings": "Settings",
     "primary": "Main navigation"
   },
@@ -224,6 +225,7 @@
     "emptyPrompt": "Type something to start.",
     "noResultsTmdb": "We found nothing for \"{query}\".",
     "noResultsAnime": "We found no anime for \"{query}\".",
+    "animeUnavailable": "The anime catalog (MyAnimeList) is not responding right now. Try again in a moment.",
     "tabs": {
       "aria": "Search type",
       "tmdb": "Movies & series",
@@ -278,6 +280,60 @@
     "languages": {
       "es": "Español",
       "en": "English"
+    }
+  },
+  "badges": {
+    "title": "Badges",
+    "summary": "{earned} of {total} unlocked",
+    "emptyFiltered": "No badges match this filter.",
+    "earnedOn": "Unlocked on {date}",
+    "progress": "{current} / {target}",
+    "recentTitle": "Recent badges",
+    "recentEmpty": "You haven't unlocked any badges yet.",
+    "seeAll": "See all",
+    "filters": {
+      "aria": "Filter badges",
+      "all": "All",
+      "earned": "Unlocked",
+      "inProgress": "In progress"
+    },
+    "toast": {
+      "unlocked": "Badge unlocked!"
+    },
+    "dismissHint": "Tap to dismiss",
+    "items": {
+      "first_watch": {
+        "name": "First view",
+        "description": "Log your first viewing."
+      },
+      "cinephile_10": {
+        "name": "Cinephile",
+        "description": "Mark 10 movies as watched."
+      },
+      "series_finisher_5": {
+        "name": "Series binger",
+        "description": "Finish 5 series."
+      },
+      "otaku_5": {
+        "name": "Otaku",
+        "description": "Finish 5 anime."
+      },
+      "critic_20": {
+        "name": "Critic",
+        "description": "Rate 20 viewings."
+      },
+      "marathon_3": {
+        "name": "Marathon",
+        "description": "Log 3 viewings in a single day."
+      },
+      "genre_explorer_5": {
+        "name": "Genre explorer",
+        "description": "Watch content from 5 different genres."
+      },
+      "streak_7": {
+        "name": "On a streak",
+        "description": "Log a viewing on 7 consecutive days."
+      }
     }
   },
   "platforms": {

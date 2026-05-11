@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useNotifyBadges } from "@/features/badges/notify";
 import { todayIso } from "@/lib/dates";
 import { addWatchEntry } from "../actions";
 import { PLATFORMS, type WatchEntryInput, watchEntrySchema } from "../schemas";
@@ -26,6 +27,7 @@ export function WatchEntryForm({ mediaItemId }: { mediaItemId: string }) {
   const t = useTranslations("library.watchEntry");
   const tCommon = useTranslations("common");
   const tPlatforms = useTranslations("platforms");
+  const notifyBadges = useNotifyBadges();
   const [isPending, startTransition] = useTransition();
   const [platformSelection, setPlatformSelection] = useState<string>("Netflix");
   const [otherPlatform, setOtherPlatform] = useState("");
@@ -62,6 +64,7 @@ export function WatchEntryForm({ mediaItemId }: { mediaItemId: string }) {
         return;
       }
       toast.success(t("successToast"));
+      if (result.newBadges?.length) notifyBadges(result.newBadges);
       reset({
         mediaItemId,
         watchedOn: todayIso(),

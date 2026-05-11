@@ -203,6 +203,24 @@ export type Database = {
           },
         ];
       };
+      user_badges: {
+        Row: {
+          user_id: string;
+          badge_id: string;
+          earned_at: string;
+        };
+        Insert: {
+          user_id: string;
+          badge_id: string;
+          earned_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          badge_id?: string;
+          earned_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {

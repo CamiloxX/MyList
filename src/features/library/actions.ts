@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { evaluateAndPersist } from "@/features/badges/evaluator";
+import type { BadgeDefinition } from "@/features/badges/types";
 import { createClient } from "@/lib/supabase/server";
 import type { Database, Json } from "@/types/database";
 import {
@@ -11,8 +13,12 @@ import {
   watchEntrySchema,
 } from "./schemas";
 
-export type LibraryActionResult = { ok: true } | { ok: false; error: string };
-export type LibraryActionResultWith<T> = { ok: true; data: T } | { ok: false; error: string };
+export type LibraryActionResult =
+  | { ok: true; newBadges?: BadgeDefinition[] }
+  | { ok: false; error: string };
+export type LibraryActionResultWith<T> =
+  | { ok: true; data: T; newBadges?: BadgeDefinition[] }
+  | { ok: false; error: string };
 
 type MediaStatus = Database["public"]["Enums"]["media_status"];
 
@@ -61,8 +67,9 @@ export async function addToLibrary(input: AddToLibraryInput): Promise<LibraryAct
     return { ok: false, error: error.message };
   }
 
+  const newBadges = await evaluateAndPersist(supabase, user.id);
   revalidatePath("/library");
-  return { ok: true };
+  return { ok: true, newBadges };
 }
 
 /**
@@ -80,6 +87,13 @@ export async function updateLibraryStatus(
   }
 
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { ok: false, error: "Inicia sesión primero" };
+  }
+
   const { error } = await supabase
     .from("media_items")
     .update({ status: parsedStatus.data })
@@ -89,8 +103,9 @@ export async function updateLibraryStatus(
     return { ok: false, error: error.message };
   }
 
+  const newBadges = await evaluateAndPersist(supabase, user.id);
   revalidatePath("/library");
-  return { ok: true };
+  return { ok: true, newBadges };
 }
 
 /**
@@ -157,10 +172,11 @@ export async function addWatchEntry(
     .eq("id", parsed.data.mediaItemId)
     .eq("status", "pending");
 
+  const newBadges = await evaluateAndPersist(supabase, user.id);
   revalidatePath(`/library/${parsed.data.mediaItemId}`);
   revalidatePath("/library");
   revalidatePath("/month");
-  return { ok: true, data: { id: inserted.id } };
+  return { ok: true, data: { id: inserted.id }, newBadges };
 }
 
 /**

@@ -10,6 +10,7 @@
     "discover": "Descubrir",
     "month": "Mes",
     "stats": "Stats",
+    "badges": "Logros",
     "settings": "Ajustes",
     "primary": "Navegación principal"
   },
@@ -224,6 +225,7 @@
     "emptyPrompt": "Escribe el nombre de algo para empezar.",
     "noResultsTmdb": "No encontramos nada para \"{query}\".",
     "noResultsAnime": "No encontramos anime para \"{query}\".",
+    "animeUnavailable": "El catálogo de anime (MyAnimeList) no responde ahora mismo. Inténtalo de nuevo en un momento.",
     "tabs": {
       "aria": "Tipo de búsqueda",
       "tmdb": "Pelis y series",
@@ -278,6 +280,60 @@
     "languages": {
       "es": "Español",
       "en": "English"
+    }
+  },
+  "badges": {
+    "title": "Logros",
+    "summary": "{earned} de {total} desbloqueados",
+    "emptyFiltered": "No hay logros con ese filtro.",
+    "earnedOn": "Desbloqueado el {date}",
+    "progress": "{current} / {target}",
+    "recentTitle": "Logros recientes",
+    "recentEmpty": "Aún no has desbloqueado ningún logro.",
+    "seeAll": "Ver todos",
+    "filters": {
+      "aria": "Filtrar logros",
+      "all": "Todos",
+      "earned": "Desbloqueados",
+      "inProgress": "En progreso"
+    },
+    "toast": {
+      "unlocked": "¡Logro desbloqueado!"
+    },
+    "dismissHint": "Toca para cerrar",
+    "items": {
+      "first_watch": {
+        "name": "Primera función",
+        "description": "Registra tu primera visualización."
+      },
+      "cinephile_10": {
+        "name": "Cinéfilo",
+        "description": "Marca como vistas 10 películas."
+      },
+      "series_finisher_5": {
+        "name": "Maratonero de series",
+        "description": "Termina 5 series."
+      },
+      "otaku_5": {
+        "name": "Otaku",
+        "description": "Termina 5 animes."
+      },
+      "critic_20": {
+        "name": "Crítico",
+        "description": "Califica 20 visualizaciones."
+      },
+      "marathon_3": {
+        "name": "Maratón",
+        "description": "Registra 3 visualizaciones en un mismo día."
+      },
+      "genre_explorer_5": {
+        "name": "Explorador de géneros",
+        "description": "Mira contenido de 5 géneros distintos."
+      },
+      "streak_7": {
+        "name": "En racha",
+        "description": "Registra al menos una visualización 7 días seguidos."
+      }
     }
   },
   "platforms": {

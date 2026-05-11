@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { BrandMark, Wordmark } from "@/components/brand/brand-mark";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { signOut } from "@/features/auth/actions";
+import { BadgeCelebrationProvider } from "@/features/badges/components/badge-celebration-provider";
 import { BottomNav } from "@/features/shell/components/bottom-nav";
 import { HeaderSearch } from "@/features/shell/components/header-search";
 import { Link, redirect } from "@/i18n/navigation";
@@ -33,10 +34,12 @@ export default async function AppLayout({
     { href: "/library" as const, label: t("nav.library") },
     { href: "/discover" as const, label: t("nav.discover") },
     { href: "/month" as const, label: t("nav.month") },
+    { href: "/badges" as const, label: t("nav.badges") },
     { href: "/settings" as const, label: t("nav.settings") },
   ];
 
   return (
+    <BadgeCelebrationProvider>
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-5xl items-center gap-4 px-4 py-3">
@@ -72,5 +75,6 @@ export default async function AppLayout({
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pb-24 md:pb-6">{children}</main>
       <BottomNav />
     </div>
+    </BadgeCelebrationProvider>
   );
 }
