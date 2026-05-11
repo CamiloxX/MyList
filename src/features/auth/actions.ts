@@ -52,8 +52,17 @@ function mapFieldErrors(
 }
 
 export async function signIn(input: LoginInput): Promise<SignInResult> {
+  console.warn("[signIn] received input:", {
+    type: typeof input,
+    isObject: input !== null && typeof input === "object",
+    keys: input && typeof input === "object" ? Object.keys(input) : null,
+    emailType: typeof (input as Record<string, unknown> | null)?.email,
+    emailLen: ((input as Record<string, unknown> | null)?.email as string | undefined)?.length,
+    passwordLen: ((input as Record<string, unknown> | null)?.password as string | undefined)?.length,
+  });
   const parsed = loginSchema.safeParse(input);
   if (!parsed.success) {
+    console.warn("[signIn] zod failure:", JSON.stringify(parsed.error.flatten()));
     return {
       ok: false,
       errorKey: "reviewFields",
@@ -76,8 +85,19 @@ export async function signIn(input: LoginInput): Promise<SignInResult> {
 }
 
 export async function signUp(input: RegisterInput): Promise<SignUpResult> {
+  console.warn("[signUp] received input:", {
+    type: typeof input,
+    isObject: input !== null && typeof input === "object",
+    keys: input && typeof input === "object" ? Object.keys(input) : null,
+    emailType: typeof (input as Record<string, unknown> | null)?.email,
+    emailLen: ((input as Record<string, unknown> | null)?.email as string | undefined)?.length,
+    passwordLen: ((input as Record<string, unknown> | null)?.password as string | undefined)?.length,
+    displayNameLen: ((input as Record<string, unknown> | null)?.displayName as string | undefined)
+      ?.length,
+  });
   const parsed = registerSchema.safeParse(input);
   if (!parsed.success) {
+    console.warn("[signUp] zod failure:", JSON.stringify(parsed.error.flatten()));
     return {
       ok: false,
       errorKey: "reviewFields",
