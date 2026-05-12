@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { BackgroundParticles } from "@/components/background-particles";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { routing } from "@/i18n/routing";
@@ -70,6 +71,7 @@ export default async function LocaleLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <BackgroundParticles />
             {children}
             <Toaster />
           </ThemeProvider>
