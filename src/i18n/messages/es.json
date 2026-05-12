@@ -139,6 +139,8 @@
       "kind": "Tipo",
       "all": "Todos",
       "clear": "Limpiar",
+      "done": "Listo",
+      "itemTotal": "{count, plural, =0 {Sin items} =1 {1 item en total} other {# items en total}}",
       "activeBadge": "{count, plural, =1 {1 activo} other {# activos}}",
       "ariaPanel": "Filtros de la biblioteca"
     },
