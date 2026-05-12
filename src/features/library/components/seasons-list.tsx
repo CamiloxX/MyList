@@ -1,13 +1,16 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
-import { tmdbImage } from "@/lib/tmdb/client";
+import { tmdbImage } from "@/lib/tmdb/images";
 import { getTmdbTvSeasons } from "@/lib/tmdb/tv";
-import { SeasonRow } from "./season-row";
+import { SeasonsCollapsible } from "./seasons-collapsible";
+import { SeasonToggle } from "./season-toggle";
 
 /**
- * Server component that lists every season of a TMDB TV show. Each row
- * delegates to a client SeasonRow so the user can expand it to see episodes
- * (lazy-loaded) and toggle the "watched" mark independently.
+ * Server component that lists every season of a TMDB TV show. Each row shows
+ * poster, name, episode count and a watched-toggle. Rendered inside a client
+ * collapsible wrapper so the whole panel can be folded away when the user
+ * doesn't need it.
  *
  * Hidden entirely (returns null) when TMDB has no seasons or the fetch fails.
  */
@@ -34,23 +37,37 @@ export async function SeasonsList({
   );
 
   return (
-    <section className="flex flex-col gap-3">
-      <h2 className="text-lg font-medium">{t("title")}</h2>
+    <SeasonsCollapsible total={seasons.length}>
       <ul className="flex flex-col gap-2">
-        {seasons.map((season) => (
-          <SeasonRow
-            key={season.id}
-            mediaItemId={mediaItemId}
-            tmdbId={tmdbId}
-            seasonNumber={season.season_number}
-            name={season.name}
-            episodeCount={season.episode_count ?? 0}
-            airYear={season.air_date ? season.air_date.slice(0, 4) : null}
-            posterUrl={tmdbImage(season.poster_path, "w154")}
-            initialWatched={watchedSet.has(season.season_number)}
-          />
-        ))}
+        {seasons.map((season) => {
+          const poster = tmdbImage(season.poster_path, "w154");
+          const isWatched = watchedSet.has(season.season_number);
+          return (
+            <li
+              key={season.id}
+              className="flex items-center gap-3 rounded-xl border bg-background p-3 shadow-sm"
+            >
+              <div className="relative aspect-[2/3] w-12 shrink-0 overflow-hidden rounded-md bg-muted">
+                {poster ? (
+                  <Image src={poster} alt="" fill sizes="48px" className="object-cover" />
+                ) : null}
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span className="truncate text-sm font-medium">{season.name}</span>
+                <span className="text-xs text-muted-foreground">
+                  {t("episodeCount", { count: season.episode_count ?? 0 })}
+                  {season.air_date ? ` · ${season.air_date.slice(0, 4)}` : ""}
+                </span>
+              </div>
+              <SeasonToggle
+                mediaItemId={mediaItemId}
+                seasonNumber={season.season_number}
+                initialWatched={isWatched}
+              />
+            </li>
+          );
+        })}
       </ul>
-    </section>
+    </SeasonsCollapsible>
   );
 }
