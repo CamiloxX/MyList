@@ -108,7 +108,14 @@
       "emailNotConfirmed": "Confirm your email before signing in",
       "userAlreadyRegistered": "An account with that email already exists",
       "weakPassword": "Password is too weak",
-      "googleConnect": "We couldn't connect to Google"
+      "googleConnect": "We couldn't connect to Google",
+      "currentPasswordWrong": "Current password is incorrect",
+      "newPasswordSameAsOld": "New password must be different",
+      "passwordsDontMatch": "Passwords don't match",
+      "confirmPasswordRequired": "Confirm your password",
+      "notSignedIn": "Sign in first",
+      "noEmailOnAccount": "Your account has no email associated",
+      "updatePasswordFailed": "We couldn't update your password"
     }
   },
   "library": {
@@ -288,6 +295,18 @@
     "languages": {
       "es": "Español",
       "en": "English"
+    },
+    "security": {
+      "title": "Security",
+      "description": "Change your password. We ask for the current one to confirm it's you.",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "newPasswordHint": "Minimum 8 characters.",
+      "confirmPassword": "Confirm new password",
+      "submit": "Change password",
+      "submitting": "Changing...",
+      "successToast": "Password updated",
+      "toggleVisibility": "Show or hide password"
     }
   },
   "badges": {

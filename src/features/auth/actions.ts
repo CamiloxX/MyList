@@ -3,7 +3,14 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { type LoginInput, loginSchema, type RegisterInput, registerSchema } from "./schemas";
+import {
+  type ChangePasswordInput,
+  changePasswordSchema,
+  type LoginInput,
+  loginSchema,
+  type RegisterInput,
+  registerSchema,
+} from "./schemas";
 
 export type AuthErrorKey =
   | "reviewFields"
@@ -16,7 +23,14 @@ export type AuthErrorKey =
   | "passwordRequired"
   | "passwordMin"
   | "nameRequired"
-  | "nameMax";
+  | "nameMax"
+  | "currentPasswordWrong"
+  | "newPasswordSameAsOld"
+  | "passwordsDontMatch"
+  | "confirmPasswordRequired"
+  | "notSignedIn"
+  | "noEmailOnAccount"
+  | "updatePasswordFailed";
 
 export type ActionFailure = {
   ok: false;
@@ -36,6 +50,9 @@ const ZOD_TO_KEY: Record<string, AuthErrorKey> = {
   "Mínimo 8 caracteres": "passwordMin",
   "Ingresa tu nombre": "nameRequired",
   "Máximo 50 caracteres": "nameMax",
+  "Confirma tu contraseña": "confirmPasswordRequired",
+  "Las contraseñas no coinciden": "passwordsDontMatch",
+  "La nueva contraseña debe ser distinta": "newPasswordSameAsOld",
 };
 
 function mapFieldErrors(
@@ -143,4 +160,69 @@ function translateAuthErrorKey(message: string): AuthErrorKey {
   if (lower.includes("user already registered")) return "userAlreadyRegistered";
   if (lower.includes("weak password")) return "weakPassword";
   return "reviewFields";
+}
+
+export type ChangePasswordResult = { ok: true } | ActionFailure;
+
+/**
+ * Verifies the current password by re-running signInWithPassword (which is the
+ * only Supabase primitive that confirms a plaintext password belongs to the
+ * user) and, on success, updates the password via auth.updateUser. Both calls
+ * happen on the server with the user's session cookies, so RLS and audit trail
+ * are intact.
+ *
+ * Returns a translated-error-key result instead of raw Supabase messages so
+ * the form can render localized strings via next-intl.
+ */
+export async function changePassword(input: ChangePasswordInput): Promise<ChangePasswordResult> {
+  const parsed = changePasswordSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      errorKey: "reviewFields",
+      fieldErrors: mapFieldErrors(parsed.error.flatten().fieldErrors),
+    };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, errorKey: "notSignedIn" };
+  if (!user.email) return { ok: false, errorKey: "noEmailOnAccount" };
+
+  // Re-authenticate to confirm the user actually knows the current password.
+  // Supabase replays this as a fresh sign-in and rotates the session cookies,
+  // which is fine — the same user stays signed in.
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: parsed.data.currentPassword,
+  });
+  if (signInError) {
+    return {
+      ok: false,
+      errorKey: "currentPasswordWrong",
+      fieldErrors: { currentPassword: "currentPasswordWrong" },
+    };
+  }
+
+  const { error: updateError } = await supabase.auth.updateUser({
+    password: parsed.data.newPassword,
+  });
+  if (updateError) {
+    const lower = updateError.message.toLowerCase();
+    if (lower.includes("weak password")) {
+      return { ok: false, errorKey: "weakPassword", fieldErrors: { newPassword: "weakPassword" } };
+    }
+    if (lower.includes("same as the existing")) {
+      return {
+        ok: false,
+        errorKey: "newPasswordSameAsOld",
+        fieldErrors: { newPassword: "newPasswordSameAsOld" },
+      };
+    }
+    return { ok: false, errorKey: "updatePasswordFailed" };
+  }
+
+  return { ok: true };
 }

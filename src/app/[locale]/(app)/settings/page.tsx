@@ -4,14 +4,17 @@ import { signOut } from "@/features/auth/actions";
 import { BADGE_BY_ID } from "@/features/badges/catalog";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { getRecentEarnedBadges } from "@/features/badges/queries";
+import { ChangePasswordForm } from "@/features/settings/components/change-password-form";
 import { LanguageSwitcher } from "@/features/settings/components/language-switcher";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
+  await loadingDemoDelay();
   const supabase = await createClient();
   const {
     data: { user },
@@ -21,6 +24,12 @@ export default async function SettingsPage() {
   const tBadges = await getTranslations("badges");
   const locale = (await getLocale()) as Locale;
   const recentBadges = await getRecentEarnedBadges(3);
+
+  // Supabase tags every connected provider on `app_metadata.providers`. Only
+  // accounts that signed up (or linked) with email/password have a password to
+  // change — Google-only users would need a separate "set password" flow.
+  const providers = (user?.app_metadata?.providers ?? []) as string[];
+  const canChangePassword = providers.includes("email");
 
   return (
     <div className="flex flex-col gap-6">
@@ -70,6 +79,16 @@ export default async function SettingsPage() {
           </ul>
         )}
       </section>
+
+      {canChangePassword ? (
+        <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-base font-medium">{t("security.title")}</h2>
+            <p className="text-sm text-muted-foreground">{t("security.description")}</p>
+          </div>
+          <ChangePasswordForm />
+        </section>
+      ) : null}
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
         <div className="flex flex-col gap-1">

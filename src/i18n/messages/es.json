@@ -108,7 +108,14 @@
       "emailNotConfirmed": "Confirma tu email antes de iniciar sesión",
       "userAlreadyRegistered": "Ya existe una cuenta con ese email",
       "weakPassword": "La contraseña es muy débil",
-      "googleConnect": "No pudimos conectar con Google"
+      "googleConnect": "No pudimos conectar con Google",
+      "currentPasswordWrong": "La contraseña actual no es correcta",
+      "newPasswordSameAsOld": "La nueva contraseña debe ser distinta",
+      "passwordsDontMatch": "Las contraseñas no coinciden",
+      "confirmPasswordRequired": "Confirma tu contraseña",
+      "notSignedIn": "Inicia sesión primero",
+      "noEmailOnAccount": "Tu cuenta no tiene email asociado",
+      "updatePasswordFailed": "No pudimos actualizar tu contraseña"
     }
   },
   "library": {
@@ -288,6 +295,18 @@
     "languages": {
       "es": "Español",
       "en": "English"
+    },
+    "security": {
+      "title": "Seguridad",
+      "description": "Cambia tu contraseña. Te pedimos la actual para confirmar que eres tú.",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña",
+      "newPasswordHint": "Mínimo 8 caracteres.",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "submit": "Cambiar contraseña",
+      "submitting": "Cambiando...",
+      "successToast": "Contraseña actualizada",
+      "toggleVisibility": "Mostrar u ocultar contraseña"
     }
   },
   "badges": {
