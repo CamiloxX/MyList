@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -85,12 +86,17 @@ export function WatchEntryForm({ mediaItemId }: { mediaItemId: string }) {
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="watchedOn">{t("date")}</Label>
-        <Input
-          id="watchedOn"
-          type="date"
-          className="w-fit"
-          aria-invalid={Boolean(errors.watchedOn)}
-          {...register("watchedOn")}
+        <Controller
+          control={control}
+          name="watchedOn"
+          render={({ field }) => (
+            <DatePicker
+              id="watchedOn"
+              value={field.value ?? ""}
+              onChange={(iso) => field.onChange(iso)}
+              ariaInvalid={Boolean(errors.watchedOn)}
+            />
+          )}
         />
         {errors.watchedOn ? (
           <p className="text-xs text-destructive">{errors.watchedOn.message}</p>

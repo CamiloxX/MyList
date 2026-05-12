@@ -27,6 +27,12 @@
     "optional": "Optional",
     "today": "Today"
   },
+  "calendar": {
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "today": "Today",
+    "placeholder": "Pick a date"
+  },
   "kinds": {
     "movie": "Movie",
     "tv": "Series",
@@ -145,6 +151,15 @@
     "trailer": {
       "watch": "Watch trailer",
       "dialogTitle": "Trailer for {title}"
+    },
+    "seasons": {
+      "title": "Seasons",
+      "watched": "Watched",
+      "markWatched": "Mark as watched",
+      "unmarkWatched": "Unmark",
+      "episodeCount": "{count, plural, =0 {No episodes} =1 {1 episode} other {# episodes}}",
+      "loadError": "We couldn't load the seasons",
+      "noSeasons": "This show has no seasons on TMDB"
     },
     "addToLibrary": {
       "add": "Add",
