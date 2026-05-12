@@ -1,9 +1,13 @@
 import { getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
 import { LibraryCard } from "@/features/library/components/library-card";
-import { LibraryFilters } from "@/features/library/components/library-filters";
+import {
+  type LibraryFilterCounts,
+  LibraryFilters,
+} from "@/features/library/components/library-filters";
 import type { MediaKind, MediaStatus } from "@/features/library/status";
 import { Link } from "@/i18n/navigation";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +21,7 @@ type LibraryPageProps = {
 };
 
 export default async function LibraryPage({ searchParams }: LibraryPageProps) {
+  await loadingDemoDelay();
   const { status: rawStatus, kind: rawKind } = await searchParams;
   const status = VALID_STATUSES.includes(rawStatus as MediaStatus)
     ? (rawStatus as MediaStatus)
@@ -35,7 +40,19 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
   if (status) query = query.eq("status", status);
   if (kind) query = query.eq("kind", kind);
 
-  const { data: items, error } = await query;
+  // Fetch the filter-counts query in parallel: a tiny `(status, kind)` projection
+  // over the user's full library so each filter pill shows its total regardless
+  // of the OTHER active filter — gives a stable, predictable picture.
+  const countsPromise = user
+    ? supabase.from("media_items").select("status, kind").eq("user_id", user.id)
+    : Promise.resolve({ data: [] as Array<{ status: MediaStatus; kind: MediaKind }>, error: null });
+
+  const [{ data: items, error }, { data: countsRows }] = await Promise.all([
+    query,
+    countsPromise,
+  ]);
+
+  const counts = aggregateCounts(countsRows ?? []);
 
   if (error) {
     return (
@@ -64,7 +81,7 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
         </p>
       </header>
 
-      <LibraryFilters />
+      <LibraryFilters counts={counts} />
 
       {itemsList.length === 0 ? (
         <EmptyState filtered={Boolean(status || kind)} />
@@ -79,6 +96,23 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
       )}
     </div>
   );
+}
+
+function aggregateCounts(
+  rows: ReadonlyArray<{ status: MediaStatus; kind: MediaKind }>,
+): LibraryFilterCounts {
+  const byStatus: Record<MediaStatus, number> = {
+    watching: 0,
+    watched: 0,
+    pending: 0,
+    dropped: 0,
+  };
+  const byKind: Record<MediaKind, number> = { movie: 0, tv: 0, anime: 0 };
+  for (const row of rows) {
+    byStatus[row.status] += 1;
+    byKind[row.kind] += 1;
+  }
+  return { total: rows.length, byStatus, byKind };
 }
 
 async function EmptyState({ filtered }: { filtered: boolean }) {

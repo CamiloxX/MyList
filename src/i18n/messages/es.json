@@ -121,9 +121,13 @@
     "emptyFiltered": "No hay items con esos filtros.",
     "loadError": "No pudimos cargar tu biblioteca: {message}",
     "filters": {
+      "title": "Filtros",
       "status": "Estado",
       "kind": "Tipo",
-      "all": "Todos"
+      "all": "Todos",
+      "clear": "Limpiar",
+      "activeBadge": "{count, plural, =1 {1 activo} other {# activos}}",
+      "ariaPanel": "Filtros de la biblioteca"
     },
     "remove": {
       "button": "Eliminar",

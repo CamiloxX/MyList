@@ -121,9 +121,13 @@
     "emptyFiltered": "No items match these filters.",
     "loadError": "We couldn't load your library: {message}",
     "filters": {
+      "title": "Filters",
       "status": "Status",
       "kind": "Type",
-      "all": "All"
+      "all": "All",
+      "clear": "Clear",
+      "activeBadge": "{count, plural, =1 {1 active} other {# active}}",
+      "ariaPanel": "Library filters"
     },
     "remove": {
       "button": "Remove",
