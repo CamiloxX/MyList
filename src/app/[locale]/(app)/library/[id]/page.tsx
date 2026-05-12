@@ -5,12 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { RemoveButton } from "@/features/library/components/remove-button";
 import { StatusSelect } from "@/features/library/components/status-select";
+import { TrailerButton } from "@/features/library/components/trailer-button";
 import { WatchEntryForm } from "@/features/library/components/watch-entry-form";
 import { WatchEntryList } from "@/features/library/components/watch-entry-list";
 import type { MediaStatus } from "@/features/library/status";
 import { Link } from "@/i18n/navigation";
+import { getJikanTrailer } from "@/lib/jikan/videos";
 import { loadingDemoDelay } from "@/lib/loading-demo";
 import { createClient } from "@/lib/supabase/server";
+import { getTmdbTrailer } from "@/lib/tmdb/videos";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -30,11 +33,14 @@ export default async function MediaDetailPage({ params }: DetailPageProps) {
     notFound();
   }
 
-  const { data: entries } = await supabase
-    .from("watch_entries")
-    .select("id, watched_on, rating, platform, notes")
-    .eq("media_item_id", id)
-    .order("watched_on", { ascending: false });
+  const [{ data: entries }, trailer] = await Promise.all([
+    supabase
+      .from("watch_entries")
+      .select("id, watched_on, rating, platform, notes")
+      .eq("media_item_id", id)
+      .order("watched_on", { ascending: false }),
+    fetchTrailerFor(item.source, item.kind, item.source_id),
+  ]);
 
   const entriesList = entries ?? [];
   const t = await getTranslations();
@@ -105,6 +111,9 @@ export default async function MediaDetailPage({ params }: DetailPageProps) {
             </header>
             <div className="flex flex-wrap items-center gap-2">
               <StatusSelect id={item.id} current={item.status as MediaStatus} />
+              {trailer ? (
+                <TrailerButton youtubeKey={trailer.youtubeKey} title={item.title} />
+              ) : null}
               <RemoveButton id={item.id} title={item.title} />
             </div>
             <p className="text-xs text-muted-foreground">
@@ -124,4 +133,24 @@ export default async function MediaDetailPage({ params }: DetailPageProps) {
       </section>
     </div>
   );
+}
+
+/**
+ * Routes the trailer lookup to the right provider based on where the title
+ * came from. Anime entries fan out to Jikan/MyAnimeList; movies and TV go
+ * through TMDB. Anything else (or any failure) returns null and the watch
+ * trailer button just doesn't render.
+ */
+async function fetchTrailerFor(
+  source: string,
+  kind: string,
+  sourceId: string,
+): Promise<{ youtubeKey: string } | null> {
+  if (source === "tmdb" && (kind === "movie" || kind === "tv")) {
+    return getTmdbTrailer(kind, sourceId);
+  }
+  if (source === "anilist" && kind === "anime") {
+    return getJikanTrailer(sourceId);
+  }
+  return null;
 }

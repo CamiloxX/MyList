@@ -142,6 +142,10 @@
       "removing": "...",
       "successToast": "\"{title}\" eliminado"
     },
+    "trailer": {
+      "watch": "Ver tráiler",
+      "dialogTitle": "Tráiler de {title}"
+    },
     "addToLibrary": {
       "add": "Agregar",
       "adding": "Agregando...",
