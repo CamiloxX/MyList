@@ -158,9 +158,13 @@
       "markWatched": "Mark as watched",
       "unmarkWatched": "Unmark",
       "episodeCount": "{count, plural, =0 {No episodes} =1 {1 episode} other {# episodes}}",
-      "loadError": "We couldn't load the seasons",
+      "loadError": "We couldn't load the episodes",
       "noSeasons": "This show has no seasons on TMDB",
-      "seasonBadge": "S{number}"
+      "seasonBadge": "S{number}",
+      "expandSeason": "Show episodes",
+      "collapseSeason": "Hide episodes",
+      "loadingEpisodes": "Loading episodes...",
+      "noEpisodes": "No episodes available"
     },
     "addToLibrary": {
       "add": "Add",

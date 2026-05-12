@@ -3,6 +3,7 @@
 import {
   BookmarkIcon,
   CheckCircle2Icon,
+  ChevronDownIcon,
   EyeIcon,
   FilmIcon,
   LayersIcon,
@@ -15,6 +16,7 @@ import {
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { AnimeIcon } from "@/features/discover/components/media-icons";
 import { cn } from "@/lib/utils";
 import type { MediaKind, MediaStatus } from "../status";
@@ -62,14 +64,23 @@ export function LibraryFilters({ counts }: { counts: LibraryFilterCounts }) {
 
   const activeCount = (status ? 1 : 0) + (kind ? 1 : 0);
   const hasActive = activeCount > 0;
+  // Default open when filters are active so the user can see what's applied
+  // without having to click; default closed otherwise to keep the page tidy.
+  const [isOpen, setIsOpen] = useState(hasActive);
 
   return (
     <section
       aria-label={t("library.filters.ariaPanel")}
-      className="flex flex-col gap-4 overflow-hidden rounded-xl bg-card p-4 ring-1 ring-foreground/10"
+      className="flex flex-col overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10"
     >
-      <header className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+      <header className="flex items-center justify-between gap-2 p-3">
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-expanded={isOpen}
+          aria-controls="library-filters-panel"
+          className="inline-flex flex-1 items-center gap-2 rounded-md px-1 py-0.5 text-left transition-colors hover:text-foreground"
+        >
           <SlidersHorizontalIcon className="size-4 text-muted-foreground" aria-hidden />
           <span className="text-sm font-semibold tracking-tight">
             {t("library.filters.title")}
@@ -79,7 +90,14 @@ export function LibraryFilters({ counts }: { counts: LibraryFilterCounts }) {
               {t("library.filters.activeBadge", { count: activeCount })}
             </span>
           ) : null}
-        </div>
+          <ChevronDownIcon
+            className={cn(
+              "ml-auto size-4 text-muted-foreground transition-transform",
+              isOpen && "rotate-180",
+            )}
+            aria-hidden
+          />
+        </button>
         {hasActive ? (
           <Link
             href={pathname}
@@ -91,48 +109,58 @@ export function LibraryFilters({ counts }: { counts: LibraryFilterCounts }) {
         ) : null}
       </header>
 
-      <div className="h-px bg-border/60" />
+      <div
+        id="library-filters-panel"
+        className={cn(
+          "grid transition-all duration-200 ease-out",
+          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="flex flex-col gap-4 border-t p-4">
+            <FilterGroup label={t("library.filters.status")}>
+              <FilterPill
+                href={buildFilterHref(pathname, searchParams, "status", null)}
+                label={t("library.filters.all")}
+                icon={LayersIcon}
+                count={counts.total}
+                isActive={status === null}
+              />
+              {STATUS_OPTIONS.map((option) => (
+                <FilterPill
+                  key={option.value}
+                  href={buildFilterHref(pathname, searchParams, "status", option.value)}
+                  label={t(`statuses.${option.value}` as "statuses.watching")}
+                  icon={STATUS_ICONS[option.value]}
+                  iconClass={STATUS_ACCENT[option.value]}
+                  count={counts.byStatus[option.value] ?? 0}
+                  isActive={status === option.value}
+                />
+              ))}
+            </FilterGroup>
 
-      <FilterGroup label={t("library.filters.status")}>
-        <FilterPill
-          href={buildFilterHref(pathname, searchParams, "status", null)}
-          label={t("library.filters.all")}
-          icon={LayersIcon}
-          count={counts.total}
-          isActive={status === null}
-        />
-        {STATUS_OPTIONS.map((option) => (
-          <FilterPill
-            key={option.value}
-            href={buildFilterHref(pathname, searchParams, "status", option.value)}
-            label={t(`statuses.${option.value}` as "statuses.watching")}
-            icon={STATUS_ICONS[option.value]}
-            iconClass={STATUS_ACCENT[option.value]}
-            count={counts.byStatus[option.value] ?? 0}
-            isActive={status === option.value}
-          />
-        ))}
-      </FilterGroup>
-
-      <FilterGroup label={t("library.filters.kind")}>
-        <FilterPill
-          href={buildFilterHref(pathname, searchParams, "kind", null)}
-          label={t("library.filters.all")}
-          icon={LayersIcon}
-          count={counts.total}
-          isActive={kind === null}
-        />
-        {KIND_OPTIONS.map((option) => (
-          <FilterPill
-            key={option.value}
-            href={buildFilterHref(pathname, searchParams, "kind", option.value)}
-            label={t(`kinds.${option.value}` as "kinds.movie")}
-            icon={KIND_ICONS[option.value]}
-            count={counts.byKind[option.value] ?? 0}
-            isActive={kind === option.value}
-          />
-        ))}
-      </FilterGroup>
+            <FilterGroup label={t("library.filters.kind")}>
+              <FilterPill
+                href={buildFilterHref(pathname, searchParams, "kind", null)}
+                label={t("library.filters.all")}
+                icon={LayersIcon}
+                count={counts.total}
+                isActive={kind === null}
+              />
+              {KIND_OPTIONS.map((option) => (
+                <FilterPill
+                  key={option.value}
+                  href={buildFilterHref(pathname, searchParams, "kind", option.value)}
+                  label={t(`kinds.${option.value}` as "kinds.movie")}
+                  icon={KIND_ICONS[option.value]}
+                  count={counts.byKind[option.value] ?? 0}
+                  isActive={kind === option.value}
+                />
+              ))}
+            </FilterGroup>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
