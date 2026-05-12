@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { RemoveButton } from "@/features/library/components/remove-button";
+import { SeasonsList } from "@/features/library/components/seasons-list";
 import { StatusSelect } from "@/features/library/components/status-select";
 import { TrailerButton } from "@/features/library/components/trailer-button";
 import { WatchEntryForm } from "@/features/library/components/watch-entry-form";
@@ -36,7 +37,7 @@ export default async function MediaDetailPage({ params }: DetailPageProps) {
   const [{ data: entries }, trailer] = await Promise.all([
     supabase
       .from("watch_entries")
-      .select("id, watched_on, rating, platform, notes")
+      .select("id, watched_on, rating, platform, notes, season_number")
       .eq("media_item_id", id)
       .order("watched_on", { ascending: false }),
     fetchTrailerFor(item.source, item.kind, item.source_id),
@@ -122,6 +123,10 @@ export default async function MediaDetailPage({ params }: DetailPageProps) {
           </div>
         </div>
       </article>
+
+      {item.kind === "tv" && item.source === "tmdb" ? (
+        <SeasonsList mediaItemId={item.id} tmdbId={item.source_id} />
+      ) : null}
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-medium">{t("library.detail.history")}</h2>

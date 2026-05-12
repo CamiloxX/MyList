@@ -16,6 +16,7 @@ export type WatchEntryRow = {
   rating: number | null;
   platform: string | null;
   notes: string | null;
+  season_number: number | null;
 };
 
 export function WatchEntryList({
@@ -49,6 +50,7 @@ function WatchEntryRow({ entry, mediaItemId }: { entry: WatchEntryRow; mediaItem
   const tWatch = useTranslations("library.watchEntry");
   const tRemove = useTranslations("library.remove");
   const tPlatforms = useTranslations("platforms");
+  const tSeasons = useTranslations("library.seasons");
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
 
@@ -71,6 +73,11 @@ function WatchEntryRow({ entry, mediaItemId }: { entry: WatchEntryRow; mediaItem
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm font-medium">{formatWatchedOn(entry.watched_on, locale)}</span>
           {entry.rating ? <StarRatingReadonly value={entry.rating} size="sm" /> : null}
+          {entry.season_number !== null ? (
+            <Badge variant="outline" className="border-emerald-400/50 text-emerald-600 dark:text-emerald-400">
+              {tSeasons("seasonBadge", { number: entry.season_number })}
+            </Badge>
+          ) : null}
           {entry.platform && platformLabel ? (
             <Badge variant="secondary" className="gap-1.5">
               <PlatformIcon platform={entry.platform} size="sm" />

@@ -203,3 +203,88 @@ export async function removeWatchEntry(
   revalidatePath("/month");
   return { ok: true };
 }
+
+const seasonSchema = z.object({
+  mediaItemId: z.string().uuid(),
+  seasonNumber: z.number().int().min(0).max(1000),
+});
+
+/**
+ * Marks a season as watched by inserting a watch_entry tagged with
+ * `season_number`. Idempotent: if the same (media, season) pair already has
+ * an entry it is left alone and we report success — the UI is "is the season
+ * checked or not", not "how many times have you watched it".
+ *
+ * Auto-bumps the parent media_item to "watching" if it was still "pending".
+ */
+export async function markSeasonWatched(input: {
+  mediaItemId: string;
+  seasonNumber: number;
+}): Promise<LibraryActionResult> {
+  const parsed = seasonSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "Datos inválidos" };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Inicia sesión primero" };
+
+  const { data: existing } = await supabase
+    .from("watch_entries")
+    .select("id")
+    .eq("media_item_id", parsed.data.mediaItemId)
+    .eq("season_number", parsed.data.seasonNumber)
+    .limit(1)
+    .maybeSingle();
+
+  if (!existing) {
+    const today = new Date().toISOString().slice(0, 10);
+    const { error } = await supabase.from("watch_entries").insert({
+      user_id: user.id,
+      media_item_id: parsed.data.mediaItemId,
+      watched_on: today,
+      season_number: parsed.data.seasonNumber,
+    });
+    if (error) return { ok: false, error: error.message };
+
+    await supabase
+      .from("media_items")
+      .update({ status: "watching" })
+      .eq("id", parsed.data.mediaItemId)
+      .eq("status", "pending");
+  }
+
+  const newBadges = await evaluateAndPersist(supabase, user.id);
+  revalidatePath(`/library/${parsed.data.mediaItemId}`);
+  revalidatePath("/library");
+  revalidatePath("/month");
+  return { ok: true, newBadges };
+}
+
+/**
+ * Removes ALL watch_entries for a given (media, season) pair. Used when the
+ * user toggles a season off — collapses any duplicate entries created by
+ * past mark-then-unmark cycles back to zero so the UI stays in sync.
+ */
+export async function unmarkSeasonWatched(input: {
+  mediaItemId: string;
+  seasonNumber: number;
+}): Promise<LibraryActionResult> {
+  const parsed = seasonSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "Datos inválidos" };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("watch_entries")
+    .delete()
+    .eq("media_item_id", parsed.data.mediaItemId)
+    .eq("season_number", parsed.data.seasonNumber);
+
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath(`/library/${parsed.data.mediaItemId}`);
+  revalidatePath("/library");
+  revalidatePath("/month");
+  return { ok: true };
+}

@@ -159,7 +159,8 @@
       "unmarkWatched": "Quitar marca",
       "episodeCount": "{count, plural, =0 {Sin episodios} =1 {1 episodio} other {# episodios}}",
       "loadError": "No pudimos cargar las temporadas",
-      "noSeasons": "Esta serie no tiene temporadas en TMDB"
+      "noSeasons": "Esta serie no tiene temporadas en TMDB",
+      "seasonBadge": "T{number}"
     },
     "addToLibrary": {
       "add": "Agregar",
