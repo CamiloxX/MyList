@@ -173,8 +173,15 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Move the page background to <html> so <body> can stay transparent and a
+     fixed `-z-10` canvas (BackgroundParticles) renders visibly behind the
+     page content. Otherwise the body's own bg layer stacks above any
+     negative-z child and hides the particles. */
+  html {
+    @apply bg-background;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
 }
 
