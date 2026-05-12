@@ -1,13 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DiscoverFilters } from "@/features/discover/components/discover-filters";
 import { DiscoverGrid } from "@/features/discover/components/discover-grid";
 import { DiscoverTabs } from "@/features/discover/components/discover-tabs";
-import { GenreFilter } from "@/features/discover/components/genre-filter";
 import { MediaTypeTabs } from "@/features/discover/components/media-type-tabs";
 import { PaginationControls } from "@/features/discover/components/pagination-controls";
-import { ProviderFilter } from "@/features/discover/components/provider-filter";
-import { RegionFilter } from "@/features/discover/components/region-filter";
 import {
   getByGenreFor,
   getGenresFor,
@@ -72,29 +70,19 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
         <>
           <MediaTypeTabs current={filters.type} />
 
-          <div className="flex flex-wrap items-end gap-3">
-            {filters.tab === "genre" ? (
-              <Suspense key={`genres:${filters.type}`} fallback={<FilterSkeleton />}>
-                <GenrePicker type={filters.type} current={filters.genre} />
-              </Suspense>
-            ) : null}
-
-            {showStreamingFilters ? (
-              <>
-                <RegionFilter current={filters.region} />
-                <Suspense
-                  key={`providers:${filters.type}:${filters.region}`}
-                  fallback={<FilterSkeleton />}
-                >
-                  <ProviderPicker
-                    type={filters.type as Exclude<DiscoverType, "anime">}
-                    region={filters.region}
-                    current={filters.provider}
-                  />
-                </Suspense>
-              </>
-            ) : null}
-          </div>
+          <Suspense
+            key={`filters:${filters.type}:${filters.region}:${filters.tab}`}
+            fallback={<FilterSkeleton />}
+          >
+            <FiltersBar
+              showGenre={filters.tab === "genre"}
+              showStreaming={showStreamingFilters}
+              type={filters.type}
+              region={filters.region}
+              currentGenre={filters.genre}
+              currentProvider={filters.provider}
+            />
+          </Suspense>
 
           <Suspense
             key={`${filters.tab}:${filters.type}:${filters.genre ?? ""}:${filters.provider ?? ""}:${filters.region}:${filters.page}`}
@@ -147,22 +135,42 @@ async function ResultsSection({
   );
 }
 
-async function GenrePicker({ type, current }: { type: DiscoverType; current: number | undefined }) {
-  const genres = await getGenresFor(type);
-  return <GenreFilter genres={genres} current={current} />;
-}
-
-async function ProviderPicker({
+async function FiltersBar({
+  showGenre,
+  showStreaming,
   type,
   region,
-  current,
+  currentGenre,
+  currentProvider,
 }: {
-  type: Exclude<DiscoverType, "anime">;
+  showGenre: boolean;
+  showStreaming: boolean;
+  type: DiscoverType;
   region: DiscoverRegion;
-  current: number | undefined;
+  currentGenre: number | undefined;
+  currentProvider: number | undefined;
 }) {
-  const providers = await getProvidersFor(type, region);
-  return <ProviderFilter providers={providers} current={current} />;
+  // Both lookups are cheap and cached at TMDB level. Skip whichever isn't
+  // relevant to the current tab to avoid wasted requests (e.g., anime tab
+  // has no providers; trending tab doesn't need a genre list).
+  const [genres, providers] = await Promise.all([
+    showGenre ? getGenresFor(type) : Promise.resolve([]),
+    showStreaming && type !== "anime"
+      ? getProvidersFor(type as Exclude<DiscoverType, "anime">, region)
+      : Promise.resolve([]),
+  ]);
+
+  return (
+    <DiscoverFilters
+      showGenre={showGenre}
+      showStreaming={showStreaming}
+      genres={genres}
+      providers={providers}
+      currentGenre={currentGenre}
+      currentRegion={region}
+      currentProvider={currentProvider}
+    />
+  );
 }
 
 async function ForYouSection({ region }: { region: DiscoverRegion }) {

@@ -178,6 +178,7 @@
     },
     "watchEntry": {
       "title": "Registrar visualización",
+      "addCta": "Registrar visualización",
       "date": "Fecha",
       "rating": "Calificación",
       "ratingAriaLabel": "Calificación de la visualización",
@@ -186,6 +187,9 @@
       "notes": "Notas",
       "successToast": "Visualización registrada",
       "removedToast": "Visualización eliminada"
+    },
+    "status": {
+      "pickLabel": "Cambiar estado"
     },
     "starRating": {
       "ariaLabel": "Calificación",

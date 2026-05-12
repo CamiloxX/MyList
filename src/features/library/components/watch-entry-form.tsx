@@ -19,12 +19,20 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useNotifyBadges } from "@/features/badges/notify";
 import { todayIso } from "@/lib/dates";
+import { cn } from "@/lib/utils";
 import { addWatchEntry } from "../actions";
 import { PLATFORMS, type WatchEntryInput, watchEntrySchema } from "../schemas";
 import { PlatformIcon } from "./platform-icon";
 import { StarRating } from "./star-rating";
 
-export function WatchEntryForm({ mediaItemId }: { mediaItemId: string }) {
+export function WatchEntryForm({
+  mediaItemId,
+  onSuccess,
+}: {
+  mediaItemId: string;
+  /** Optional hook fired after a successful save — used by the drawer wrapper to dismiss itself. */
+  onSuccess?: () => void;
+}) {
   const t = useTranslations("library.watchEntry");
   const tCommon = useTranslations("common");
   const tPlatforms = useTranslations("platforms");
@@ -75,12 +83,24 @@ export function WatchEntryForm({ mediaItemId }: { mediaItemId: string }) {
       });
       setPlatformSelection("Netflix");
       setOtherPlatform("");
+      onSuccess?.();
     });
   });
 
+  // When `onSuccess` is provided we assume the form is embedded inside a Drawer
+  // (the drawer renders its own title + chrome), so we drop the card wrapper
+  // and the duplicated heading. Otherwise we keep the standalone card look.
+  const isEmbedded = Boolean(onSuccess);
+
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4 rounded-xl border bg-card p-4">
-      <h3 className="text-base font-medium">{t("title")}</h3>
+    <form
+      onSubmit={onSubmit}
+      className={cn(
+        "flex flex-col gap-4",
+        !isEmbedded && "rounded-xl border bg-card p-4",
+      )}
+    >
+      {isEmbedded ? null : <h3 className="text-base font-medium">{t("title")}</h3>}
 
       <input type="hidden" {...register("mediaItemId")} />
 

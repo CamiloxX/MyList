@@ -7,8 +7,8 @@ import { RemoveButton } from "@/features/library/components/remove-button";
 import { SeasonsList } from "@/features/library/components/seasons-list";
 import { StatusSelect } from "@/features/library/components/status-select";
 import { TrailerButton } from "@/features/library/components/trailer-button";
-import { WatchEntryForm } from "@/features/library/components/watch-entry-form";
 import { WatchEntryList } from "@/features/library/components/watch-entry-list";
+import { WatchEntryTrigger } from "@/features/library/components/watch-entry-trigger";
 import type { MediaStatus } from "@/features/library/status";
 import { Link } from "@/i18n/navigation";
 import { getJikanTrailer } from "@/lib/jikan/videos";
@@ -129,12 +129,16 @@ export default async function MediaDetailPage({ params }: DetailPageProps) {
       ) : null}
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-medium">{t("library.detail.history")}</h2>
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-lg font-medium">{t("library.detail.history")}</h2>
+          <div className="hidden sm:block">
+            <WatchEntryTrigger mediaItemId={item.id} />
+          </div>
+        </div>
         <WatchEntryList entries={entriesList} mediaItemId={item.id} />
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <WatchEntryForm mediaItemId={item.id} />
+        <div className="sm:hidden">
+          <WatchEntryTrigger mediaItemId={item.id} />
+        </div>
       </section>
     </div>
   );

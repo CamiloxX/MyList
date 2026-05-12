@@ -178,6 +178,7 @@
     },
     "watchEntry": {
       "title": "Log a view",
+      "addCta": "Log a view",
       "date": "Date",
       "rating": "Rating",
       "ratingAriaLabel": "Rating for this view",
@@ -186,6 +187,9 @@
       "notes": "Notes",
       "successToast": "View logged",
       "removedToast": "View removed"
+    },
+    "status": {
+      "pickLabel": "Change status"
     },
     "starRating": {
       "ariaLabel": "Rating",
