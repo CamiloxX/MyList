@@ -9,6 +9,7 @@ import { WatchEntryForm } from "@/features/library/components/watch-entry-form";
 import { WatchEntryList } from "@/features/library/components/watch-entry-list";
 import type { MediaStatus } from "@/features/library/status";
 import { Link } from "@/i18n/navigation";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,7 @@ type DetailPageProps = {
 };
 
 export default async function MediaDetailPage({ params }: DetailPageProps) {
+  await loadingDemoDelay();
   const { id } = await params;
   const supabase = await createClient();
 
@@ -49,42 +51,66 @@ export default async function MediaDetailPage({ params }: DetailPageProps) {
         {t("library.detail.back")}
       </Link>
 
-      <article className="flex flex-col gap-4 sm:flex-row">
-        <div className="relative aspect-[2/3] w-32 shrink-0 overflow-hidden rounded-md bg-muted sm:w-40">
-          {item.poster_url ? (
+      <article className="relative isolate overflow-hidden rounded-2xl ring-1 ring-foreground/10">
+        {/* Backdrop: the same poster blown up + heavily blurred behind the
+            content, with a gradient scrim so text stays readable on light AND
+            dark themes. Hidden from assistive tech — purely decorative. */}
+        {item.poster_url ? (
+          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
             <Image
               src={item.poster_url}
-              alt={t("posters.alt", { title: item.title })}
+              alt=""
               fill
-              sizes="(min-width: 640px) 160px, 128px"
-              className="object-cover"
+              sizes="100vw"
+              className="scale-125 object-cover blur-2xl"
+              priority
             />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-              {t("common.noPoster")}
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col gap-3">
-          <header className="flex flex-col gap-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-semibold tracking-tight">{item.title}</h1>
-              <Badge variant="secondary">{t(`kinds.${item.kind}`)}</Badge>
-              {item.year ? (
-                <span className="text-sm text-muted-foreground">{item.year}</span>
-              ) : null}
-            </div>
-            {item.original_title && item.original_title !== item.title ? (
-              <p className="text-sm text-muted-foreground">{item.original_title}</p>
-            ) : null}
-          </header>
-          <div className="flex flex-wrap items-center gap-2">
-            <StatusSelect id={item.id} current={item.status as MediaStatus} />
-            <RemoveButton id={item.id} title={item.title} />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/70 to-background/85" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/60" />
           </div>
-          <p className="text-xs text-muted-foreground">
-            {t("library.detail.entriesCount", { count: entriesList.length })}
-          </p>
+        ) : (
+          <div className="absolute inset-0 -z-10 bg-card" aria-hidden />
+        )}
+
+        <div className="flex flex-col gap-4 p-4 sm:flex-row sm:p-6">
+          <div className="relative aspect-[2/3] w-32 shrink-0 overflow-hidden rounded-md bg-muted shadow-lg ring-1 ring-foreground/10 sm:w-40">
+            {item.poster_url ? (
+              <Image
+                src={item.poster_url}
+                alt={t("posters.alt", { title: item.title })}
+                fill
+                sizes="(min-width: 640px) 160px, 128px"
+                className="object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                {t("common.noPoster")}
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-3">
+            <header className="flex flex-col gap-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl font-semibold tracking-tight drop-shadow-sm">
+                  {item.title}
+                </h1>
+                <Badge variant="secondary">{t(`kinds.${item.kind}`)}</Badge>
+                {item.year ? (
+                  <span className="text-sm text-muted-foreground">{item.year}</span>
+                ) : null}
+              </div>
+              {item.original_title && item.original_title !== item.title ? (
+                <p className="text-sm text-muted-foreground">{item.original_title}</p>
+              ) : null}
+            </header>
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusSelect id={item.id} current={item.status as MediaStatus} />
+              <RemoveButton id={item.id} title={item.title} />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {t("library.detail.entriesCount", { count: entriesList.length })}
+            </p>
+          </div>
         </div>
       </article>
 
