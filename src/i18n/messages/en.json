@@ -208,6 +208,10 @@
       "next": "Next",
       "page": "Page {page}"
     },
+    "providersRow": {
+      "label": "Available on",
+      "ariaLink": "See where to watch on TMDB"
+    },
     "forYou": {
       "empty": "Not enough data yet. Add something to your library so we can recommend titles tailored to you.",
       "fallbackNotice": "Your library is empty — here's what's trending right now.",

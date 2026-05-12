@@ -14,8 +14,10 @@ import {
   getProvidersFor,
   getTrendingFor,
 } from "@/features/discover/queries";
+import { fetchProvidersForTmdbItems } from "@/features/discover/providers";
 import { fetchRatingsForTmdbItems } from "@/features/discover/ratings";
 import { getForYou } from "@/features/discover/recommend";
+import { getLibraryItemKeys, libraryItemKey } from "@/features/library/queries";
 import {
   type DiscoverRegion,
   type DiscoverTab,
@@ -24,6 +26,7 @@ import {
 } from "@/features/discover/schemas";
 import { AnimeCard } from "@/features/search/components/anime-card";
 import { MediaCard } from "@/features/search/components/media-card";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +41,7 @@ type DiscoverPageProps = {
 };
 
 export default async function DiscoverPage({ searchParams }: DiscoverPageProps) {
+  await loadingDemoDelay();
   const raw = await searchParams;
   const filters = discoverFiltersSchema.parse({
     tab: raw.tab,
@@ -61,8 +65,8 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
       <DiscoverTabs current={filters.tab} />
 
       {filters.tab === "for-you" ? (
-        <Suspense key="for-you" fallback={<MultiSectionSkeleton />}>
-          <ForYouSection />
+        <Suspense key={`for-you:${filters.region}`} fallback={<MultiSectionSkeleton />}>
+          <ForYouSection region={filters.region} />
         </Suspense>
       ) : (
         <>
@@ -137,7 +141,7 @@ async function ResultsSection({
 
   return (
     <>
-      <DiscoverGrid list={list} />
+      <DiscoverGrid list={list} region={region} />
       <PaginationControls page={page} hasMore={hasMore} />
     </>
   );
@@ -161,13 +165,18 @@ async function ProviderPicker({
   return <ProviderFilter providers={providers} current={current} />;
 }
 
-async function ForYouSection() {
+async function ForYouSection({ region }: { region: DiscoverRegion }) {
   const t = await getTranslations("discover.forYou");
   const result = await getForYou();
   const isEmpty = result.movies.length === 0 && result.tv.length === 0 && result.anime.length === 0;
 
-  // Enrich TMDB items with OMDb ratings in a single parallel pass.
-  const ratings = await fetchRatingsForTmdbItems([...result.movies, ...result.tv]);
+  // Enrich TMDB items with OMDb ratings and watch providers in a parallel pass.
+  const tmdbItems = [...result.movies, ...result.tv];
+  const [ratings, providers, libraryKeys] = await Promise.all([
+    fetchRatingsForTmdbItems(tmdbItems),
+    fetchProvidersForTmdbItems(tmdbItems, region),
+    getLibraryItemKeys(),
+  ]);
 
   if (isEmpty) {
     return (
@@ -190,7 +199,14 @@ async function ForYouSection() {
           <ul className="flex flex-col gap-3">
             {result.movies.map((item) => (
               <li key={`movie-${item.id}`}>
-                <MediaCard item={item} ratings={ratings.get(item.id) ?? null} />
+                <MediaCard
+                  item={item}
+                  ratings={ratings.get(item.id) ?? null}
+                  providers={providers.get(item.id) ?? null}
+                  alreadyAdded={libraryKeys.has(
+                    libraryItemKey({ source: "tmdb", sourceId: String(item.id), kind: "movie" }),
+                  )}
+                />
               </li>
             ))}
           </ul>
@@ -202,7 +218,14 @@ async function ForYouSection() {
           <ul className="flex flex-col gap-3">
             {result.tv.map((item) => (
               <li key={`tv-${item.id}`}>
-                <MediaCard item={item} ratings={ratings.get(item.id) ?? null} />
+                <MediaCard
+                  item={item}
+                  ratings={ratings.get(item.id) ?? null}
+                  providers={providers.get(item.id) ?? null}
+                  alreadyAdded={libraryKeys.has(
+                    libraryItemKey({ source: "tmdb", sourceId: String(item.id), kind: "tv" }),
+                  )}
+                />
               </li>
             ))}
           </ul>
@@ -214,7 +237,16 @@ async function ForYouSection() {
           <ul className="flex flex-col gap-3">
             {result.anime.map((item) => (
               <li key={`anime-${item.mal_id}`}>
-                <AnimeCard item={item} />
+                <AnimeCard
+                  item={item}
+                  alreadyAdded={libraryKeys.has(
+                    libraryItemKey({
+                      source: "anilist",
+                      sourceId: String(item.mal_id),
+                      kind: "anime",
+                    }),
+                  )}
+                />
               </li>
             ))}
           </ul>

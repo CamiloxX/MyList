@@ -177,3 +177,39 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Loading screen — radar-style ripples emitted from behind the brand mark. */
+@keyframes mylist-ripple {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.55;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* Loading screen — slow breathing scale applied to the logo itself. */
+@keyframes mylist-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+/* Loading screen — gradient sweep across the wordmark while loading. */
+@keyframes mylist-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

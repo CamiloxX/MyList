@@ -1,19 +1,27 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
+import { ProvidersRow } from "@/features/discover/components/providers-row";
 import { RatingsBadge } from "@/features/discover/components/ratings-badge";
 import { AddToLibraryButton } from "@/features/library/components/add-to-library-button";
 import type { OmdbRatings } from "@/lib/omdb/schemas";
 import { tmdbImage } from "@/lib/tmdb/client";
+import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
 import { type TmdbSearchResult, tmdbOriginalTitle, tmdbTitle, tmdbYear } from "@/lib/tmdb/search";
 
 export async function MediaCard({
   item,
   ratings,
+  providers,
+  alreadyAdded = false,
 }: {
   item: TmdbSearchResult;
   /** Optional OMDb ratings (RT / IMDb / Meta). Discover passes them; Search omits. */
   ratings?: OmdbRatings | null;
+  /** Streaming-provider availability for the active region. Discover only. */
+  providers?: WatchProvidersForTitle | null;
+  /** When true, the Add button renders as already-added and is disabled. */
+  alreadyAdded?: boolean;
 }) {
   const title = tmdbTitle(item);
   const originalTitle = tmdbOriginalTitle(item);
@@ -51,6 +59,7 @@ export async function MediaCard({
           ) : null}
         </header>
         {ratings ? <RatingsBadge ratings={ratings} /> : null}
+        {providers ? <ProvidersRow data={providers} /> : null}
         {overview ? <p className="line-clamp-3 text-sm text-muted-foreground">{overview}</p> : null}
         <div className="mt-auto pt-1">
           <AddToLibraryButton
@@ -63,6 +72,7 @@ export async function MediaCard({
             year={year}
             genres={item.genre_ids ?? []}
             rawMetadata={item}
+            alreadyAdded={alreadyAdded}
           />
         </div>
       </div>

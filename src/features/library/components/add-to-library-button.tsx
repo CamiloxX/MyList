@@ -8,11 +8,14 @@ import { useNotifyBadges } from "@/features/badges/notify";
 import { addToLibrary } from "../actions";
 import type { AddToLibraryInput } from "../schemas";
 
-export function AddToLibraryButton(props: AddToLibraryInput) {
+export function AddToLibraryButton({
+  alreadyAdded = false,
+  ...props
+}: AddToLibraryInput & { alreadyAdded?: boolean }) {
   const t = useTranslations("library.addToLibrary");
   const notifyBadges = useNotifyBadges();
   const [isPending, startTransition] = useTransition();
-  const [added, setAdded] = useState(false);
+  const [added, setAdded] = useState(alreadyAdded);
 
   const handleClick = () => {
     startTransition(async () => {

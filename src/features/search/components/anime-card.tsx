@@ -11,7 +11,14 @@ import {
   jikanTitle,
 } from "@/lib/jikan/search";
 
-export async function AnimeCard({ item }: { item: JikanAnime }) {
+export async function AnimeCard({
+  item,
+  alreadyAdded = false,
+}: {
+  item: JikanAnime;
+  /** When true, the Add button renders as already-added and is disabled. */
+  alreadyAdded?: boolean;
+}) {
   const title = jikanTitle(item);
   const originalTitle = jikanOriginalTitle(item);
   const poster = jikanPoster(item);
@@ -65,6 +72,7 @@ export async function AnimeCard({ item }: { item: JikanAnime }) {
             episodeCount={item.episodes ?? null}
             genres={genreNames}
             rawMetadata={item}
+            alreadyAdded={alreadyAdded}
           />
         </div>
       </div>

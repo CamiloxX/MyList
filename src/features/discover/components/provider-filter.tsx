@@ -1,5 +1,6 @@
 "use client";
 
+import { MonitorPlayIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
@@ -38,7 +39,10 @@ export function ProviderFilter({ providers, current }: Props) {
 
   return (
     <label className="flex flex-col gap-1 text-sm">
-      <span className="text-xs font-medium text-muted-foreground">{t("provider")}</span>
+      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+        <MonitorPlayIcon className="size-3.5" aria-hidden />
+        {t("provider")}
+      </span>
       <select
         value={current ?? ""}
         onChange={handleChange}

@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { getLibraryItemKeys, libraryItemKey } from "@/features/library/queries";
 import { searchJikan } from "@/lib/jikan/search";
 import { AnimeCard } from "./anime-card";
 
@@ -27,11 +28,18 @@ export async function AnimeResults({ query }: { query: string }) {
     );
   }
 
+  const libraryKeys = await getLibraryItemKeys();
+
   return (
     <ul className="flex flex-col gap-3">
       {results.map((item) => (
         <li key={`jikan-${item.mal_id}`}>
-          <AnimeCard item={item} />
+          <AnimeCard
+            item={item}
+            alreadyAdded={libraryKeys.has(
+              libraryItemKey({ source: "anilist", sourceId: String(item.mal_id), kind: "anime" }),
+            )}
+          />
         </li>
       ))}
     </ul>

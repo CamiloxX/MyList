@@ -107,3 +107,22 @@ export type TmdbWatchProvider = z.infer<typeof tmdbWatchProviderSchema>;
 export const tmdbWatchProvidersResponseSchema = z.object({
   results: z.array(tmdbWatchProviderSchema),
 });
+
+/**
+ * /{movie|tv}/{id}/watch/providers returns providers grouped by region
+ * (ISO-3166-1 alpha-2 country code) and then by offer kind. We only care
+ * about subscription (`flatrate`) for the badge, but the schema accepts the
+ * other lists too in case we want them later.
+ */
+const watchProvidersForRegionSchema = z.object({
+  link: z.string().optional(),
+  flatrate: z.array(tmdbWatchProviderSchema).optional(),
+  rent: z.array(tmdbWatchProviderSchema).optional(),
+  buy: z.array(tmdbWatchProviderSchema).optional(),
+  ads: z.array(tmdbWatchProviderSchema).optional(),
+  free: z.array(tmdbWatchProviderSchema).optional(),
+});
+
+export const tmdbWatchProvidersByRegionResponseSchema = z.object({
+  results: z.record(z.string(), watchProvidersForRegionSchema).default({}),
+});

@@ -1,5 +1,6 @@
 "use client";
 
+import { GlobeIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
@@ -35,7 +36,10 @@ export function RegionFilter({ current }: Props) {
 
   return (
     <label className="flex flex-col gap-1 text-sm">
-      <span className="text-xs font-medium text-muted-foreground">{t("region")}</span>
+      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+        <GlobeIcon className="size-3.5" aria-hidden />
+        {t("region")}
+      </span>
       <select
         value={current}
         onChange={handleChange}

@@ -4,6 +4,7 @@ export { GenreFilter } from "./components/genre-filter";
 export { MediaTypeTabs } from "./components/media-type-tabs";
 export { PaginationControls } from "./components/pagination-controls";
 export { ProviderFilter } from "./components/provider-filter";
+export { ProvidersRow } from "./components/providers-row";
 export { RatingsBadge } from "./components/ratings-badge";
 export { RegionFilter } from "./components/region-filter";
 export { discoverFiltersSchema } from "./schemas";

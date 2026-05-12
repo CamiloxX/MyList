@@ -12,6 +12,7 @@ import {
   tmdbExternalIdsSchema,
   tmdbGenreListResponseSchema,
   tmdbMultiResponseSchema,
+  tmdbWatchProvidersByRegionResponseSchema,
   tmdbWatchProvidersResponseSchema,
 } from "./schemas";
 
@@ -179,6 +180,42 @@ export async function getWatchProviders(
   return parsed.data.results.sort(
     (a, b) => (a.display_priority ?? 999) - (b.display_priority ?? 999),
   );
+}
+
+export type WatchProvidersForTitle = {
+  /** TMDB-hosted "where to watch" deep link for the chosen region. */
+  link: string | null;
+  /** Subscription providers in this region (Netflix, Disney+, etc.). */
+  flatrate: TmdbWatchProvider[];
+};
+
+/**
+ * Streaming providers where a specific title can be watched in `region`.
+ * Returns `null` when there is no flatrate availability listed (TMDB has
+ * limited coverage for older or regional-only titles). Cache 1 day —
+ * availability moves slowly but does change.
+ */
+export async function getWatchProvidersForTitle(
+  tmdbId: number,
+  kind: "movie" | "tv",
+  region: string,
+): Promise<WatchProvidersForTitle | null> {
+  const raw = await tmdbFetch<unknown>(`/${kind}/${tmdbId}/watch/providers`, {
+    revalidate: 60 * 60 * 24,
+  });
+  const parsed = tmdbWatchProvidersByRegionResponseSchema.safeParse(raw);
+  if (!parsed.success) return null;
+
+  const regionData = parsed.data.results[region];
+  const flatrate = regionData?.flatrate ?? [];
+  if (flatrate.length === 0) return null;
+
+  return {
+    link: regionData?.link ?? null,
+    flatrate: flatrate.sort(
+      (a, b) => (a.display_priority ?? 999) - (b.display_priority ?? 999),
+    ),
+  };
 }
 
 /**

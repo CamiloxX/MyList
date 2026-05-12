@@ -208,6 +208,10 @@
       "next": "Siguiente",
       "page": "Página {page}"
     },
+    "providersRow": {
+      "label": "Disponible en",
+      "ariaLink": "Ver dónde verlo en TMDB"
+    },
     "forYou": {
       "empty": "Aún no tenemos suficientes datos. Agrega algo a tu biblioteca para que aparezcan recomendaciones personalizadas.",
       "fallbackNotice": "Tu biblioteca está vacía: te mostramos lo más popular para empezar.",

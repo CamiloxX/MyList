@@ -1,73 +1,61 @@
 import type { OmdbRatings } from "@/lib/omdb/schemas";
-import { cn } from "@/lib/utils";
+import { ImdbWordmark, MetacriticTile, TomatoIcon } from "./score-icons";
 
 type Props = {
   ratings: OmdbRatings;
 };
 
 /**
- * Compact pill row showing IMDb / Rotten Tomatoes / Metacritic scores.
- * Each score is color-coded: green ≥ good, amber for middle, red for low.
- * If a score is missing (OMDb returned "N/A"), the corresponding pill is
- * omitted instead of showing a placeholder.
+ * Inline row of review scores. Each score uses the iconography users already
+ * recognize from the source service:
+ *   - 🍅 Rotten Tomatoes (fresh red / rotten green) + percentage
+ *   - IMDb yellow wordmark + score / 10
+ *   - Metacritic colored tile + score / 100
+ *
+ * No background pills, just icon + number with tabular-nums so digits align
+ * across cards. Missing scores are skipped silently; if all three are
+ * missing the badge renders nothing.
  */
 export function RatingsBadge({ ratings }: Props) {
   const imdb = parseFloat(ratings.imdb ?? "");
   const rt = parseFloat(ratings.rottenTomatoes ?? "");
   const meta = parseFloat(ratings.metacritic ?? "");
 
-  const items: Array<{ key: string; label: string; value: string; className: string }> = [];
-  if (Number.isFinite(rt)) {
-    items.push({
-      key: "rt",
-      label: "RT",
-      value: `${Math.round(rt)}%`,
-      className: tone(rt, { good: 75, ok: 60 }),
-    });
-  }
-  if (Number.isFinite(imdb)) {
-    items.push({
-      key: "imdb",
-      label: "IMDb",
-      value: imdb.toFixed(1),
-      className: tone(imdb, { good: 7.5, ok: 6 }),
-    });
-  }
-  if (Number.isFinite(meta)) {
-    items.push({
-      key: "meta",
-      label: "Meta",
-      value: String(Math.round(meta)),
-      className: tone(meta, { good: 75, ok: 50 }),
-    });
-  }
+  const hasRt = Number.isFinite(rt);
+  const hasImdb = Number.isFinite(imdb);
+  const hasMeta = Number.isFinite(meta);
 
-  if (items.length === 0) return null;
+  if (!hasRt && !hasImdb && !hasMeta) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      {items.map((item) => (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
+      {hasRt ? (
         <span
-          key={item.key}
-          className={cn(
-            "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium leading-none",
-            item.className,
-          )}
+          className="inline-flex items-center gap-1.5 font-semibold tabular-nums"
+          title={`Rotten Tomatoes ${Math.round(rt)}%`}
         >
-          <span className="opacity-70">{item.label}</span>
-          <span>{item.value}</span>
+          <TomatoIcon fresh={rt >= 60} className="size-4" />
+          <span>{Math.round(rt)}%</span>
         </span>
-      ))}
+      ) : null}
+      {hasImdb ? (
+        <span
+          className="inline-flex items-center gap-1.5 font-semibold tabular-nums"
+          title={`IMDb ${imdb.toFixed(1)} / 10`}
+        >
+          <ImdbWordmark className="h-3.5 w-auto" />
+          <span>{imdb.toFixed(1)}</span>
+        </span>
+      ) : null}
+      {hasMeta ? (
+        <span
+          className="inline-flex items-center gap-1.5 font-semibold tabular-nums"
+          title={`Metacritic ${Math.round(meta)} / 100`}
+        >
+          <MetacriticTile value={Math.round(meta)} className="size-4" />
+          <span>{Math.round(meta)}</span>
+        </span>
+      ) : null}
     </div>
   );
-}
-
-function tone(value: number, thresholds: { good: number; ok: number }): string {
-  if (value >= thresholds.good) {
-    return "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
-  }
-  if (value >= thresholds.ok) {
-    return "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300";
-  }
-  return "border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300";
 }
