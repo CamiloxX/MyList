@@ -2,6 +2,11 @@ import "server-only";
 
 import { serverEnv } from "@/lib/env/server";
 
+// Re-export the pure image-URL helper so existing server-side imports keep
+// working unchanged. Client components must import from "./images" directly
+// to avoid pulling this server-only module into their bundle.
+export { tmdbImage } from "./images";
+
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 export type TmdbFetchOptions = {
@@ -39,11 +44,3 @@ export async function tmdbFetch<T>(path: string, options: TmdbFetchOptions = {})
   return (await response.json()) as T;
 }
 
-/** Build full image URL from a TMDB poster path (e.g. "/abc.jpg"). */
-export function tmdbImage(
-  path: string | null | undefined,
-  size: "w92" | "w154" | "w185" | "w342" | "w500" | "w780" | "original" = "w342",
-): string | null {
-  if (!path) return null;
-  return `https://image.tmdb.org/t/p/${size}${path}`;
-}

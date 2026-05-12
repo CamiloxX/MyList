@@ -4,7 +4,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
-import { tmdbImage } from "@/lib/tmdb/client";
+import { tmdbImage } from "@/lib/tmdb/images";
 import type { TmdbEpisode } from "@/lib/tmdb/tv";
 import { cn } from "@/lib/utils";
 import { loadSeasonEpisodes } from "../seasons-actions";
