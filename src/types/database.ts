@@ -15,6 +15,7 @@ export type Database = {
           display_name: string | null;
           avatar_url: string | null;
           locale: string;
+          is_admin: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -23,6 +24,7 @@ export type Database = {
           display_name?: string | null;
           avatar_url?: string | null;
           locale?: string;
+          is_admin?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -31,6 +33,7 @@ export type Database = {
           display_name?: string | null;
           avatar_url?: string | null;
           locale?: string;
+          is_admin?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -224,11 +227,187 @@ export type Database = {
         };
         Relationships: [];
       };
+      forum_categories: {
+        Row: {
+          id: string;
+          slug: string;
+          name: string;
+          description: string | null;
+          display_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name: string;
+          description?: string | null;
+          display_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          name?: string;
+          description?: string | null;
+          display_order?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      forum_threads: {
+        Row: {
+          id: string;
+          category_id: string;
+          user_id: string;
+          title: string;
+          pinned: boolean;
+          locked: boolean;
+          reply_count: number;
+          last_post_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          category_id: string;
+          user_id: string;
+          title: string;
+          pinned?: boolean;
+          locked?: boolean;
+          reply_count?: number;
+          last_post_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          category_id?: string;
+          user_id?: string;
+          title?: string;
+          pinned?: boolean;
+          locked?: boolean;
+          reply_count?: number;
+          last_post_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "forum_threads_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: false;
+            referencedRelation: "forum_categories";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      forum_posts: {
+        Row: {
+          id: string;
+          thread_id: string;
+          user_id: string | null;
+          body_md: string;
+          edited_at: string | null;
+          deleted_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          thread_id: string;
+          user_id?: string | null;
+          body_md: string;
+          edited_at?: string | null;
+          deleted_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          thread_id?: string;
+          user_id?: string | null;
+          body_md?: string;
+          edited_at?: string | null;
+          deleted_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "forum_posts_thread_id_fkey";
+            columns: ["thread_id"];
+            isOneToOne: false;
+            referencedRelation: "forum_threads";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      forum_reactions: {
+        Row: {
+          post_id: string;
+          user_id: string;
+          created_at: string;
+        };
+        Insert: {
+          post_id: string;
+          user_id: string;
+          created_at?: string;
+        };
+        Update: {
+          post_id?: string;
+          user_id?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "forum_reactions_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "forum_posts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      title_comments: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          source: Database["public"]["Enums"]["media_source"];
+          source_id: string;
+          kind: Database["public"]["Enums"]["media_kind"];
+          body_md: string;
+          edited_at: string | null;
+          deleted_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          source: Database["public"]["Enums"]["media_source"];
+          source_id: string;
+          kind: Database["public"]["Enums"]["media_kind"];
+          body_md: string;
+          edited_at?: string | null;
+          deleted_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          source?: Database["public"]["Enums"]["media_source"];
+          source_id?: string;
+          kind?: Database["public"]["Enums"]["media_kind"];
+          body_md?: string;
+          edited_at?: string | null;
+          deleted_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
       handle_new_user: { Args: Record<string, never>; Returns: unknown };
       set_updated_at: { Args: Record<string, never>; Returns: unknown };
+      is_admin: { Args: { uid: string }; Returns: boolean };
+      bump_thread_on_post: { Args: Record<string, never>; Returns: unknown };
     };
     Enums: {
       media_kind: "movie" | "tv" | "anime";

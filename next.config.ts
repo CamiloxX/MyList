@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
         hostname: "myanimelist.net",
         pathname: "/images/**",
       },
+      {
+        protocol: "https",
+        hostname: "kefozbpfdbcdtsykbhws.supabase.co",
+        pathname: "/storage/v1/object/public/avatars/**",
+      },
     ],
   },
 };

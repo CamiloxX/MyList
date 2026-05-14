@@ -8,6 +8,7 @@
     "library": "Library",
     "search": "Search",
     "discover": "Discover",
+    "forum": "Forum",
     "month": "Month",
     "stats": "Stats",
     "badges": "Badges",
@@ -333,6 +334,30 @@
       "submitting": "Changing...",
       "successToast": "Password updated",
       "toggleVisibility": "Show or hide password"
+    },
+    "avatar": {
+      "title": "Profile picture",
+      "description": "Upload an image and crop it. It shows up on your forum posts and comments."
+    }
+  },
+  "profile": {
+    "upload": {
+      "change": "Change photo",
+      "remove": "Remove",
+      "confirmRemove": "Confirm",
+      "cancel": "Cancel",
+      "hint": "JPG, PNG or WebP. Up to 2 MB.",
+      "errorMime": "Unsupported format",
+      "errorSize": "Image is larger than 2 MB",
+      "successToast": "Photo updated",
+      "removedToast": "Photo removed"
+    },
+    "crop": {
+      "title": "Adjust your photo",
+      "zoom": "Zoom",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving..."
     }
   },
   "badges": {
@@ -420,5 +445,85 @@
   },
   "posters": {
     "alt": "Poster of {title}"
+  },
+  "forum": {
+    "title": "Forum",
+    "subtitle": "Talk to the community about what you're watching.",
+    "empty": "No categories yet.",
+    "emptyThreads": "No threads in this category yet. Be the first.",
+    "newThread": "New thread",
+    "newThreadSubtitle": "Share something with the community.",
+    "backToCategories": "← Back to the forum",
+    "backToThreads": "← Back to the category",
+    "titleLabel": "Title",
+    "titlePlaceholder": "A clear, concise title",
+    "bodyLabel": "Body",
+    "bodyPlaceholder": "Write here... markdown supported",
+    "markdownHint": "Markdown supported: **bold**, *italics*, lists, links, code.",
+    "cancel": "Cancel",
+    "publish": "Publish",
+    "publishing": "Publishing...",
+    "reply": "Reply",
+    "replyPlaceholder": "Write your reply...",
+    "postPublished": "Reply posted",
+    "threadCreated": "Thread created",
+    "threadDeleted": "Thread deleted",
+    "postDeleted": "Post deleted",
+    "postUpdated": "Post updated",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving...",
+    "delete": "Delete",
+    "confirmDelete": "Confirm",
+    "deleteThread": "Delete thread",
+    "edited": "edited",
+    "originalPoster": "OP",
+    "toggleLike": "Like",
+    "loginToLike": "Sign in to react",
+    "loginToReply": "Sign in to reply.",
+    "lockedNotice": "This thread is locked. No new replies can be added.",
+    "signIn": "Sign in",
+    "modBadge": "Mod",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "lock": "Lock",
+    "unlock": "Unlock",
+    "pinned": "Pinned",
+    "locked": "Locked",
+    "byAuthor": "by {name}",
+    "replyCount": "{count, plural, =0 {No replies} =1 {1 reply} other {# replies}}",
+    "anonymous": "Anonymous",
+    "errors": {
+      "titleRequired": "Add a title",
+      "bodyRequired": "Write something"
+    },
+    "categories": {
+      "general": "General",
+      "peliculas": "Movies",
+      "series": "Series",
+      "anime": "Anime",
+      "recomendaciones": "Recommendations"
+    }
+  },
+  "comments": {
+    "title": "Comments",
+    "count": "{count, plural, =0 {No comments} =1 {1 comment} other {# comments}}",
+    "empty": "Be the first to comment on this title.",
+    "placeholder": "Write a comment...",
+    "publish": "Publish",
+    "publishing": "Publishing...",
+    "loginPrompt": "Sign in to comment.",
+    "signIn": "Sign in",
+    "published": "Comment posted",
+    "updated": "Comment updated",
+    "deleted": "Comment deleted",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving...",
+    "delete": "Delete",
+    "confirmDelete": "Confirm",
+    "cancel": "Cancel",
+    "edited": "edited",
+    "anonymous": "Anonymous"
   }
 }

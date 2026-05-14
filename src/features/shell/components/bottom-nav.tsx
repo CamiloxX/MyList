@@ -4,6 +4,7 @@ import {
   CalendarIcon,
   CompassIcon,
   LibraryIcon,
+  MessagesSquareIcon,
   SettingsIcon,
   TrophyIcon,
 } from "lucide-react";
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils";
 const ITEMS = [
   { href: "/library" as const, labelKey: "library", Icon: LibraryIcon },
   { href: "/discover" as const, labelKey: "discover", Icon: CompassIcon },
+  { href: "/forum" as const, labelKey: "forum", Icon: MessagesSquareIcon },
   { href: "/month" as const, labelKey: "month", Icon: CalendarIcon },
   { href: "/badges" as const, labelKey: "badges", Icon: TrophyIcon },
   { href: "/settings" as const, labelKey: "settings", Icon: SettingsIcon },

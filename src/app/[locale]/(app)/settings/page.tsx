@@ -4,6 +4,7 @@ import { signOut } from "@/features/auth/actions";
 import { BADGE_BY_ID } from "@/features/badges/catalog";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { getRecentEarnedBadges } from "@/features/badges/queries";
+import { AvatarUploadCard } from "@/features/profile/components/avatar-upload-card";
 import { ChangePasswordForm } from "@/features/settings/components/change-password-form";
 import { LanguageSwitcher } from "@/features/settings/components/language-switcher";
 import { Link } from "@/i18n/navigation";
@@ -24,6 +25,14 @@ export default async function SettingsPage() {
   const tBadges = await getTranslations("badges");
   const locale = (await getLocale()) as Locale;
   const recentBadges = await getRecentEarnedBadges(3);
+
+  const { data: profile } = user
+    ? await supabase
+        .from("profiles")
+        .select("avatar_url, display_name")
+        .eq("id", user.id)
+        .maybeSingle()
+    : { data: null };
 
   // Supabase tags every connected provider on `app_metadata.providers`. Only
   // accounts that signed up (or linked) with email/password have a password to
@@ -50,6 +59,19 @@ export default async function SettingsPage() {
             {t("signOut")}
           </Button>
         </form>
+      </section>
+
+      <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-base font-medium">{t("avatar.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("avatar.description")}</p>
+        </div>
+        <AvatarUploadCard
+          currentAvatarUrl={profile?.avatar_url ?? null}
+          displayName={
+            profile?.display_name ?? user?.user_metadata?.display_name ?? user?.email ?? null
+          }
+        />
       </section>
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">

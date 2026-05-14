@@ -10,6 +10,7 @@ import { TrailerButton } from "@/features/library/components/trailer-button";
 import { WatchEntryList } from "@/features/library/components/watch-entry-list";
 import { WatchEntryTrigger } from "@/features/library/components/watch-entry-trigger";
 import type { MediaStatus } from "@/features/library/status";
+import { TitleComments } from "@/features/title-comments/components/title-comments";
 import { Link } from "@/i18n/navigation";
 import { getJikanTrailer } from "@/lib/jikan/videos";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -140,6 +141,8 @@ export default async function MediaDetailPage({ params }: DetailPageProps) {
           <WatchEntryTrigger mediaItemId={item.id} />
         </div>
       </section>
+
+      <TitleComments source={item.source} sourceId={item.source_id} kind={item.kind} />
     </div>
   );
 }
