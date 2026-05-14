@@ -1,3 +1,4 @@
+import { BadgeCheckIcon } from "lucide-react";
 import { BADGE_BY_ID } from "@/features/badges/catalog";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { Avatar } from "@/components/avatar";
@@ -10,6 +11,8 @@ type AuthorAsideProps = {
   variant?: "sidebar" | "compact";
   fallbackLabel?: string;
   chip?: string | null;
+  verified?: boolean;
+  verifiedLabel?: string;
   className?: string;
 };
 
@@ -25,6 +28,8 @@ export function AuthorAside({
   variant = "sidebar",
   fallbackLabel,
   chip,
+  verified,
+  verifiedLabel,
   className,
 }: AuthorAsideProps) {
   const displayName = name?.trim() || fallbackLabel || "?";
@@ -36,6 +41,12 @@ export function AuthorAside({
         <Avatar src={avatarUrl} name={displayName} size="sm" />
         <div className="flex items-center gap-1.5 text-sm">
           <span className="font-medium">{displayName}</span>
+          {verified ? (
+            <BadgeCheckIcon
+              className="size-4 text-sky-500"
+              aria-label={verifiedLabel}
+            />
+          ) : null}
           {chip ? (
             <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
               {chip}
@@ -52,7 +63,15 @@ export function AuthorAside({
     >
       <Avatar src={avatarUrl} name={displayName} size="lg" />
       <div className="flex flex-col items-center gap-0.5">
-        <span className="line-clamp-2 text-sm font-medium leading-tight">{displayName}</span>
+        <div className="inline-flex items-center justify-center gap-1">
+          <span className="line-clamp-2 text-sm font-medium leading-tight">{displayName}</span>
+          {verified ? (
+            <BadgeCheckIcon
+              className="size-4 shrink-0 text-sky-500"
+              aria-label={verifiedLabel}
+            />
+          ) : null}
+        </div>
         {chip ? (
           <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
             {chip}

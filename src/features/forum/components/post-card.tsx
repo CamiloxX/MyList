@@ -86,6 +86,8 @@ export function PostCard({ post, viewer, isThreadAuthorPost }: Props) {
         name={post.author?.displayName ?? null}
         avatarUrl={post.author?.avatarUrl ?? null}
         badgeIds={post.author?.badgeIds ?? []}
+        verified={post.author?.isAdmin ?? false}
+        verifiedLabel={t("verified")}
         chip={chip}
         fallbackLabel={fallbackName}
         className="hidden w-32 shrink-0 sm:flex"
@@ -97,6 +99,8 @@ export function PostCard({ post, viewer, isThreadAuthorPost }: Props) {
             name={post.author?.displayName ?? null}
             avatarUrl={post.author?.avatarUrl ?? null}
             badgeIds={post.author?.badgeIds ?? []}
+            verified={post.author?.isAdmin ?? false}
+            verifiedLabel={t("verified")}
             chip={chip}
             fallbackLabel={fallbackName}
             variant="compact"

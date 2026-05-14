@@ -34,7 +34,10 @@ export async function listCommentsByTitle(args: {
   }
 
   const [{ data: authors }, badgesByUser] = await Promise.all([
-    supabase.from("profiles").select("id, display_name, avatar_url").in("id", authorIds),
+    supabase
+      .from("profiles")
+      .select("id, display_name, avatar_url, is_admin")
+      .in("id", authorIds),
     fetchBadgesByUserIds(authorIds),
   ]);
 
@@ -45,6 +48,7 @@ export async function listCommentsByTitle(args: {
       displayName: row.display_name,
       avatarUrl: row.avatar_url,
       badgeIds: badgesByUser.get(row.id) ?? [],
+      isAdmin: row.is_admin ?? false,
     });
   }
 

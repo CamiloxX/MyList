@@ -493,6 +493,7 @@
     "byAuthor": "by {name}",
     "replyCount": "{count, plural, =0 {No replies} =1 {1 reply} other {# replies}}",
     "anonymous": "Anonymous",
+    "verified": "Verified account (admin)",
     "errors": {
       "titleRequired": "Add a title",
       "bodyRequired": "Write something"
@@ -524,6 +525,7 @@
     "confirmDelete": "Confirm",
     "cancel": "Cancel",
     "edited": "edited",
-    "anonymous": "Anonymous"
+    "anonymous": "Anonymous",
+    "verified": "Verified account (admin)"
   }
 }

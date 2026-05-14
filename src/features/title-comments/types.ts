@@ -7,6 +7,7 @@ export type TitleCommentAuthor = {
   displayName: string | null;
   avatarUrl: string | null;
   badgeIds: string[];
+  isAdmin: boolean;
 };
 
 export type TitleCommentListItem = TitleComment & {

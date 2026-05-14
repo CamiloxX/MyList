@@ -113,7 +113,7 @@ async function fetchAuthors(userIds: string[]): Promise<Map<string, ForumAuthor>
   const supabase = await createClient();
 
   const [profilesResult, badgesByUser] = await Promise.all([
-    supabase.from("profiles").select("id, display_name, avatar_url").in("id", unique),
+    supabase.from("profiles").select("id, display_name, avatar_url, is_admin").in("id", unique),
     fetchBadgesByUserIds(unique),
   ]);
 
@@ -123,6 +123,7 @@ async function fetchAuthors(userIds: string[]): Promise<Map<string, ForumAuthor>
       displayName: row.display_name,
       avatarUrl: row.avatar_url,
       badgeIds: badgesByUser.get(row.id) ?? [],
+      isAdmin: row.is_admin ?? false,
     });
   }
   return map;

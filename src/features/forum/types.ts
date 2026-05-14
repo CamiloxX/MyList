@@ -9,6 +9,7 @@ export type ForumAuthor = {
   displayName: string | null;
   avatarUrl: string | null;
   badgeIds: string[];
+  isAdmin: boolean;
 };
 
 export type ForumThreadListItem = ForumThread & {

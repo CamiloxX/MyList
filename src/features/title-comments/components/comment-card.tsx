@@ -60,6 +60,8 @@ export function CommentCard({ comment, viewerId, viewerIsAdmin }: Props) {
         name={comment.author?.displayName ?? null}
         avatarUrl={comment.author?.avatarUrl ?? null}
         badgeIds={comment.author?.badgeIds ?? []}
+        verified={comment.author?.isAdmin ?? false}
+        verifiedLabel={t("verified")}
         fallbackLabel={fallbackName}
         className="hidden w-32 shrink-0 sm:flex"
       />
@@ -70,6 +72,8 @@ export function CommentCard({ comment, viewerId, viewerIsAdmin }: Props) {
             name={comment.author?.displayName ?? null}
             avatarUrl={comment.author?.avatarUrl ?? null}
             badgeIds={comment.author?.badgeIds ?? []}
+            verified={comment.author?.isAdmin ?? false}
+            verifiedLabel={t("verified")}
             fallbackLabel={fallbackName}
             variant="compact"
             className="sm:hidden"
