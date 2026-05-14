@@ -13,6 +13,7 @@ type AuthorAsideProps = {
   chip?: string | null;
   verified?: boolean;
   verifiedLabel?: string;
+  verifiedChipLabel?: string;
   className?: string;
 };
 
@@ -30,6 +31,7 @@ export function AuthorAside({
   chip,
   verified,
   verifiedLabel,
+  verifiedChipLabel,
   className,
 }: AuthorAsideProps) {
   const displayName = name?.trim() || fallbackLabel || "?";
@@ -46,6 +48,11 @@ export function AuthorAside({
               className="size-4 text-sky-500"
               aria-label={verifiedLabel}
             />
+          ) : null}
+          {verified && verifiedChipLabel ? (
+            <span className="rounded-md bg-sky-500/15 px-1.5 py-0.5 text-[10px] font-medium text-sky-700 dark:text-sky-300">
+              {verifiedChipLabel}
+            </span>
           ) : null}
           {chip ? (
             <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
@@ -72,6 +79,11 @@ export function AuthorAside({
             />
           ) : null}
         </div>
+        {verified && verifiedChipLabel ? (
+          <span className="rounded-md bg-sky-500/15 px-1.5 py-0.5 text-[10px] font-medium text-sky-700 dark:text-sky-300">
+            {verifiedChipLabel}
+          </span>
+        ) : null}
         {chip ? (
           <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
             {chip}

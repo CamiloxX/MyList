@@ -494,6 +494,7 @@
     "replyCount": "{count, plural, =0 {No replies} =1 {1 reply} other {# replies}}",
     "anonymous": "Anonymous",
     "verified": "Verified account (admin)",
+    "adminChip": "Admin",
     "errors": {
       "titleRequired": "Add a title",
       "bodyRequired": "Write something"
@@ -526,6 +527,7 @@
     "cancel": "Cancel",
     "edited": "edited",
     "anonymous": "Anonymous",
-    "verified": "Verified account (admin)"
+    "verified": "Verified account (admin)",
+    "adminChip": "Admin"
   }
 }

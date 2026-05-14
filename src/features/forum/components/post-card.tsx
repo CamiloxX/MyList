@@ -88,6 +88,7 @@ export function PostCard({ post, viewer, isThreadAuthorPost }: Props) {
         badgeIds={post.author?.badgeIds ?? []}
         verified={post.author?.isAdmin ?? false}
         verifiedLabel={t("verified")}
+        verifiedChipLabel={t("adminChip")}
         chip={chip}
         fallbackLabel={fallbackName}
         className="hidden w-32 shrink-0 sm:flex"
@@ -101,6 +102,7 @@ export function PostCard({ post, viewer, isThreadAuthorPost }: Props) {
             badgeIds={post.author?.badgeIds ?? []}
             verified={post.author?.isAdmin ?? false}
             verifiedLabel={t("verified")}
+            verifiedChipLabel={t("adminChip")}
             chip={chip}
             fallbackLabel={fallbackName}
             variant="compact"

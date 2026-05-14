@@ -62,6 +62,7 @@ export function CommentCard({ comment, viewerId, viewerIsAdmin }: Props) {
         badgeIds={comment.author?.badgeIds ?? []}
         verified={comment.author?.isAdmin ?? false}
         verifiedLabel={t("verified")}
+        verifiedChipLabel={t("adminChip")}
         fallbackLabel={fallbackName}
         className="hidden w-32 shrink-0 sm:flex"
       />
@@ -74,6 +75,7 @@ export function CommentCard({ comment, viewerId, viewerIsAdmin }: Props) {
             badgeIds={comment.author?.badgeIds ?? []}
             verified={comment.author?.isAdmin ?? false}
             verifiedLabel={t("verified")}
+            verifiedChipLabel={t("adminChip")}
             fallbackLabel={fallbackName}
             variant="compact"
             className="sm:hidden"
