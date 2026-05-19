@@ -337,6 +337,33 @@
     "avatar": {
       "title": "Profile picture",
       "description": "Upload an image and crop it. It shows up next to your name in comments."
+    },
+    "export": {
+      "title": "Export your library",
+      "description": "Download a copy of your movies, series and anime. Keep it wherever you like — so if the app ever goes down, your history is safe.",
+      "hint": "JSON keeps every detail (ideal if a future import option is added). CSV opens in Excel or Google Sheets. TXT is a human-readable list.",
+      "download": "Download",
+      "downloading": "Generating…",
+      "recommended": "Recommended",
+      "successToast": "Done: {filename}",
+      "formats": {
+        "json": {
+          "title": "JSON",
+          "description": "Full, machine-readable format. Includes items and viewings."
+        },
+        "csv": {
+          "title": "CSV",
+          "description": "One row per viewing. Opens in Excel or Google Sheets."
+        },
+        "txt": {
+          "title": "TXT",
+          "description": "Plain-text inventory grouped by kind and status."
+        }
+      },
+      "errors": {
+        "notSignedIn": "Sign in first.",
+        "queryFailed": "We couldn't export your library. Try again."
+      }
     }
   },
   "profile": {

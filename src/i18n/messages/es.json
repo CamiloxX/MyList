@@ -337,6 +337,33 @@
     "avatar": {
       "title": "Foto de perfil",
       "description": "Sube una imagen y recórtala. Aparece junto a tu nombre en los comentarios."
+    },
+    "export": {
+      "title": "Exportar tu biblioteca",
+      "description": "Descarga una copia de tus pelis, series y anime. Guárdala donde quieras: así, aunque cierre la app, no pierdes tu historial.",
+      "hint": "El JSON conserva todos los datos (ideal por si más adelante hay opción de re-importar). El CSV se abre en Excel o Google Sheets. El TXT es una lista legible para humanos.",
+      "download": "Descargar",
+      "downloading": "Generando…",
+      "recommended": "Recomendado",
+      "successToast": "Listo: {filename}",
+      "formats": {
+        "json": {
+          "title": "JSON",
+          "description": "Formato completo, máquina-legible. Incluye items y visualizaciones."
+        },
+        "csv": {
+          "title": "CSV",
+          "description": "Una fila por visualización. Se abre en Excel o Google Sheets."
+        },
+        "txt": {
+          "title": "TXT",
+          "description": "Inventario en texto plano, agrupado por tipo y estado."
+        }
+      },
+      "errors": {
+        "notSignedIn": "Inicia sesión primero.",
+        "queryFailed": "No pudimos exportar tu biblioteca. Intenta de nuevo."
+      }
     }
   },
   "profile": {

@@ -4,6 +4,7 @@ import { signOut } from "@/features/auth/actions";
 import { BADGE_BY_ID } from "@/features/badges/catalog";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { getRecentEarnedBadges } from "@/features/badges/queries";
+import { ExportCard } from "@/features/export/components/export-card";
 import { AvatarUploadCard } from "@/features/profile/components/avatar-upload-card";
 import { ChangePasswordForm } from "@/features/settings/components/change-password-form";
 import { LanguageSwitcher } from "@/features/settings/components/language-switcher";
@@ -118,6 +119,14 @@ export default async function SettingsPage() {
           <p className="text-sm text-muted-foreground">{t("languageDescription")}</p>
         </div>
         <LanguageSwitcher current={locale} />
+      </section>
+
+      <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-base font-medium">{t("export.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("export.description")}</p>
+        </div>
+        <ExportCard />
       </section>
     </div>
   );
