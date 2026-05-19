@@ -8,7 +8,6 @@
     "library": "Biblioteca",
     "search": "Buscar",
     "discover": "Descubrir",
-    "forum": "Foro",
     "month": "Mes",
     "stats": "Stats",
     "badges": "Logros",
@@ -337,7 +336,7 @@
     },
     "avatar": {
       "title": "Foto de perfil",
-      "description": "Sube una imagen y recórtala. Aparece en tus posts del foro y comentarios."
+      "description": "Sube una imagen y recórtala. Aparece junto a tu nombre en los comentarios."
     }
   },
   "profile": {
@@ -445,67 +444,6 @@
   },
   "posters": {
     "alt": "Póster de {title}"
-  },
-  "forum": {
-    "title": "Foro",
-    "subtitle": "Habla con la comunidad sobre lo que estás viendo.",
-    "empty": "Aún no hay categorías.",
-    "emptyThreads": "Aún no hay hilos en esta categoría. Sé el primero.",
-    "newThread": "Nuevo hilo",
-    "newThreadSubtitle": "Comparte algo con la comunidad.",
-    "backToCategories": "← Volver al foro",
-    "backToThreads": "← Volver a la categoría",
-    "titleLabel": "Título",
-    "titlePlaceholder": "Un título claro y conciso",
-    "bodyLabel": "Contenido",
-    "bodyPlaceholder": "Escribe aquí... admite markdown",
-    "markdownHint": "Admite markdown: **negritas**, *cursivas*, listas, enlaces, código.",
-    "cancel": "Cancelar",
-    "publish": "Publicar",
-    "publishing": "Publicando...",
-    "reply": "Responder",
-    "replyPlaceholder": "Escribe tu respuesta...",
-    "postPublished": "Respuesta publicada",
-    "threadCreated": "Hilo creado",
-    "threadDeleted": "Hilo eliminado",
-    "postDeleted": "Mensaje eliminado",
-    "postUpdated": "Mensaje actualizado",
-    "edit": "Editar",
-    "save": "Guardar",
-    "saving": "Guardando...",
-    "delete": "Eliminar",
-    "confirmDelete": "Confirmar",
-    "deleteThread": "Eliminar hilo",
-    "edited": "editado",
-    "originalPoster": "OP",
-    "toggleLike": "Me gusta",
-    "loginToLike": "Inicia sesión para reaccionar",
-    "loginToReply": "Inicia sesión para responder.",
-    "lockedNotice": "Este hilo está cerrado. No se pueden agregar respuestas.",
-    "signIn": "Iniciar sesión",
-    "modBadge": "Mod",
-    "pin": "Fijar",
-    "unpin": "Quitar fijado",
-    "lock": "Cerrar",
-    "unlock": "Reabrir",
-    "pinned": "Fijado",
-    "locked": "Cerrado",
-    "byAuthor": "por {name}",
-    "replyCount": "{count, plural, =0 {Sin respuestas} =1 {1 respuesta} other {# respuestas}}",
-    "anonymous": "Anónimo",
-    "verified": "Cuenta verificada (admin)",
-    "adminChip": "Admin",
-    "errors": {
-      "titleRequired": "Pon un título",
-      "bodyRequired": "Escribe algo"
-    },
-    "categories": {
-      "general": "General",
-      "peliculas": "Películas",
-      "series": "Series",
-      "anime": "Anime",
-      "recomendaciones": "Recomendaciones"
-    }
   },
   "comments": {
     "title": "Comentarios",

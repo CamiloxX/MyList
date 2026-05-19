@@ -77,7 +77,6 @@ export async function uploadAvatar(formData: FormData): Promise<ProfileActionRes
   if (updateError) return { ok: false, error: updateError.message };
 
   revalidatePath("/settings");
-  revalidatePath("/forum", "layout");
   revalidatePath("/library", "layout");
   return { ok: true, avatarUrl: url };
 }
@@ -101,7 +100,6 @@ export async function removeAvatar(): Promise<ProfileActionResult> {
   if (error) return { ok: false, error: error.message };
 
   revalidatePath("/settings");
-  revalidatePath("/forum", "layout");
   revalidatePath("/library", "layout");
   return { ok: true, avatarUrl: null };
 }

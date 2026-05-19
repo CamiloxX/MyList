@@ -18,7 +18,7 @@ type AuthorAsideProps = {
 };
 
 /**
- * Author profile block used by forum PostCard and title CommentCard.
+ * Author profile block used by title CommentCard.
  * - `sidebar`: vertical column for sm:+ — avatar + name + badges grid.
  * - `compact`: horizontal pill for mobile — avatar small + name only.
  */

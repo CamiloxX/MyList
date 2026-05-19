@@ -33,7 +33,6 @@ export default async function AppLayout({
   const navLinks = [
     { href: "/library" as const, label: t("nav.library") },
     { href: "/discover" as const, label: t("nav.discover") },
-    { href: "/forum" as const, label: t("nav.forum") },
     { href: "/month" as const, label: t("nav.month") },
     { href: "/badges" as const, label: t("nav.badges") },
     { href: "/settings" as const, label: t("nav.settings") },

@@ -44,3 +44,24 @@ export async function getRecentEarnedBadges(limit = 3): Promise<EarnedBadge[]> {
     .filter((row) => BADGE_BY_ID.has(row.badge_id))
     .map((row) => ({ badgeId: row.badge_id, earnedAt: row.earned_at }));
 }
+
+/**
+ * Returns up to 4 most recently earned badge ids per user, keyed by user id.
+ * Used to render badge chips next to author names in comment threads.
+ */
+export async function fetchBadgesByUserIds(userIds: string[]): Promise<Map<string, string[]>> {
+  const map = new Map<string, string[]>();
+  if (userIds.length === 0) return map;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("user_badges")
+    .select("user_id, badge_id, earned_at")
+    .in("user_id", userIds)
+    .order("earned_at", { ascending: false });
+  for (const row of data ?? []) {
+    const list = map.get(row.user_id) ?? [];
+    if (list.length < 4) list.push(row.badge_id);
+    map.set(row.user_id, list);
+  }
+  return map;
+}

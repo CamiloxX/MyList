@@ -1,6 +1,6 @@
 import "server-only";
 
-import { fetchBadgesByUserIds } from "@/features/forum/queries";
+import { fetchBadgesByUserIds } from "@/features/badges/queries";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database";
 import type { TitleCommentAuthor, TitleCommentListItem } from "./types";
