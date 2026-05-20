@@ -1,40 +1,25 @@
 import { cn } from "@/lib/utils";
 
 /**
- * MyList brand mark (Concept A from the Logo Exploration).
- * Rounded square with a vertical gradient (#A855F7 → #5B21B6), a soft-white
- * play triangle, and a deep-purple check inside the triangle.
+ * MyList brand mark. Renders the official logo PNG from /public; the file
+ * already includes rounded corners, so no clipping is applied here.
+ *
+ * Kept as a thin wrapper instead of inlining an <img> at every call site so
+ * future changes (swap to <Image>, add a dark variant, etc.) happen in one
+ * place.
  */
 export function BrandMark({ size = 64, className }: { size?: number; className?: string }) {
   return (
-    <svg
-      role="img"
-      aria-label="MyList"
+    // biome-ignore lint/performance/noImgElement: server-component-friendly and avoids next/image sizing quirks for the brand mark
+    <img
+      src="/iconomylist.png"
+      alt="MyList"
       width={size}
       height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <title>MyList</title>
-      <defs>
-        <linearGradient id="mylist-brand-gradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#A855F7" />
-          <stop offset="100%" stopColor="#5B21B6" />
-        </linearGradient>
-      </defs>
-      <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#mylist-brand-gradient)" />
-      <path d="M22 20 L22 44 L44 32 Z" fill="#F8FAFC" />
-      <path
-        d="M28 32 L31 35 L38 27"
-        stroke="#5B21B6"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
+      decoding="async"
+      className={cn("object-contain", className)}
+      style={{ width: size, height: size }}
+    />
   );
 }
 
