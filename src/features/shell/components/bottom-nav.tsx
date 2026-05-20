@@ -4,6 +4,7 @@ import {
   CalendarIcon,
   CompassIcon,
   LibraryIcon,
+  SearchIcon,
   SettingsIcon,
   TrophyIcon,
 } from "lucide-react";
@@ -13,6 +14,7 @@ import { cn } from "@/lib/utils";
 
 const ITEMS = [
   { href: "/library" as const, labelKey: "library", Icon: LibraryIcon },
+  { href: "/search" as const, labelKey: "search", Icon: SearchIcon },
   { href: "/discover" as const, labelKey: "discover", Icon: CompassIcon },
   { href: "/month" as const, labelKey: "month", Icon: CalendarIcon },
   { href: "/badges" as const, labelKey: "badges", Icon: TrophyIcon },
@@ -36,13 +38,13 @@ export function BottomNav() {
               <Link
                 href={href}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-1 rounded-md px-2 py-1.5 text-[11px] transition-colors",
+                  "flex flex-col items-center justify-center gap-1 rounded-md px-1 py-1.5 text-[11px] transition-colors",
                   isActive ? "text-primary" : "text-muted-foreground hover:text-foreground",
                 )}
                 aria-current={isActive ? "page" : undefined}
               >
                 <Icon className="size-5" aria-hidden />
-                <span>{t(labelKey)}</span>
+                <span className="max-w-full truncate">{t(labelKey)}</span>
               </Link>
             </li>
           );
