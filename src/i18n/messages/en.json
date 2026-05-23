@@ -174,7 +174,8 @@
       "back": "← Back to library",
       "history": "History",
       "entriesCount": "{count, plural, =0 {No views} =1 {1 view logged} other {# views logged}}.",
-      "emptyHistory": "No views logged yet."
+      "emptyHistory": "No views logged yet.",
+      "watchNow": "Watch now"
     },
     "watchEntry": {
       "title": "Log a view",

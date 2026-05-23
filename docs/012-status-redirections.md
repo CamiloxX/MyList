@@ -14,6 +14,11 @@ Hemos implementado un flujo dinámico que mejora la interacción y reduce los cl
    - **Racional**: Marcar como "Vista" requiere registrar la fecha, calificación y notas de visualización de forma inmediata. Al abrir el cajón automáticamente, simplificamos el registro.
    - **Implementación**: La página de detalle en el servidor recibe e interpreta los `searchParams` y propaga la propiedad `defaultOpen` al componente `WatchEntryTrigger`. Cuando el cajón se cierra, limpiamos el query param `log` de la URL usando `router.replace` de forma transparente.
 
+3. **Botón "Ver ahora" en Detalles**:
+   - **Comportamiento**: Añadimos un botón explícito con la etiqueta "Ver ahora" al lado del tráiler en la página de detalles de biblioteca. Al pulsarlo, abre directamente la plataforma de streaming oficial.
+   - **Racional**: Permite que el usuario acceda de forma directa al streaming oficial en cualquier momento sin tener que cambiar de estado.
+   - **Implementación**: Cargamos la URL del streaming en paralelo en el servidor (Server Component) para que el enlace sea estático en el HTML nativo, eliminando cualquier posible retraso o bloqueo de popup en el navegador.
+
 ## Modificaciones Técnicas
 
 - `src/features/library/actions.ts`:
@@ -25,3 +30,6 @@ Hemos implementado un flujo dinámico que mejora la interacción y reduce los cl
   - Soportamos `defaultOpen` y añadimos lógica de limpieza de parámetros de URL al cerrarse el cajón.
 - `src/app/[locale]/(app)/library/[id]/page.tsx`:
   - Leemos de forma asíncrona `searchParams` y los propagamos a la UI.
+  - Cargamos `getMediaWatchUrl` en paralelo en el servidor y renderizamos un enlace estilizado como un botón verde premium ("Ver ahora") con icono de reproducción.
+- `src/i18n/messages/es.json` y `en.json`:
+  - Añadimos la clave de traducción `"watchNow"` para soporte multilingüe.

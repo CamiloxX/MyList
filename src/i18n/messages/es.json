@@ -174,7 +174,8 @@
       "back": "← Volver a la biblioteca",
       "history": "Historial",
       "entriesCount": "{count, plural, =0 {Sin visualizaciones} =1 {1 visualización registrada} other {# visualizaciones registradas}}.",
-      "emptyHistory": "Sin visualizaciones registradas todavía."
+      "emptyHistory": "Sin visualizaciones registradas todavía.",
+      "watchNow": "Ver ahora"
     },
     "watchEntry": {
       "title": "Registrar visualización",

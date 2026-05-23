@@ -17,6 +17,8 @@ import { loadingDemoDelay } from "@/lib/loading-demo";
 import { createClient } from "@/lib/supabase/server";
 import { getTmdbTrailer } from "@/lib/tmdb/videos";
 import { cn } from "@/lib/utils";
+import { PlayIcon } from "lucide-react";
+import { getMediaWatchUrl } from "@/features/library/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +40,8 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
     notFound();
   }
 
-  const [{ data: entries }, trailer] = await Promise.all([
+  const [watchUrl, { data: entries }, trailer] = await Promise.all([
+    getMediaWatchUrl(id).catch(() => null),
     supabase
       .from("watch_entries")
       .select("id, watched_on, rating, platform, notes, season_number")
@@ -116,6 +119,20 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
             </header>
             <div className="flex flex-wrap items-center gap-2">
               <StatusSelect id={item.id} current={item.status as MediaStatus} />
+              {watchUrl ? (
+                <a
+                  href={watchUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={cn(
+                    buttonVariants({ variant: "default", size: "sm" }),
+                    "gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm transition-colors",
+                  )}
+                >
+                  <PlayIcon className="size-4 shrink-0 fill-current" aria-hidden />
+                  <span>{t("library.detail.watchNow")}</span>
+                </a>
+              ) : null}
               {trailer ? (
                 <TrailerButton youtubeKey={trailer.youtubeKey} title={item.title} />
               ) : null}
