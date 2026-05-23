@@ -2,7 +2,7 @@
 
 import { PlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -11,6 +11,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useRouter, usePathname } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { WatchEntryForm } from "./watch-entry-form";
 
 /**
@@ -19,12 +21,39 @@ import { WatchEntryForm } from "./watch-entry-form";
  * bottom of the detail page and forced a long scroll — this gives it a
  * dedicated surface only when the user actually wants to log something.
  */
-export function WatchEntryTrigger({ mediaItemId }: { mediaItemId: string }) {
+export function WatchEntryTrigger({
+  mediaItemId,
+  defaultOpen = false,
+}: {
+  mediaItemId: string;
+  defaultOpen?: boolean;
+}) {
   const t = useTranslations("library.watchEntry");
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (defaultOpen) {
+      setOpen(true);
+    }
+  }, [defaultOpen]);
+
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      const params = new URLSearchParams(searchParams.toString());
+      if (params.has("log")) {
+        params.delete("log");
+        const nextQuery = params.toString();
+        router.replace(`${pathname}${nextQuery ? `?${nextQuery}` : ""}`);
+      }
+    }
+  };
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={handleOpenChange}>
       <DrawerTrigger
         render={<Button type="button" size="lg" className="w-full gap-2 sm:w-auto" />}
       >
@@ -36,7 +65,7 @@ export function WatchEntryTrigger({ mediaItemId }: { mediaItemId: string }) {
           <DrawerTitle>{t("title")}</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto pb-2">
-          <WatchEntryForm mediaItemId={mediaItemId} onSuccess={() => setOpen(false)} />
+          <WatchEntryForm mediaItemId={mediaItemId} onSuccess={() => handleOpenChange(false)} />
         </div>
       </DrawerContent>
     </Drawer>

@@ -22,11 +22,14 @@ export const dynamic = "force-dynamic";
 
 type DetailPageProps = {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ log?: string }>;
 };
 
-export default async function MediaDetailPage({ params }: DetailPageProps) {
+export default async function MediaDetailPage({ params, searchParams }: DetailPageProps) {
   await loadingDemoDelay();
   const { id } = await params;
+  const { log } = (await searchParams) ?? {};
+  const defaultOpenLog = log === "true";
   const supabase = await createClient();
 
   const { data: item } = await supabase.from("media_items").select("*").eq("id", id).maybeSingle();
@@ -133,12 +136,12 @@ export default async function MediaDetailPage({ params }: DetailPageProps) {
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-lg font-medium">{t("library.detail.history")}</h2>
           <div className="hidden sm:block">
-            <WatchEntryTrigger mediaItemId={item.id} />
+            <WatchEntryTrigger mediaItemId={item.id} defaultOpen={defaultOpenLog} />
           </div>
         </div>
         <WatchEntryList entries={entriesList} mediaItemId={item.id} />
         <div className="sm:hidden">
-          <WatchEntryTrigger mediaItemId={item.id} />
+          <WatchEntryTrigger mediaItemId={item.id} defaultOpen={defaultOpenLog} />
         </div>
       </section>
 

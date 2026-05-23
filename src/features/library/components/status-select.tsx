@@ -22,8 +22,9 @@ import {
 } from "@/components/ui/drawer";
 import { useNotifyBadges } from "@/features/badges/notify";
 import { cn } from "@/lib/utils";
-import { updateLibraryStatus } from "../actions";
+import { getMediaWatchUrl, updateLibraryStatus } from "../actions";
 import { type MediaStatus, STATUS_OPTIONS } from "../status";
+import { useRouter } from "@/i18n/navigation";
 
 const STATUS_ICONS: Record<MediaStatus, LucideIcon> = {
   watching: EyeIcon,
@@ -45,6 +46,7 @@ const STATUS_ACCENT: Record<MediaStatus, string> = {
  * a full-width tappable row with its accent color.
  */
 export function StatusSelect({ id, current }: { id: string; current: MediaStatus }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("statuses");
@@ -56,14 +58,37 @@ export function StatusSelect({ id, current }: { id: string; current: MediaStatus
       setOpen(false);
       return;
     }
+
+    let newTab: Window | null = null;
+    if (next === "watching") {
+      newTab = window.open("about:blank", "_blank");
+    }
+
     startTransition(async () => {
       const result = await updateLibraryStatus(id, next);
       if (!result.ok) {
         toast.error(result.error);
+        if (newTab) newTab.close();
         return;
       }
       if (result.newBadges?.length) notifyBadges(result.newBadges);
       setOpen(false);
+
+      if (next === "watching") {
+        try {
+          const url = await getMediaWatchUrl(id);
+          if (newTab) {
+            newTab.location.href = url;
+          } else {
+            window.open(url, "_blank");
+          }
+        } catch {
+          if (newTab) newTab.close();
+          toast.error("No se pudo obtener la plataforma de visualización");
+        }
+      } else if (next === "watched") {
+        router.push(`/library/${id}?log=true`);
+      }
     });
   };
 

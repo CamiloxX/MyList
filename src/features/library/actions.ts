@@ -79,7 +79,7 @@ export async function addToLibrary(input: AddToLibraryInput): Promise<LibraryAct
 export async function updateLibraryStatus(
   id: string,
   status: MediaStatus,
-): Promise<LibraryActionResult> {
+): Promise<LibraryActionResultWith<Database["public"]["Tables"]["media_items"]["Row"]>> {
   const parsedId = idSchema.safeParse(id);
   const parsedStatus = statusSchema.safeParse(status);
   if (!parsedId.success || !parsedStatus.success) {
@@ -94,18 +94,20 @@ export async function updateLibraryStatus(
     return { ok: false, error: "Inicia sesión primero" };
   }
 
-  const { error } = await supabase
+  const { data: updatedItem, error } = await supabase
     .from("media_items")
     .update({ status: parsedStatus.data })
-    .eq("id", parsedId.data);
+    .eq("id", parsedId.data)
+    .select("*")
+    .single();
 
-  if (error) {
-    return { ok: false, error: error.message };
+  if (error || !updatedItem) {
+    return { ok: false, error: error?.message ?? "Error al actualizar el estado" };
   }
 
   const newBadges = await evaluateAndPersist(supabase, user.id);
   revalidatePath("/library");
-  return { ok: true, newBadges };
+  return { ok: true, data: updatedItem, newBadges };
 }
 
 /**
@@ -287,4 +289,53 @@ export async function unmarkSeasonWatched(input: {
   revalidatePath("/library");
   revalidatePath("/month");
   return { ok: true };
+}
+
+/**
+ * Resolves the watch/streaming provider URL for a media item.
+ * Falls back to IMDB, AniList or a generic Google Search if no direct flatrate links exist.
+ */
+export async function getMediaWatchUrl(id: string): Promise<string> {
+  const parsedId = idSchema.safeParse(id);
+  if (!parsedId.success) {
+    throw new Error("ID inválido");
+  }
+
+  const supabase = await createClient();
+  const { data: item } = await supabase
+    .from("media_items")
+    .select("source, source_id, kind, title")
+    .eq("id", parsedId.data)
+    .single();
+
+  if (!item) {
+    throw new Error("Item no encontrado");
+  }
+
+  if (item.source === "tmdb") {
+    try {
+      const { getWatchProvidersForTitle } = await import("@/lib/tmdb/discover");
+      // Default to region "CO" (Colombia)
+      const providers = await getWatchProvidersForTitle(
+        Number.parseInt(item.source_id, 10),
+        item.kind as "movie" | "tv",
+        "CO",
+      );
+      if (providers?.link) {
+        return providers.link;
+      }
+    } catch (e) {
+      console.warn("[getMediaWatchUrl] Failed to fetch TMDB watch providers:", e);
+    }
+    // Fallback: TMDB detail page
+    return `https://www.themoviedb.org/${item.kind}/${item.source_id}`;
+  }
+
+  if (item.source === "anilist") {
+    // Direct link to AniList anime page
+    return `https://anilist.co/anime/${item.source_id}`;
+  }
+
+  // Definite fallback: Google search
+  return `https://www.google.com/search?q=${encodeURIComponent(`dónde ver ${item.title}`)}`;
 }
