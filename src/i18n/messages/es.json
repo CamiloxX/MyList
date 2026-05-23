@@ -438,6 +438,34 @@
       "streak_7": {
         "name": "En racha",
         "description": "Registra al menos una visualización 7 días seguidos."
+      },
+      "cinephile_50": {
+        "name": "Cinéfilo empedernido",
+        "description": "Marca como vistas 50 películas."
+      },
+      "series_finisher_20": {
+        "name": "Devorador de series",
+        "description": "Termina 20 series."
+      },
+      "otaku_20": {
+        "name": "Maestro Otaku",
+        "description": "Termina 20 animes."
+      },
+      "critic_50": {
+        "name": "Crítico experto",
+        "description": "Califica 50 visualizaciones."
+      },
+      "marathon_5": {
+        "name": "Sin dormir",
+        "description": "Registra 5 visualizaciones en un mismo día."
+      },
+      "streak_30": {
+        "name": "Imparable",
+        "description": "Registra al menos una visualización 30 días seguidos."
+      },
+      "decade_explorer_4": {
+        "name": "Viajero en el tiempo",
+        "description": "Mira contenido de 4 décadas distintas."
       }
     }
   },

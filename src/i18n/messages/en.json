@@ -438,6 +438,34 @@
       "streak_7": {
         "name": "On a streak",
         "description": "Log a viewing on 7 consecutive days."
+      },
+      "cinephile_50": {
+        "name": "Hardcore Cinephile",
+        "description": "Mark 50 movies as watched."
+      },
+      "series_finisher_20": {
+        "name": "Series Devourer",
+        "description": "Finish 20 series."
+      },
+      "otaku_20": {
+        "name": "Otaku Master",
+        "description": "Finish 20 anime."
+      },
+      "critic_50": {
+        "name": "Expert Critic",
+        "description": "Rate 50 viewings."
+      },
+      "marathon_5": {
+        "name": "Sleepless",
+        "description": "Log 5 viewings in a single day."
+      },
+      "streak_30": {
+        "name": "Unstoppable",
+        "description": "Log a viewing on 30 consecutive days."
+      },
+      "decade_explorer_4": {
+        "name": "Time Traveler",
+        "description": "Watch content from 4 different decades."
       }
     }
   },
