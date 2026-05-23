@@ -14,6 +14,7 @@ import {
   parseYearMonth,
   shiftYearMonth,
 } from "@/lib/dates";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -24,6 +25,7 @@ type MonthPageProps = {
 };
 
 export default async function MonthPage({ params, searchParams }: MonthPageProps) {
+  await loadingDemoDelay();
   const { locale } = await params;
   const { ym } = await searchParams;
   const yearMonth = ym && parseYearMonth(ym) ? ym : currentYearMonth();

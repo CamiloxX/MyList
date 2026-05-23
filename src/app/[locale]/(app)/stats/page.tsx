@@ -9,10 +9,12 @@ import {
 } from "@/features/stats/queries";
 import { Link } from "@/i18n/navigation";
 import { currentYear } from "@/lib/dates";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 
 export const dynamic = "force-dynamic";
 
 export default async function StatsPage() {
+  await loadingDemoDelay();
   const t = await getTranslations();
   const [overview, topRated, topOfYear] = await Promise.all([
     getUserOverview(),

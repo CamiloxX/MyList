@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { BadgesGrid } from "@/features/badges/components/badges-grid";
 import { getBadgesForCurrentUser } from "@/features/badges/queries";
 import { redirect } from "@/i18n/navigation";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,7 @@ export default async function BadgesPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
+  await loadingDemoDelay();
   const { locale } = await params;
   const t = await getTranslations("badges");
   const badges = await getBadgesForCurrentUser();

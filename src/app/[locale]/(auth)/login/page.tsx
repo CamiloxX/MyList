@@ -4,8 +4,10 @@ import { AuthBrandPanel } from "@/features/auth/components/auth-brand-panel";
 import { AuthMobileBlobs } from "@/features/auth/components/auth-mobile-blobs";
 import { LoginForm } from "@/features/auth/components/login-form";
 import { Link } from "@/i18n/navigation";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 
 export default async function LoginPage() {
+  await loadingDemoDelay();
   const t = await getTranslations();
 
   return (

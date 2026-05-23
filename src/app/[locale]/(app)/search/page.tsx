@@ -5,6 +5,7 @@ import { AnimeResults } from "@/features/search/components/anime-results";
 import { SearchInput } from "@/features/search/components/search-input";
 import { SearchResults } from "@/features/search/components/search-results";
 import { SearchTabs, type SearchType } from "@/features/search/components/search-tabs";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,7 @@ type SearchPageProps = {
 };
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
+  await loadingDemoDelay();
   const { q, type } = await searchParams;
   const trimmed = q?.trim() ?? "";
   const searchType: SearchType = type === "anime" ? "anime" : "tmdb";

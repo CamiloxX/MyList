@@ -9,8 +9,22 @@ const APP_PATTERN = /^\/(library|search|stats|lists|settings|month|year)(\/|$)/;
 const AUTH_PATTERN = /^\/(login|register)(\/|$)/;
 const LOCALE_PREFIX = /^\/(es|en)(?=\/|$)/;
 
+// Site-root paths the OAuth provider may land on when Supabase's redirect
+// URL whitelist drops our `redirectTo` and falls back to the Site URL.
+const ROOT_PATHS = new Set(["/", "/es", "/en", "/es/", "/en/"]);
+
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
+
+  // Fallback for OAuth callbacks that land on the site root instead of
+  // /auth/callback (happens when Supabase's redirect-URL whitelist doesn't
+  // include our callback path). Forward the `code` to the real handler so
+  // login completes even with mis-configured project settings.
+  if (searchParams.has("code") && ROOT_PATHS.has(pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/callback";
+    return NextResponse.redirect(url);
+  }
 
   // Supabase OAuth callback lives at /auth/callback (no locale prefix).
   // Just refresh the session and pass through — next-intl is not involved.

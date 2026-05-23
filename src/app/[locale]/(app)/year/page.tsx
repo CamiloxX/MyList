@@ -3,6 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getYearSummary } from "@/features/stats/queries";
 import { Link } from "@/i18n/navigation";
 import { currentYear, monthNameByIndex, parseYear } from "@/lib/dates";
+import { loadingDemoDelay } from "@/lib/loading-demo";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,7 @@ type YearPageProps = {
 };
 
 export default async function YearPage({ params, searchParams }: YearPageProps) {
+  await loadingDemoDelay();
   const { locale } = await params;
   const { y } = await searchParams;
   const year = parseYear(y) ?? Number.parseInt(currentYear(), 10);

@@ -30,7 +30,7 @@ const PLATFORM_VISUALS: Record<Platform, PlatformVisual> = {
   "Disney+": {
     bg: "bg-[#0C162C]",
     fg: "",
-    label: () => <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" alt="Disney+" className="w-full h-full object-contain p-0.5" />,
+    label: () => <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" alt="Disney+" className="w-full h-full object-contain p-0.5 brightness-0 invert" />,
   },
   "HBO Max": {
     bg: "bg-[#5A0E82]",

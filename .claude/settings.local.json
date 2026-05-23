@@ -42,7 +42,17 @@
       "Bash(git commit -m ' *)",
       "Bash(git remote *)",
       "Bash(git push *)",
-      "Bash(pnpm lint *)"
+      "Bash(pnpm lint *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(git stash *)",
+      "PowerShell(Set-Clipboard *)",
+      "Bash(xargs grep -l \"FileInput\\\\|ImageUpload\\\\|image.*upload\\\\|dropzone\\\\|cropper\")",
+      "mcp__plugin_supabase_supabase__list_projects",
+      "mcp__plugin_supabase_supabase__list_tables",
+      "mcp__plugin_supabase_supabase__list_migrations",
+      "mcp__plugin_supabase_supabase__apply_migration",
+      "Bash(pnpm remove *)"
     ]
   }
 }
