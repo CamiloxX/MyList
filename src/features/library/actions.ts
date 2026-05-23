@@ -315,25 +315,64 @@ export async function getMediaWatchUrl(id: string): Promise<string> {
   if (item.source === "tmdb") {
     try {
       const { getWatchProvidersForTitle } = await import("@/lib/tmdb/discover");
-      // Default to region "CO" (Colombia)
       const providers = await getWatchProvidersForTitle(
         Number.parseInt(item.source_id, 10),
         item.kind as "movie" | "tv",
         "CO",
       );
-      if (providers?.link) {
-        return providers.link;
+
+      if (providers && providers.flatrate.length > 0) {
+        // Find the most prominent provider
+        const first = providers.flatrate[0]?.provider_name?.toLowerCase() || "";
+        const titleQuery = encodeURIComponent(item.title);
+
+        if (first.includes("netflix")) {
+          return `https://www.netflix.com/search?q=${titleQuery}`;
+        }
+        if (first.includes("prime") || first.includes("amazon")) {
+          return `https://www.primevideo.com/search/ref=atv_sr_sug_1?phrase=${titleQuery}`;
+        }
+        if (first.includes("disney")) {
+          return `https://www.disneyplus.com/search?q=${titleQuery}`;
+        }
+        if (first.includes("max") || first.includes("hbo")) {
+          return `https://play.max.com/search?q=${titleQuery}`;
+        }
+        if (first.includes("apple")) {
+          return `https://tv.apple.com/search?term=${titleQuery}`;
+        }
+        if (first.includes("crunchyroll")) {
+          return `https://www.crunchyroll.com/search?q=${titleQuery}`;
+        }
       }
     } catch (e) {
       console.warn("[getMediaWatchUrl] Failed to fetch TMDB watch providers:", e);
     }
-    // Fallback: TMDB detail page
-    return `https://www.themoviedb.org/${item.kind}/${item.source_id}`;
+    
+    // Fallback if no known platform or no providers
+    return `https://www.google.com/search?q=${encodeURIComponent(`dónde ver ${item.title}`)}`;
   }
 
   if (item.source === "anilist") {
-    // Direct link to AniList anime page
-    return `https://anilist.co/anime/${item.source_id}`;
+    try {
+      const res = await fetch(`https://api.jikan.moe/v4/anime/${item.source_id}/streaming`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.data && json.data.length > 0) {
+          const preferred = json.data.find(
+            (p: any) =>
+              p.name === "Crunchyroll" ||
+              p.name === "Netflix" ||
+              p.name === "Amazon Prime Video" ||
+              p.name === "Disney Plus",
+          );
+          if (preferred) return preferred.url;
+          return json.data[0].url;
+        }
+      }
+    } catch (e) {
+      console.warn("[getMediaWatchUrl] Failed to fetch Jikan streaming info:", e);
+    }
   }
 
   // Definite fallback: Google search
