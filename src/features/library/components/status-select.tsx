@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/drawer";
 import { useNotifyBadges } from "@/features/badges/notify";
 import { cn } from "@/lib/utils";
-import { getMediaWatchUrl, updateLibraryStatus } from "../actions";
+import { updateLibraryStatus } from "../actions";
 import { type MediaStatus, STATUS_OPTIONS } from "../status";
 import { useRouter } from "@/i18n/navigation";
 
@@ -59,34 +59,16 @@ export function StatusSelect({ id, current }: { id: string; current: MediaStatus
       return;
     }
 
-    let newTab: Window | null = null;
-    if (next === "watching") {
-      newTab = window.open("about:blank", "_blank");
-    }
-
     startTransition(async () => {
       const result = await updateLibraryStatus(id, next);
       if (!result.ok) {
         toast.error(result.error);
-        if (newTab) newTab.close();
         return;
       }
       if (result.newBadges?.length) notifyBadges(result.newBadges);
       setOpen(false);
 
-      if (next === "watching") {
-        try {
-          const url = await getMediaWatchUrl(id);
-          if (newTab) {
-            newTab.location.href = url;
-          } else {
-            window.open(url, "_blank");
-          }
-        } catch {
-          if (newTab) newTab.close();
-          toast.error("No se pudo obtener la plataforma de visualización");
-        }
-      } else if (next === "watched") {
+      if (next === "watched") {
         router.push(`/library/${id}?log=true`);
       }
     });
