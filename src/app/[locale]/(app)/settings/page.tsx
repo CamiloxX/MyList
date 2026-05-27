@@ -24,6 +24,7 @@ export default async function SettingsPage() {
 
   const t = await getTranslations("settings");
   const tBadges = await getTranslations("badges");
+  const tChangelog = await getTranslations("changelog");
   const locale = (await getLocale()) as Locale;
   const recentBadges = await getRecentEarnedBadges(3);
 
@@ -127,6 +128,18 @@ export default async function SettingsPage() {
           <p className="text-sm text-muted-foreground">{t("export.description")}</p>
         </div>
         <ExportCard />
+      </section>
+
+      <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-base font-medium">{tChangelog("title")}</h2>
+            <p className="text-sm text-muted-foreground">{tChangelog("subtitle")}</p>
+          </div>
+          <Link href="/changelog" className="text-xs text-muted-foreground hover:text-foreground">
+            {tChangelog("settingsLink")} →
+          </Link>
+        </div>
       </section>
     </div>
   );

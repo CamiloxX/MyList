@@ -12,6 +12,7 @@
     "stats": "Stats",
     "badges": "Logros",
     "settings": "Ajustes",
+    "changelog": "Novedades",
     "primary": "Navegación principal"
   },
   "common": {
@@ -523,5 +524,16 @@
     "anonymous": "Anónimo",
     "verified": "Cuenta verificada (admin)",
     "adminChip": "Admin"
+  },
+  "changelog": {
+    "title": "Novedades",
+    "subtitle": "Todo lo que se ha agregado y mejorado en MyList, ordenado por fecha.",
+    "empty": "Aún no hay novedades publicadas.",
+    "settingsLink": "Ver novedades de la app",
+    "tags": {
+      "new": "Nuevo",
+      "improvement": "Mejora",
+      "fix": "Corrección"
+    }
   }
 }

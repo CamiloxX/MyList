@@ -12,6 +12,7 @@
     "stats": "Stats",
     "badges": "Badges",
     "settings": "Settings",
+    "changelog": "What's new",
     "primary": "Main navigation"
   },
   "common": {
@@ -523,5 +524,16 @@
     "anonymous": "Anonymous",
     "verified": "Verified account (admin)",
     "adminChip": "Admin"
+  },
+  "changelog": {
+    "title": "What's new",
+    "subtitle": "Everything that's been added or improved in MyList, sorted by date.",
+    "empty": "No release notes yet.",
+    "settingsLink": "See what's new",
+    "tags": {
+      "new": "New",
+      "improvement": "Improvement",
+      "fix": "Fix"
+    }
   }
 }

@@ -35,6 +35,7 @@ export default async function AppLayout({
     { href: "/discover" as const, label: t("nav.discover") },
     { href: "/month" as const, label: t("nav.month") },
     { href: "/badges" as const, label: t("nav.badges") },
+    { href: "/changelog" as const, label: t("nav.changelog") },
     { href: "/settings" as const, label: t("nav.settings") },
   ];
 
