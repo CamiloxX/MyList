@@ -8,12 +8,37 @@ export type { TmdbSearchResult } from "./schemas";
 /**
  * Search TMDB for movies and TV shows by free-text query.
  * Filters out person results.
+ *
+ * Fires two parallel searches (es-ES + en-US) so titles match regardless of
+ * which localization the user types. Spanish results keep their original
+ * ranking; English-only hits are appended after, deduped by media_type+id.
  */
 export async function searchTmdb(query: string, page = 1): Promise<TmdbSearchResult[]> {
   if (!query.trim()) return [];
 
+  const [esResults, enResults] = await Promise.all([
+    fetchSearchPage(query, page, "es-ES"),
+    fetchSearchPage(query, page, "en-US"),
+  ]);
+
+  const seen = new Set<string>();
+  const merged: TmdbSearchResult[] = [];
+  for (const item of [...esResults, ...enResults]) {
+    const key = `${item.media_type}-${item.id}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(item);
+  }
+  return merged;
+}
+
+async function fetchSearchPage(
+  query: string,
+  page: number,
+  language: string,
+): Promise<TmdbSearchResult[]> {
   const raw = await tmdbFetch<unknown>("/search/multi", {
-    query: { query, page, include_adult: "false" },
+    query: { query, page, include_adult: "false", language },
     // Search results aren't worth caching; user-typed queries are unique.
     revalidate: 0,
   });
