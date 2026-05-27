@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-26",
     tag: "new",
     title: {
+      es: "MyList se puede instalar como app",
+      en: "MyList is now installable as an app",
+    },
+    description: {
+      es: "Desde el navegador del celular o del escritorio puedes instalar MyList como una app: arranca a pantalla completa, sin barra del navegador, y queda en tu pantalla de inicio. En Chrome/Edge: menú → “Instalar app”. En iPhone Safari: compartir → “Añadir a pantalla de inicio”.",
+      en: "From your mobile or desktop browser you can install MyList as an app: it opens full-screen, no browser bar, and stays on your home screen. In Chrome/Edge: menu → “Install app”. On iPhone Safari: share → “Add to Home Screen”.",
+    },
+  },
+  {
+    date: "2026-05-26",
+    tag: "new",
+    title: {
       es: "“¿Qué veo hoy?” — sugerencia al azar",
       en: "“What should I watch?” — random pick",
     },
