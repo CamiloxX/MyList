@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-26",
     tag: "new",
     title: {
+      es: "“¿Qué veo hoy?” — sugerencia al azar",
+      en: "“What should I watch?” — random pick",
+    },
+    description: {
+      es: "Botón nuevo en la biblioteca que elige al azar algo de tu lista de pendientes. Pulsa “Otra” si la sugerencia no te convence.",
+      en: "New button on the library that randomly picks something from your pending list. Hit “Another” if the suggestion isn't what you want.",
+    },
+  },
+  {
+    date: "2026-05-26",
+    tag: "new",
+    title: {
       es: "Buscar y ordenar dentro de tu biblioteca",
       en: "Search and sort inside your library",
     },

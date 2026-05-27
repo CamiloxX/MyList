@@ -148,6 +148,15 @@
         "year-asc": "Year (oldest)"
       }
     },
+    "randomPick": {
+      "trigger": "What should I watch?",
+      "title": "Today's pick",
+      "empty": "You don't have anything pending. Add something to your list and I'll suggest what to watch.",
+      "goSearch": "Find something",
+      "seeDetail": "See detail",
+      "reroll": "Another",
+      "noMoreOptions": "No more pending options"
+    },
     "filters": {
       "title": "Filters",
       "status": "Status",

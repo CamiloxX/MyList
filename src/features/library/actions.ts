@@ -291,6 +291,47 @@ export async function unmarkSeasonWatched(input: {
   return { ok: true };
 }
 
+type MediaItemRow = Database["public"]["Tables"]["media_items"]["Row"];
+
+/**
+ * Picks a random pending media item from the current user's library.
+ * Used by the "¿Qué veo hoy?" / "What should I watch?" feature on /library.
+ *
+ * Pool size is small in practice (user's pending list), so we fetch all
+ * candidate rows and pick one client-side rather than relying on a
+ * Postgres function. Pass `excludeId` to avoid re-suggesting the same
+ * title when the user re-rolls.
+ */
+export async function pickRandomPendingMediaItem(
+  excludeId?: string,
+): Promise<{ ok: true; item: MediaItemRow | null } | { ok: false; error: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Inicia sesión primero" };
+
+  let query = supabase
+    .from("media_items")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("status", "pending");
+
+  if (excludeId) {
+    const parsedExclude = idSchema.safeParse(excludeId);
+    if (parsedExclude.success) {
+      query = query.neq("id", parsedExclude.data);
+    }
+  }
+
+  const { data, error } = await query;
+  if (error) return { ok: false, error: error.message };
+  if (!data || data.length === 0) return { ok: true, item: null };
+
+  const picked = data[Math.floor(Math.random() * data.length)] ?? null;
+  return { ok: true, item: picked };
+}
+
 /**
  * Resolves the watch/streaming provider URL for a media item.
  * Falls back to IMDB, AniList or a generic Google Search if no direct flatrate links exist.

@@ -148,6 +148,15 @@
         "year-asc": "Año (más antiguo)"
       }
     },
+    "randomPick": {
+      "trigger": "¿Qué veo hoy?",
+      "title": "Tu sugerencia de hoy",
+      "empty": "No tienes nada en pendiente. Agrega algo a tu lista y te sugiero qué ver.",
+      "goSearch": "Buscar algo",
+      "seeDetail": "Ver detalle",
+      "reroll": "Otra",
+      "noMoreOptions": "No hay más opciones pendientes"
+    },
     "filters": {
       "title": "Filtros",
       "status": "Estado",

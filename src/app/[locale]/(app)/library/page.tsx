@@ -7,6 +7,7 @@ import {
 } from "@/features/library/components/library-filters";
 import { LibrarySearchInput } from "@/features/library/components/library-search-input";
 import { LibrarySortSelect } from "@/features/library/components/library-sort-select";
+import { RandomPickButton } from "@/features/library/components/random-pick-button";
 import { parseLibrarySort } from "@/features/library/sort";
 import type { MediaKind, MediaStatus } from "@/features/library/status";
 import { Link } from "@/i18n/navigation";
@@ -105,12 +106,15 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t("hello", { name: namePart })}
-          {itemsList.length === 0 ? t("empty") : t("count", { count: itemsList.length })}
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t("hello", { name: namePart })}
+            {itemsList.length === 0 ? t("empty") : t("count", { count: itemsList.length })}
+          </p>
+        </div>
+        <RandomPickButton />
       </header>
 
       <div className="flex flex-col gap-3">
