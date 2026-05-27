@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-26",
+    tag: "new",
+    title: {
+      es: "Buscar y ordenar dentro de tu biblioteca",
+      en: "Search and sort inside your library",
+    },
+    description: {
+      es: "Ahora puedes buscar por título dentro de tu biblioteca y ordenarla por fecha de agregado, título (A-Z / Z-A) o año del título (más nuevo / más antiguo).",
+      en: "You can now search by title inside your library and sort it by added date, title (A-Z / Z-A) or release year (newest / oldest).",
+    },
+  },
+  {
+    date: "2026-05-26",
     tag: "improvement",
     title: {
       es: "Búsqueda en español e inglés",

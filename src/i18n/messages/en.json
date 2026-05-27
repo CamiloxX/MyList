@@ -134,6 +134,20 @@
     "emptyAction": "Go to search",
     "emptyFiltered": "No items match these filters.",
     "loadError": "We couldn't load your library: {message}",
+    "searchPlaceholder": "Search your library...",
+    "searchAria": "Search my library",
+    "searchClear": "Clear search",
+    "sort": {
+      "label": "Sort",
+      "title": "Sort by",
+      "options": {
+        "recent": "Recently added",
+        "title-asc": "Title A-Z",
+        "title-desc": "Title Z-A",
+        "year-desc": "Year (newest)",
+        "year-asc": "Year (oldest)"
+      }
+    },
     "filters": {
       "title": "Filters",
       "status": "Status",

@@ -134,6 +134,20 @@
     "emptyAction": "Ir a buscar",
     "emptyFiltered": "No hay items con esos filtros.",
     "loadError": "No pudimos cargar tu biblioteca: {message}",
+    "searchPlaceholder": "Buscar en tu biblioteca...",
+    "searchAria": "Buscar en mi biblioteca",
+    "searchClear": "Limpiar búsqueda",
+    "sort": {
+      "label": "Orden",
+      "title": "Ordenar por",
+      "options": {
+        "recent": "Más reciente",
+        "title-asc": "Título A-Z",
+        "title-desc": "Título Z-A",
+        "year-desc": "Año (más nuevo)",
+        "year-asc": "Año (más antiguo)"
+      }
+    },
     "filters": {
       "title": "Filtros",
       "status": "Estado",

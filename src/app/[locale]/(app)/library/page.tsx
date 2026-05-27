@@ -5,6 +5,9 @@ import {
   type LibraryFilterCounts,
   LibraryFilters,
 } from "@/features/library/components/library-filters";
+import { LibrarySearchInput } from "@/features/library/components/library-search-input";
+import { LibrarySortSelect } from "@/features/library/components/library-sort-select";
+import { parseLibrarySort } from "@/features/library/sort";
 import type { MediaKind, MediaStatus } from "@/features/library/status";
 import { Link } from "@/i18n/navigation";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -17,16 +20,18 @@ const VALID_STATUSES: ReadonlyArray<MediaStatus> = ["watching", "watched", "pend
 const VALID_KINDS: ReadonlyArray<MediaKind> = ["movie", "tv", "anime"];
 
 type LibraryPageProps = {
-  searchParams: Promise<{ status?: string; kind?: string }>;
+  searchParams: Promise<{ status?: string; kind?: string; q?: string; sort?: string }>;
 };
 
 export default async function LibraryPage({ searchParams }: LibraryPageProps) {
   await loadingDemoDelay();
-  const { status: rawStatus, kind: rawKind } = await searchParams;
+  const { status: rawStatus, kind: rawKind, q: rawQuery, sort: rawSort } = await searchParams;
   const status = VALID_STATUSES.includes(rawStatus as MediaStatus)
     ? (rawStatus as MediaStatus)
     : null;
   const kind = VALID_KINDS.includes(rawKind as MediaKind) ? (rawKind as MediaKind) : null;
+  const queryText = rawQuery?.trim() ?? "";
+  const sort = parseLibrarySort(rawSort);
 
   const t = await getTranslations("library");
 
@@ -35,10 +40,37 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let query = supabase.from("media_items").select("*").order("created_at", { ascending: false });
+  let query = supabase.from("media_items").select("*");
+
+  switch (sort) {
+    case "title-asc":
+      query = query.order("title", { ascending: true });
+      break;
+    case "title-desc":
+      query = query.order("title", { ascending: false });
+      break;
+    case "year-desc":
+      query = query
+        .order("year", { ascending: false, nullsFirst: false })
+        .order("created_at", { ascending: false });
+      break;
+    case "year-asc":
+      query = query
+        .order("year", { ascending: true, nullsFirst: false })
+        .order("created_at", { ascending: false });
+      break;
+    default:
+      query = query.order("created_at", { ascending: false });
+  }
 
   if (status) query = query.eq("status", status);
   if (kind) query = query.eq("kind", kind);
+  if (queryText) {
+    // Escape PostgREST `ilike` wildcards in user input so a literal % or _
+    // doesn't broaden the match unexpectedly.
+    const escaped = queryText.replace(/[\\%_]/g, (m) => `\\${m}`);
+    query = query.or(`title.ilike.%${escaped}%,original_title.ilike.%${escaped}%`);
+  }
 
   // Fetch the filter-counts query in parallel: a tiny `(status, kind)` projection
   // over the user's full library so each filter pill shows its total regardless
@@ -81,10 +113,16 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
         </p>
       </header>
 
-      <LibraryFilters counts={counts} />
+      <div className="flex flex-col gap-3">
+        <LibrarySearchInput defaultValue={queryText} />
+        <div className="flex flex-wrap items-center gap-2">
+          <LibraryFilters counts={counts} />
+          <LibrarySortSelect current={sort} />
+        </div>
+      </div>
 
       {itemsList.length === 0 ? (
-        <EmptyState filtered={Boolean(status || kind)} />
+        <EmptyState filtered={Boolean(status || kind || queryText)} />
       ) : (
         <ul className="flex flex-col gap-3">
           {itemsList.map((item) => (
