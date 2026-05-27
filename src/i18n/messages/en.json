@@ -548,6 +548,14 @@
     "verified": "Verified account (admin)",
     "adminChip": "Admin"
   },
+  "pwa": {
+    "install": "Install app",
+    "iosTitle": "Install MyList on your iPhone",
+    "iosIntro": "iOS doesn't allow installing from a button. Follow these steps in Safari (Chrome on iOS won't work):",
+    "iosStep1": "Open this page in Safari.",
+    "iosStep2": "Tap the share button",
+    "iosStep3": "Pick “Add to Home Screen” and confirm."
+  },
   "changelog": {
     "title": "What's new",
     "subtitle": "Everything that's been added or improved in MyList, sorted by date.",

@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-26",
     tag: "new",
     title: {
+      es: "Botón “Instalar app” en el header móvil",
+      en: "“Install app” button in the mobile header",
+    },
+    description: {
+      es: "Si entras desde el celular y aún no tienes la app instalada, verás un icono de descarga en el header. En Android lanza el instalador nativo; en iPhone te explica los pasos para añadirla a la pantalla de inicio.",
+      en: "If you visit from a phone and don't have the app installed yet, you'll see a download icon in the header. On Android it launches the native installer; on iPhone it shows the steps to add it to your home screen.",
+    },
+  },
+  {
+    date: "2026-05-26",
+    tag: "new",
+    title: {
       es: "MyList se puede instalar como app",
       en: "MyList is now installable as an app",
     },
