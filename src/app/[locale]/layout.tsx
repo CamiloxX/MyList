@@ -78,6 +78,17 @@ export default async function LocaleLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} h-full antialiased`}
     >
+      <head>
+        {/* Apply stored theme class before first paint to avoid FOUC.
+            Reads localStorage('mylist-theme'); absence falls through to the
+            CSS @media (prefers-color-scheme) default. */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted inline init script with no user input
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('mylist-theme');if(t==='dark'||t==='light'){document.documentElement.classList.add(t);}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <ThemeProvider

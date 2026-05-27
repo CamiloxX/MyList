@@ -548,6 +548,15 @@
     "verified": "Verified account (admin)",
     "adminChip": "Admin"
   },
+  "theme": {
+    "toggleLabel": "Toggle theme",
+    "title": "Theme",
+    "options": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
+  },
   "pwa": {
     "install": "Install app",
     "iosTitle": "Install MyList on your iPhone",

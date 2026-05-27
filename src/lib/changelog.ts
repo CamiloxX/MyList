@@ -17,6 +17,18 @@ export type ChangelogEntry = {
  */
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-05-27",
+    tag: "new",
+    title: {
+      es: "Toggle de tema claro/oscuro",
+      en: "Light/dark theme toggle",
+    },
+    description: {
+      es: "Botón nuevo en el header que te deja elegir entre tema claro, oscuro o seguir el del sistema. Tu elección se recuerda en este navegador.",
+      en: "New header button that lets you pick light, dark or follow-system theme. Your choice is remembered on this browser.",
+    },
+  },
+  {
     date: "2026-05-26",
     tag: "new",
     title: {

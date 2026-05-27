@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { BrandMark, Wordmark } from "@/components/brand/brand-mark";
 import { InstallPwaButton } from "@/components/install-pwa-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { signOut } from "@/features/auth/actions";
 import { BadgeCelebrationProvider } from "@/features/badges/components/badge-celebration-provider";
@@ -56,6 +57,7 @@ export default async function AppLayout({
           <div className="flex flex-1 justify-center">
             <HeaderSearch />
           </div>
+          <ThemeToggle />
           <InstallPwaButton />
           <nav className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => (
