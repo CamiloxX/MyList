@@ -347,6 +347,30 @@
       "es": "Español",
       "en": "English"
     },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Get notified when you unlock a badge. On iPhone you'll need to install MyList as an app first (Safari → Share → Add to Home Screen) for them to work.",
+      "subscribe": "Enable notifications",
+      "subscribing": "Enabling...",
+      "subscribed": "Notifications enabled on this device",
+      "unsubscribe": "Disable on this device",
+      "unsubscribing": "Disabling...",
+      "unsubscribed": "Notifications disabled",
+      "unsupported": "Your browser doesn't support push notifications.",
+      "permissionDeniedHint": "You blocked notifications. Re-enable them from your browser's site permissions.",
+      "test": {
+        "button": "Send test",
+        "title": "MyList",
+        "body": "If you see this, notifications are working.",
+        "sent": "Sent. If you don't see it, check your browser permissions."
+      },
+      "errors": {
+        "notConfigured": "Notifications aren't configured on the server yet.",
+        "permissionDenied": "You need to grant notification permission.",
+        "subscribeFailed": "We couldn't enable notifications.",
+        "unsubscribeFailed": "We couldn't disable notifications."
+      }
+    },
     "security": {
       "title": "Security",
       "description": "Change your password. We ask for the current one to confirm it's you.",

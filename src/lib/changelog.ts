@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-27",
     tag: "new",
     title: {
+      es: "Notificaciones push de logros",
+      en: "Push notifications for badges",
+    },
+    description: {
+      es: "Activa las notificaciones en Ajustes y recibirás un aviso en tu teléfono o computadora cada vez que desbloquees un logro nuevo, aunque no tengas la app abierta. En iPhone necesitas instalar MyList como app desde Safari (Compartir → Añadir a pantalla de inicio) para que funcionen.",
+      en: "Enable notifications in Settings and you'll get a heads-up on your phone or computer whenever you unlock a new badge, even without the app open. On iPhone you need to install MyList as an app from Safari (Share → Add to Home Screen) for them to work.",
+    },
+  },
+  {
+    date: "2026-05-27",
+    tag: "new",
+    title: {
       es: "Toggle de tema claro/oscuro",
       en: "Light/dark theme toggle",
     },

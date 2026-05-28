@@ -1,9 +1,9 @@
-// Minimal service worker for PWA installability.
+// Minimal service worker for PWA installability + Web Push.
 // Chromium requires a fetch handler to consider the page installable, so we
 // register a pass-through one. No caching is wired up yet — adding a
 // stale-while-revalidate strategy for static assets is the natural next step.
 
-const VERSION = "v1";
+const VERSION = "v2";
 
 self.addEventListener("install", () => {
   self.skipWaiting();
@@ -17,4 +17,63 @@ self.addEventListener("fetch", (event) => {
   // Pass-through: let the browser handle the request normally.
   // Wrapping this with respondWith would let us add caching later.
   void event;
+});
+
+// Web Push: the server sends a JSON payload shaped like
+// { title, body, url?, icon?, tag? }. We surface it as a system notification
+// and remember the target URL on the notification itself so the click handler
+// can route back into the app.
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+
+  let payload;
+  try {
+    payload = event.data.json();
+  } catch {
+    payload = { title: "MyList", body: event.data.text() };
+  }
+
+  const title = payload.title || "MyList";
+  const options = {
+    body: payload.body || "",
+    icon: payload.icon || "/iconomylist.png",
+    badge: "/iconomylist.png",
+    tag: payload.tag,
+    data: { url: payload.url || "/library" },
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// When the user taps the notification: focus an existing tab if one is open
+// (and navigate it to the target URL), otherwise open a fresh one. This keeps
+// PWA users from ending up with a stack of duplicate windows.
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || "/library";
+
+  event.waitUntil(
+    (async () => {
+      const allClients = await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+      });
+      for (const client of allClients) {
+        if ("focus" in client) {
+          await client.focus();
+          if ("navigate" in client) {
+            try {
+              await client.navigate(targetUrl);
+            } catch {
+              // Some browsers reject cross-origin navigate; just focus then.
+            }
+          }
+          return;
+        }
+      }
+      if (self.clients.openWindow) {
+        await self.clients.openWindow(targetUrl);
+      }
+    })(),
+  );
 });

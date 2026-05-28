@@ -3,6 +3,7 @@ import "server-only";
 import type { MediaKind } from "@/features/library/status";
 import type { createClient } from "@/lib/supabase/server";
 import { BADGE_CATALOG } from "./catalog";
+import { pushNewBadges } from "./push-notify";
 import type {
   BadgeCriterion,
   BadgeDefinition,
@@ -150,7 +151,14 @@ export async function evaluateAndPersist(
   if (insertRes.error) return [];
 
   const inserted = new Set(insertRes.data?.map((r) => r.badge_id) ?? []);
-  return newlyEarned.filter((b) => inserted.has(b.id));
+  const justEarned = newlyEarned.filter((b) => inserted.has(b.id));
+
+  // Best-effort: fire push *after* the DB write so a failed delivery never
+  // blocks the badge from being recorded. The in-app toast is still emitted
+  // by the celebration provider on the client.
+  await pushNewBadges(userId, justEarned);
+
+  return justEarned;
 }
 
 /**

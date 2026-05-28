@@ -13,6 +13,10 @@ const schema = z.object({
   // the LoadingScreen suspense fallback is actually visible during normal
   // navigation. Useful for demos / design review. Leave blank in production.
   LOADING_DEMO_MS: z.coerce.number().int().min(0).max(10_000).optional(),
+  // Web Push private half. All three (public on the client, private + subject
+  // on the server) must be set together for push to actually work.
+  VAPID_PRIVATE_KEY: z.string().min(1).optional(),
+  VAPID_SUBJECT: z.string().regex(/^(mailto:|https?:\/\/)/).optional(),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 
@@ -21,6 +25,8 @@ const parsed = schema.safeParse({
   TMDB_API_KEY: process.env.TMDB_API_KEY,
   OMDB_API_KEY: process.env.OMDB_API_KEY || undefined,
   LOADING_DEMO_MS: process.env.LOADING_DEMO_MS || undefined,
+  VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY || undefined,
+  VAPID_SUBJECT: process.env.VAPID_SUBJECT || undefined,
   NODE_ENV: process.env.NODE_ENV,
 });
 

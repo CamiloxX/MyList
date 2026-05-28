@@ -347,6 +347,30 @@
       "es": "Español",
       "en": "English"
     },
+    "notifications": {
+      "title": "Notificaciones",
+      "description": "Recibe avisos cuando desbloqueas un logro. En iPhone necesitas tener MyList instalada como app (desde Safari → Compartir → Añadir a pantalla de inicio) para que funcionen.",
+      "subscribe": "Activar notificaciones",
+      "subscribing": "Activando...",
+      "subscribed": "Notificaciones activadas en este dispositivo",
+      "unsubscribe": "Desactivar en este dispositivo",
+      "unsubscribing": "Desactivando...",
+      "unsubscribed": "Notificaciones desactivadas",
+      "unsupported": "Tu navegador no soporta notificaciones push.",
+      "permissionDeniedHint": "Bloqueaste las notificaciones. Cámbialo desde los permisos del sitio en tu navegador.",
+      "test": {
+        "button": "Mandar prueba",
+        "title": "MyList",
+        "body": "Si ves esto, las notificaciones funcionan.",
+        "sent": "Enviada. Si no la ves, revisa los permisos del navegador."
+      },
+      "errors": {
+        "notConfigured": "Las notificaciones aún no están configuradas en el servidor.",
+        "permissionDenied": "Necesitas dar permiso de notificaciones.",
+        "subscribeFailed": "No pudimos activar las notificaciones.",
+        "unsubscribeFailed": "No pudimos desactivar las notificaciones."
+      }
+    },
     "security": {
       "title": "Seguridad",
       "description": "Cambia tu contraseña. Te pedimos la actual para confirmar que eres tú.",
