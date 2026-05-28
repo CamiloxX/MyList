@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-27",
     tag: "new",
     title: {
+      es: "Anuncios push para todos (admin)",
+      en: "Broadcast push announcements (admin)",
+    },
+    description: {
+      es: "Como admin ahora puedes mandar una notificación push a todos los usuarios desde Ajustes. Útil para avisar de novedades importantes o mantenimientos.",
+      en: "As an admin you can now send a push notification to every user from Settings. Handy for announcing big changes or maintenance windows.",
+    },
+  },
+  {
+    date: "2026-05-27",
+    tag: "new",
+    title: {
       es: "Notificaciones push de logros",
       en: "Push notifications for badges",
     },

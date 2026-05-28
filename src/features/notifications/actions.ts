@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { sendPushToUser } from "./send";
+import { sendPushToAll, sendPushToUser } from "./send";
 import type { SubscribeResult } from "./types";
 
 const subscribeSchema = z.object({
@@ -103,4 +103,45 @@ export async function sendTestPush(input: {
     tag: "test",
   });
   return { ok: true };
+}
+
+const broadcastSchema = z.object({
+  title: z.string().min(1).max(120),
+  body: z.string().min(1).max(300),
+  url: z.string().max(500).optional(),
+});
+
+export type BroadcastInput = z.infer<typeof broadcastSchema>;
+export type BroadcastResult =
+  | { ok: true; sent: number; failed: number; pruned: number }
+  | { ok: false; error: string };
+
+/**
+ * Sends a push to every device of every user. Admin-only: we re-check
+ * profiles.is_admin server-side because client-side guards are advisory only.
+ */
+export async function broadcastPushToAll(input: BroadcastInput): Promise<BroadcastResult> {
+  const parsed = broadcastSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "Datos inválidos" };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Inicia sesión primero" };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (!profile?.is_admin) return { ok: false, error: "No autorizado" };
+
+  const { sent, failed, pruned } = await sendPushToAll({
+    title: parsed.data.title,
+    body: parsed.data.body,
+    url: parsed.data.url || "/library",
+    tag: "broadcast",
+  });
+  return { ok: true, sent, failed, pruned };
 }

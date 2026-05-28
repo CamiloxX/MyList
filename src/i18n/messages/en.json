@@ -347,6 +347,21 @@
       "es": "Español",
       "en": "English"
     },
+    "broadcast": {
+      "title": "Global announcement (admin)",
+      "description": "Send a push notification to EVERY user with notifications enabled. Use with care: it lands on their device immediately.",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. New feature available",
+      "bodyLabel": "Message",
+      "bodyPlaceholder": "Briefly tell them what happened or what to do.",
+      "urlLabel": "Tap-target URL (optional)",
+      "send": "Send to everyone",
+      "sending": "Sending...",
+      "sentToast": "Sent to {sent, plural, =1 {1 device} other {# devices}} (pruned {pruned, plural, =1 {1 stale} other {# stale}})",
+      "errors": {
+        "required": "Title and message are required."
+      }
+    },
     "notifications": {
       "title": "Notifications",
       "description": "Get notified when you unlock a badge. On iPhone you'll need to install MyList as an app first (Safari → Share → Add to Home Screen) for them to work.",

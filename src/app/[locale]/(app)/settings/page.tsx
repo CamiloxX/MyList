@@ -6,7 +6,7 @@ import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { getRecentEarnedBadges } from "@/features/badges/queries";
 import { ExportCard } from "@/features/export/components/export-card";
 import { AvatarUploadCard } from "@/features/profile/components/avatar-upload-card";
-import { NotificationsToggle } from "@/features/notifications";
+import { BroadcastForm, NotificationsToggle } from "@/features/notifications";
 import { ChangePasswordForm } from "@/features/settings/components/change-password-form";
 import { LanguageSwitcher } from "@/features/settings/components/language-switcher";
 import { Link } from "@/i18n/navigation";
@@ -32,10 +32,11 @@ export default async function SettingsPage() {
   const { data: profile } = user
     ? await supabase
         .from("profiles")
-        .select("avatar_url, display_name")
+        .select("avatar_url, display_name, is_admin")
         .eq("id", user.id)
         .maybeSingle()
     : { data: null };
+  const isAdmin = profile?.is_admin ?? false;
 
   // Supabase tags every connected provider on `app_metadata.providers`. Only
   // accounts that signed up (or linked) with email/password have a password to
@@ -130,6 +131,16 @@ export default async function SettingsPage() {
         </div>
         <NotificationsToggle />
       </section>
+
+      {isAdmin ? (
+        <section className="flex flex-col gap-3 rounded-xl border border-amber-500/30 bg-card p-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-base font-medium">{t("broadcast.title")}</h2>
+            <p className="text-sm text-muted-foreground">{t("broadcast.description")}</p>
+          </div>
+          <BroadcastForm />
+        </section>
+      ) : null}
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
         <div className="flex flex-col gap-1">

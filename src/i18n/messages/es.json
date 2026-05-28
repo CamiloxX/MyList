@@ -347,6 +347,21 @@
       "es": "Español",
       "en": "English"
     },
+    "broadcast": {
+      "title": "Anuncio global (admin)",
+      "description": "Manda una notificación push a TODOS los usuarios que tengan notificaciones activadas. Usalo con cuidado: les llega al instante.",
+      "titleLabel": "Título",
+      "titlePlaceholder": "Ej: Nueva función disponible",
+      "bodyLabel": "Mensaje",
+      "bodyPlaceholder": "Cuenta breve a quien le llegue qué pasa o qué tiene que hacer.",
+      "urlLabel": "URL al tocar (opcional)",
+      "send": "Enviar a todos",
+      "sending": "Enviando...",
+      "sentToast": "Enviado a {sent, plural, =1 {1 dispositivo} other {# dispositivos}} (limpiamos {pruned, plural, =1 {1 obsoleto} other {# obsoletos}})",
+      "errors": {
+        "required": "Falta título o mensaje."
+      }
+    },
     "notifications": {
       "title": "Notificaciones",
       "description": "Recibe avisos cuando desbloqueas un logro. En iPhone necesitas tener MyList instalada como app (desde Safari → Compartir → Añadir a pantalla de inicio) para que funcionen.",
