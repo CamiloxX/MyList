@@ -17,6 +17,30 @@ export type ChangelogEntry = {
  */
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-05-28",
+    tag: "new",
+    title: {
+      es: "Notificaciones programadas (admin)",
+      en: "Scheduled notifications (admin)",
+    },
+    description: {
+      es: "Como admin ahora puedes dejar una notificación lista para que salga en una fecha y hora concretas, a todos los usuarios o solo a tus dispositivos para probar. Se gestionan desde Ajustes.",
+      en: "As an admin you can now queue a notification to go out at a specific date and time, to everyone or just your own devices for testing. Manage them from Settings.",
+    },
+  },
+  {
+    date: "2026-05-28",
+    tag: "fix",
+    title: {
+      es: "Ícono de notificación más nítido en Android",
+      en: "Cleaner notification icon on Android",
+    },
+    description: {
+      es: "El ícono que aparece en la barra de estado del teléfono al recibir una notificación ahora se ve como una silueta limpia en vez de un cuadrado blanco.",
+      en: "The icon shown in your phone's status bar when a notification arrives now appears as a clean silhouette instead of a white square.",
+    },
+  },
+  {
     date: "2026-05-27",
     tag: "improvement",
     title: {
