@@ -3,7 +3,32 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { sendPushToAll, sendPushToUser } from "./send";
-import type { SubscribeResult } from "./types";
+import type { ScheduledNotification, SubscribeResult } from "./types";
+
+/**
+ * Resolves the current user and confirms they're an admin. Returns the user id
+ * on success or a Result-style error — every scheduled-notification action
+ * funnels through here so the is_admin check lives in one place (RLS enforces
+ * it too, but this gives a clean error instead of a silent empty result).
+ */
+async function requireAdmin(): Promise<
+  { ok: true; userId: string } | { ok: false; error: string }
+> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Inicia sesión primero" };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (!profile?.is_admin) return { ok: false, error: "No autorizado" };
+
+  return { ok: true, userId: user.id };
+}
 
 const subscribeSchema = z.object({
   endpoint: z.string().url(),
@@ -124,18 +149,8 @@ export async function broadcastPushToAll(input: BroadcastInput): Promise<Broadca
   const parsed = broadcastSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Datos inválidos" };
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Inicia sesión primero" };
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_admin")
-    .eq("id", user.id)
-    .maybeSingle();
-  if (!profile?.is_admin) return { ok: false, error: "No autorizado" };
+  const admin = await requireAdmin();
+  if (!admin.ok) return admin;
 
   const { sent, failed, pruned } = await sendPushToAll({
     title: parsed.data.title,
@@ -144,4 +159,96 @@ export async function broadcastPushToAll(input: BroadcastInput): Promise<Broadca
     tag: "broadcast",
   });
   return { ok: true, sent, failed, pruned };
+}
+
+const scheduleSchema = z.object({
+  title: z.string().min(1).max(120),
+  body: z.string().min(1).max(300),
+  url: z.string().max(500).optional(),
+  // ISO string built on the client from the local datetime-picker value.
+  scheduledFor: z.string().datetime(),
+  target: z.enum(["all", "self"]),
+});
+
+export type ScheduleInput = z.infer<typeof scheduleSchema>;
+
+/**
+ * Queues a notification for a future moment. Admin-only. The dispatcher cron
+ * picks it up once `scheduledFor` has passed. target "self" limits delivery to
+ * the admin's own devices (for testing a schedule); "all" broadcasts.
+ */
+export async function createScheduledNotification(
+  input: ScheduleInput,
+): Promise<SubscribeResult> {
+  const parsed = scheduleSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "Datos inválidos" };
+
+  const admin = await requireAdmin();
+  if (!admin.ok) return admin;
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("scheduled_notifications").insert({
+    title: parsed.data.title,
+    body: parsed.data.body,
+    url: parsed.data.url?.trim() || null,
+    scheduled_for: parsed.data.scheduledFor,
+    target_user_id: parsed.data.target === "self" ? admin.userId : null,
+    created_by: admin.userId,
+  });
+  if (error) return { ok: false, error: error.message };
+
+  return { ok: true };
+}
+
+export type ListScheduledResult =
+  | { ok: true; items: ScheduledNotification[] }
+  | { ok: false; error: string };
+
+/**
+ * Returns scheduled notifications newest-scheduled first, for the admin list.
+ * Reads through RLS (admin-only select policy) — no service-role needed.
+ */
+export async function listScheduledNotifications(): Promise<ListScheduledResult> {
+  const admin = await requireAdmin();
+  if (!admin.ok) return admin;
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("scheduled_notifications")
+    .select("id, title, body, url, target_user_id, scheduled_for, sent_at, result, created_at")
+    .order("scheduled_for", { ascending: false })
+    .limit(50);
+  if (error) return { ok: false, error: error.message };
+
+  const items: ScheduledNotification[] = (data ?? []).map((row) => ({
+    id: row.id,
+    title: row.title,
+    body: row.body,
+    url: row.url,
+    targetUserId: row.target_user_id,
+    scheduledFor: row.scheduled_for,
+    sentAt: row.sent_at,
+    result: (row.result as ScheduledNotification["result"]) ?? null,
+    createdAt: row.created_at,
+  }));
+  return { ok: true, items };
+}
+
+/**
+ * Cancels (deletes) a pending scheduled notification. Already-sent rows can be
+ * removed too — it just clears history. Admin-only via requireAdmin + RLS.
+ */
+export async function cancelScheduledNotification(id: string): Promise<SubscribeResult> {
+  if (!z.string().uuid().safeParse(id).success) {
+    return { ok: false, error: "Datos inválidos" };
+  }
+
+  const admin = await requireAdmin();
+  if (!admin.ok) return admin;
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("scheduled_notifications").delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+
+  return { ok: true };
 }

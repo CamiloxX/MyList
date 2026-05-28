@@ -363,6 +363,35 @@
         "required": "Falta título o mensaje."
       }
     },
+    "scheduled": {
+      "title": "Notificaciones programadas (admin)",
+      "description": "Deja una notificación lista para que salga en una fecha y hora concretas. El cron la dispara cuando llega el momento.",
+      "titleLabel": "Título",
+      "titlePlaceholder": "Ej: Estreno esta noche",
+      "bodyLabel": "Mensaje",
+      "bodyPlaceholder": "Qué le contamos a quien la reciba.",
+      "urlLabel": "URL al tocar (opcional)",
+      "whenLabel": "Fecha y hora",
+      "targetLabel": "Destinatarios",
+      "targetAll": "Todos",
+      "targetSelf": "Solo mis dispositivos (prueba)",
+      "schedule": "Programar",
+      "scheduling": "Programando...",
+      "scheduledToast": "Notificación programada.",
+      "canceledToast": "Programación cancelada.",
+      "cancel": "Cancelar",
+      "listTitle": "Programadas",
+      "listEmpty": "No hay notificaciones programadas.",
+      "statusPending": "Pendiente",
+      "statusSent": "Enviada",
+      "sentTo": "{sent, plural, =1 {1 dispositivo} other {# dispositivos}}",
+      "toAll": "Todos",
+      "toSelf": "Solo yo",
+      "errors": {
+        "required": "Falta título, mensaje o fecha.",
+        "pastDate": "La fecha tiene que ser futura."
+      }
+    },
     "notifications": {
       "title": "Notificaciones",
       "description": "Recibe avisos cuando desbloqueas un logro. En iPhone necesitas tener MyList instalada como app (desde Safari → Compartir → Añadir a pantalla de inicio) para que funcionen.",

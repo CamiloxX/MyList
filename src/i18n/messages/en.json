@@ -363,6 +363,35 @@
         "required": "Title and message are required."
       }
     },
+    "scheduled": {
+      "title": "Scheduled notifications (admin)",
+      "description": "Queue a notification to go out at a specific date and time. The cron fires it when the moment arrives.",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Premiere tonight",
+      "bodyLabel": "Message",
+      "bodyPlaceholder": "What we tell whoever receives it.",
+      "urlLabel": "Tap-target URL (optional)",
+      "whenLabel": "Date and time",
+      "targetLabel": "Recipients",
+      "targetAll": "Everyone",
+      "targetSelf": "Only my devices (test)",
+      "schedule": "Schedule",
+      "scheduling": "Scheduling...",
+      "scheduledToast": "Notification scheduled.",
+      "canceledToast": "Schedule canceled.",
+      "cancel": "Cancel",
+      "listTitle": "Scheduled",
+      "listEmpty": "No scheduled notifications.",
+      "statusPending": "Pending",
+      "statusSent": "Sent",
+      "sentTo": "{sent, plural, =1 {1 device} other {# devices}}",
+      "toAll": "Everyone",
+      "toSelf": "Only me",
+      "errors": {
+        "required": "Title, message and date are required.",
+        "pastDate": "The date must be in the future."
+      }
+    },
     "notifications": {
       "title": "Notifications",
       "description": "Get notified when you unlock a badge. On iPhone you'll need to install MyList as an app first (Safari → Share → Add to Home Screen) for them to work.",

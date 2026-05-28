@@ -257,6 +257,45 @@ export type Database = {
         };
         Relationships: [];
       };
+      scheduled_notifications: {
+        Row: {
+          id: string;
+          title: string;
+          body: string;
+          url: string | null;
+          target_user_id: string | null;
+          scheduled_for: string;
+          sent_at: string | null;
+          result: Json | null;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          body: string;
+          url?: string | null;
+          target_user_id?: string | null;
+          scheduled_for: string;
+          sent_at?: string | null;
+          result?: Json | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          body?: string;
+          url?: string | null;
+          target_user_id?: string | null;
+          scheduled_for?: string;
+          sent_at?: string | null;
+          result?: Json | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       title_comments: {
         Row: {
           id: string;

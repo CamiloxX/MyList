@@ -15,3 +15,19 @@ export type PushPayload = {
 export type SubscribeResult =
   | { ok: true }
   | { ok: false; error: string };
+
+/** Who a scheduled notification targets. */
+export type ScheduledTarget = "all" | "self";
+
+/** A scheduled notification as surfaced to the admin UI. */
+export type ScheduledNotification = {
+  id: string;
+  title: string;
+  body: string;
+  url: string | null;
+  targetUserId: string | null;
+  scheduledFor: string;
+  sentAt: string | null;
+  result: { sent: number; failed: number; pruned: number } | null;
+  createdAt: string;
+};

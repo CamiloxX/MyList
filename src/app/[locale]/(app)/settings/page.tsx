@@ -6,7 +6,13 @@ import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { getRecentEarnedBadges } from "@/features/badges/queries";
 import { ExportCard } from "@/features/export/components/export-card";
 import { AvatarUploadCard } from "@/features/profile/components/avatar-upload-card";
-import { BroadcastForm, NotificationsToggle } from "@/features/notifications";
+import {
+  BroadcastForm,
+  type ScheduledNotification,
+  ScheduledForm,
+  listScheduledNotifications,
+  NotificationsToggle,
+} from "@/features/notifications";
 import { ChangePasswordForm } from "@/features/settings/components/change-password-form";
 import { LanguageSwitcher } from "@/features/settings/components/language-switcher";
 import { Link } from "@/i18n/navigation";
@@ -37,6 +43,13 @@ export default async function SettingsPage() {
         .maybeSingle()
     : { data: null };
   const isAdmin = profile?.is_admin ?? false;
+
+  // Only admins see (and can read, per RLS) the scheduled-notifications list.
+  let scheduled: ScheduledNotification[] = [];
+  if (isAdmin) {
+    const res = await listScheduledNotifications();
+    if (res.ok) scheduled = res.items;
+  }
 
   // Supabase tags every connected provider on `app_metadata.providers`. Only
   // accounts that signed up (or linked) with email/password have a password to
@@ -139,6 +152,16 @@ export default async function SettingsPage() {
             <p className="text-sm text-muted-foreground">{t("broadcast.description")}</p>
           </div>
           <BroadcastForm />
+        </section>
+      ) : null}
+
+      {isAdmin ? (
+        <section className="flex flex-col gap-3 rounded-xl border border-amber-500/30 bg-card p-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-base font-medium">{t("scheduled.title")}</h2>
+            <p className="text-sm text-muted-foreground">{t("scheduled.description")}</p>
+          </div>
+          <ScheduledForm initial={scheduled} />
         </section>
       ) : null}
 

@@ -17,6 +17,10 @@ const schema = z.object({
   // on the server) must be set together for push to actually work.
   VAPID_PRIVATE_KEY: z.string().min(1).optional(),
   VAPID_SUBJECT: z.string().regex(/^(mailto:|https?:\/\/)/).optional(),
+  // Shared secret the scheduled-notifications cron must present in the
+  // Authorization header. Optional: without it /api/cron/notifications refuses
+  // to run (503), so the endpoint is inert until you wire up the cron.
+  CRON_SECRET: z.string().min(16).optional(),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 
@@ -27,6 +31,7 @@ const parsed = schema.safeParse({
   LOADING_DEMO_MS: process.env.LOADING_DEMO_MS || undefined,
   VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY || undefined,
   VAPID_SUBJECT: process.env.VAPID_SUBJECT || undefined,
+  CRON_SECRET: process.env.CRON_SECRET || undefined,
   NODE_ENV: process.env.NODE_ENV,
 });
 
