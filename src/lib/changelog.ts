@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-27",
+    tag: "improvement",
+    title: {
+      es: "Menú móvil más limpio",
+      en: "Tidier mobile menu",
+    },
+    description: {
+      es: "El menú inferior del celular ahora muestra solo las 4 opciones principales (Biblioteca, Buscar, Descubrir, Mes) y un botón “Más” que abre Logros, Ajustes y Novedades. Menos apretado, más fácil de tocar.",
+      en: "The mobile bottom nav now shows just the 4 main tabs (Library, Search, Discover, Month) and a “More” button that opens Badges, Settings and What's new. Less cramped, easier to tap.",
+    },
+  },
+  {
+    date: "2026-05-27",
     tag: "new",
     title: {
       es: "Anuncios push para todos (admin)",
