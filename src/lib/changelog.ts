@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-28",
+    tag: "improvement",
+    title: {
+      es: "Acciones de comentarios en un menú de ⋮",
+      en: "Comment actions in a ⋮ menu",
+    },
+    description: {
+      es: "Editar y eliminar un comentario ahora viven en un menú de tres puntos más limpio, en vez de botones sueltos. La confirmación de borrado quedó dentro del mismo menú.",
+      en: "Editing and deleting a comment now live in a tidier three-dot menu instead of loose buttons, with the delete confirmation tucked into the same menu.",
+    },
+  },
+  {
+    date: "2026-05-28",
     tag: "new",
     title: {
       es: "Elige y cambia tu nombre de perfil",

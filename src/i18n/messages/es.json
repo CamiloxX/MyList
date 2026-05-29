@@ -630,6 +630,8 @@
     "saving": "Guardando...",
     "delete": "Eliminar",
     "confirmDelete": "Confirmar",
+    "confirmDeleteTitle": "¿Eliminar este comentario?",
+    "menuLabel": "Opciones del comentario",
     "cancel": "Cancelar",
     "edited": "editado",
     "anonymous": "Anónimo",

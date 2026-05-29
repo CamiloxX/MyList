@@ -630,6 +630,8 @@
     "saving": "Saving...",
     "delete": "Delete",
     "confirmDelete": "Confirm",
+    "confirmDeleteTitle": "Delete this comment?",
+    "menuLabel": "Comment options",
     "cancel": "Cancel",
     "edited": "edited",
     "anonymous": "Anonymous",

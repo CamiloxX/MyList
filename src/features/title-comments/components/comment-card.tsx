@@ -1,13 +1,15 @@
 "use client";
 
-import { CheckIcon, PencilIcon, Trash2Icon, XIcon } from "lucide-react";
+import { CheckIcon, MoreVerticalIcon, PencilIcon, Trash2Icon, XIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { AuthorAside } from "@/components/author-aside";
 import { Markdown } from "@/components/markdown";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { deleteComment, editComment } from "../actions";
 import type { TitleCommentListItem } from "../types";
 
@@ -23,6 +25,7 @@ export function CommentCard({ comment, viewerId, viewerIsAdmin }: Props) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(comment.body_md);
   const [isPending, startTransition] = useTransition();
+  const [menuOpen, setMenuOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const isOwner = viewerId && comment.user_id === viewerId;
@@ -126,56 +129,82 @@ export function CommentCard({ comment, viewerId, viewerIsAdmin }: Props) {
         )}
 
         {(canEdit || canDelete) && !editing ? (
-          <div className="flex items-center justify-end gap-1">
-            {canEdit ? (
-              <Button
-                type="button"
-                variant="ghost"
-                size="xs"
+          <div className="flex items-center justify-end">
+            <Popover
+              open={menuOpen}
+              onOpenChange={(open) => {
+                setMenuOpen(open);
+                // Reset the delete confirmation whenever the menu closes so it
+                // reopens on the action list, not mid-confirmation.
+                if (!open) setConfirmDelete(false);
+              }}
+            >
+              <PopoverTrigger
+                aria-label={t("menuLabel")}
                 disabled={isPending}
-                onClick={() => setEditing(true)}
-                className="text-muted-foreground"
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "icon-xs" }),
+                  "text-muted-foreground",
+                )}
               >
-                <PencilIcon className="size-3.5" aria-hidden />
-                {t("edit")}
-              </Button>
-            ) : null}
-            {canDelete ? (
-              confirmDelete ? (
-                <>
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="xs"
-                    disabled={isPending}
-                    onClick={handleDelete}
-                  >
-                    {t("confirmDelete")}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="xs"
-                    disabled={isPending}
-                    onClick={() => setConfirmDelete(false)}
-                  >
-                    {t("cancel")}
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="xs"
-                  disabled={isPending}
-                  onClick={() => setConfirmDelete(true)}
-                  className="text-muted-foreground hover:text-destructive"
-                >
-                  <Trash2Icon className="size-3.5" aria-hidden />
-                  {t("delete")}
-                </Button>
-              )
-            ) : null}
+                <MoreVerticalIcon className="size-4" aria-hidden />
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-48 p-1.5">
+                {confirmDelete ? (
+                  <div className="flex flex-col gap-2 p-1">
+                    <p className="text-sm text-muted-foreground">{t("confirmDeleteTitle")}</p>
+                    <div className="flex justify-end gap-1.5">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="xs"
+                        disabled={isPending}
+                        onClick={() => setConfirmDelete(false)}
+                      >
+                        {t("cancel")}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="xs"
+                        disabled={isPending}
+                        onClick={handleDelete}
+                      >
+                        {t("delete")}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col">
+                    {canEdit ? (
+                      <button
+                        type="button"
+                        disabled={isPending}
+                        onClick={() => {
+                          setEditing(true);
+                          setMenuOpen(false);
+                        }}
+                        className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors hover:bg-muted disabled:opacity-50"
+                      >
+                        <PencilIcon className="size-3.5 text-muted-foreground" aria-hidden />
+                        {t("edit")}
+                      </button>
+                    ) : null}
+                    {canDelete ? (
+                      <button
+                        type="button"
+                        disabled={isPending}
+                        onClick={() => setConfirmDelete(true)}
+                        className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50"
+                      >
+                        <Trash2Icon className="size-3.5" aria-hidden />
+                        {t("delete")}
+                      </button>
+                    ) : null}
+                  </div>
+                )}
+              </PopoverContent>
+            </Popover>
           </div>
         ) : null}
       </div>
