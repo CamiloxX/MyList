@@ -342,6 +342,24 @@
     "email": "Email",
     "name": "Name",
     "signOut": "Sign out",
+    "profileName": {
+      "title": "Profile name",
+      "description": "This is how others see you (for example in comments). You can only change it once a month.",
+      "label": "Name",
+      "save": "Save name",
+      "saving": "Saving...",
+      "successToast": "Name updated",
+      "freeHint": "You can change it now. After that you'll have to wait 30 days for the next change.",
+      "lockedHint": "You changed your name recently. You'll be able to change it again on {date}.",
+      "errors": {
+        "tooShort": "Name is too short (minimum 2 characters).",
+        "tooLong": "Maximum 50 characters.",
+        "unchanged": "That's already your current name.",
+        "tooSoon": "You can only change your name once a month.",
+        "notSignedIn": "Sign in first.",
+        "failed": "We couldn't update your name."
+      }
+    },
     "language": "Language",
     "languageDescription": "Choose the interface language.",
     "languages": {

@@ -342,6 +342,24 @@
     "email": "Email",
     "name": "Nombre",
     "signOut": "Cerrar sesión",
+    "profileName": {
+      "title": "Nombre de perfil",
+      "description": "Así te ven los demás (por ejemplo en los comentarios). Solo puedes cambiarlo una vez al mes.",
+      "label": "Nombre",
+      "save": "Guardar nombre",
+      "saving": "Guardando...",
+      "successToast": "Nombre actualizado",
+      "freeHint": "Puedes cambiarlo ahora. Después tendrás que esperar 30 días para el siguiente cambio.",
+      "lockedHint": "Ya cambiaste tu nombre hace poco. Podrás volver a cambiarlo el {date}.",
+      "errors": {
+        "tooShort": "El nombre es muy corto (mínimo 2 caracteres).",
+        "tooLong": "Máximo 50 caracteres.",
+        "unchanged": "Ese ya es tu nombre actual.",
+        "tooSoon": "Solo puedes cambiar tu nombre una vez al mes.",
+        "notSignedIn": "Inicia sesión primero.",
+        "failed": "No pudimos actualizar tu nombre."
+      }
+    },
     "language": "Idioma",
     "languageDescription": "Elige el idioma de la interfaz.",
     "languages": {

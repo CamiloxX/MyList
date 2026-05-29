@@ -6,6 +6,8 @@ import {
   ALLOWED_AVATAR_MIME,
   type AllowedAvatarMime,
   MAX_AVATAR_BYTES,
+  type UpdateDisplayNameInput,
+  updateDisplayNameSchema,
 } from "./schemas";
 
 export type ProfileActionResult =
@@ -92,14 +94,99 @@ export async function removeAvatar(): Promise<ProfileActionResult> {
     .from("avatars")
     .remove(Object.values(EXT_BY_MIME).map((e) => `${user.id}/avatar.${e}`));
 
-  const { error } = await supabase
-    .from("profiles")
-    .update({ avatar_url: null })
-    .eq("id", user.id);
+  const { error } = await supabase.from("profiles").update({ avatar_url: null }).eq("id", user.id);
 
   if (error) return { ok: false, error: error.message };
 
   revalidatePath("/settings");
   revalidatePath("/library", "layout");
   return { ok: true, avatarUrl: null };
+}
+
+const DISPLAY_NAME_COOLDOWN_DAYS = 30;
+
+export type DisplayNameErrorKey =
+  | "notSignedIn"
+  | "tooShort"
+  | "tooLong"
+  | "unchanged"
+  | "tooSoon"
+  | "failed";
+
+export type UpdateDisplayNameResult =
+  | { ok: true; displayName: string; nextChangeAt: string }
+  | { ok: false; errorKey: DisplayNameErrorKey; nextChangeAt?: string };
+
+function addDays(iso: string, days: number): string {
+  const d = new Date(iso);
+  d.setDate(d.getDate() + days);
+  return d.toISOString();
+}
+
+/**
+ * Updates the user's display name, enforcing a once-every-30-days limit. The
+ * real enforcement lives in the DB trigger `profiles_display_name_change_limit`
+ * (RLS lets the user update their own row from the client, so the action alone
+ * can't be the gate); here we translate the trigger's error into a localized
+ * key and keep `auth.users` metadata in sync.
+ *
+ * The first change (display_name_updated_at IS NULL) is free and just starts
+ * the clock.
+ */
+export async function updateDisplayName(
+  input: UpdateDisplayNameInput,
+): Promise<UpdateDisplayNameResult> {
+  const parsed = updateDisplayNameSchema.safeParse(input);
+  if (!parsed.success) {
+    const first = parsed.error.flatten().fieldErrors.displayName?.[0];
+    return { ok: false, errorKey: first === "tooLong" ? "tooLong" : "tooShort" };
+  }
+  const displayName = parsed.data.displayName;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, errorKey: "notSignedIn" };
+
+  // Short-circuit no-ops: the trigger treats "same value" as no change and would
+  // silently succeed, which would read to the user as a wasted monthly change.
+  const { data: current } = await supabase
+    .from("profiles")
+    .select("display_name, display_name_updated_at")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (current?.display_name === displayName) {
+    return { ok: false, errorKey: "unchanged" };
+  }
+
+  const { data: updated, error } = await supabase
+    .from("profiles")
+    .update({ display_name: displayName })
+    .eq("id", user.id)
+    .select("display_name_updated_at")
+    .single();
+
+  if (error) {
+    if (error.message.includes("display_name_change_too_soon")) {
+      const nextChangeAt = current?.display_name_updated_at
+        ? addDays(current.display_name_updated_at, DISPLAY_NAME_COOLDOWN_DAYS)
+        : undefined;
+      return { ok: false, errorKey: "tooSoon", nextChangeAt };
+    }
+    console.warn("[updateDisplayName] error:", error.message);
+    return { ok: false, errorKey: "failed" };
+  }
+
+  // Keep auth metadata in sync so user_metadata.display_name doesn't drift from
+  // the profiles row (greeting, JWT claims, etc. read from metadata elsewhere).
+  await supabase.auth.updateUser({ data: { display_name: displayName } });
+
+  revalidatePath("/settings");
+  revalidatePath("/library", "layout");
+
+  const nextChangeAt = updated.display_name_updated_at
+    ? addDays(updated.display_name_updated_at, DISPLAY_NAME_COOLDOWN_DAYS)
+    : addDays(new Date().toISOString(), DISPLAY_NAME_COOLDOWN_DAYS);
+  return { ok: true, displayName, nextChangeAt };
 }

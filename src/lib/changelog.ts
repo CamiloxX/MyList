@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-28",
     tag: "new",
     title: {
+      es: "Elige y cambia tu nombre de perfil",
+      en: "Pick and change your profile name",
+    },
+    description: {
+      es: "Si entraste con Google ya no te quedas con el nombre sacado de tu correo: tomamos tu nombre real de Google. Y desde Ajustes puedes cambiar tu nombre de perfil cuando quieras, con un límite de una vez al mes.",
+      en: "If you signed in with Google you no longer get stuck with the name pulled from your email: we use your real Google name. And from Settings you can change your profile name whenever you like, limited to once a month.",
+    },
+  },
+  {
+    date: "2026-05-28",
+    tag: "new",
+    title: {
       es: "Avisos de episodios nuevos y resumen semanal",
       en: "New-episode alerts and weekly recap",
     },

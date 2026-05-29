@@ -5,14 +5,15 @@ import { BADGE_BY_ID } from "@/features/badges/catalog";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { getRecentEarnedBadges } from "@/features/badges/queries";
 import { ExportCard } from "@/features/export/components/export-card";
-import { AvatarUploadCard } from "@/features/profile/components/avatar-upload-card";
 import {
   BroadcastForm,
-  type ScheduledNotification,
-  ScheduledForm,
   listScheduledNotifications,
   NotificationsToggle,
+  ScheduledForm,
+  type ScheduledNotification,
 } from "@/features/notifications";
+import { AvatarUploadCard } from "@/features/profile/components/avatar-upload-card";
+import { DisplayNameCard } from "@/features/profile/components/display-name-card";
 import { ChangePasswordForm } from "@/features/settings/components/change-password-form";
 import { LanguageSwitcher } from "@/features/settings/components/language-switcher";
 import { Link } from "@/i18n/navigation";
@@ -38,11 +39,20 @@ export default async function SettingsPage() {
   const { data: profile } = user
     ? await supabase
         .from("profiles")
-        .select("avatar_url, display_name, is_admin")
+        .select("avatar_url, display_name, display_name_updated_at, is_admin")
         .eq("id", user.id)
         .maybeSingle()
     : { data: null };
   const isAdmin = profile?.is_admin ?? false;
+
+  // Source of truth for the visible name is profiles.display_name (kept in sync
+  // with auth metadata by updateDisplayName). The 30-day cooldown is computed
+  // here so the card can render a disabled state with the unlock date.
+  const displayName = profile?.display_name ?? user?.user_metadata?.display_name ?? "";
+  const lastNameChange = profile?.display_name_updated_at ?? null;
+  const nextNameChangeAt = lastNameChange
+    ? new Date(new Date(lastNameChange).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
+    : null;
 
   // Only admins see (and can read, per RLS) the scheduled-notifications list.
   let scheduled: ScheduledNotification[] = [];
@@ -69,13 +79,21 @@ export default async function SettingsPage() {
           <dt className="text-muted-foreground">{t("email")}</dt>
           <dd>{user?.email ?? "—"}</dd>
           <dt className="text-muted-foreground">{t("name")}</dt>
-          <dd>{user?.user_metadata?.display_name ?? "—"}</dd>
+          <dd>{displayName || "—"}</dd>
         </dl>
         <form action={signOut} className="mt-3">
           <Button type="submit" variant="outline" size="sm">
             {t("signOut")}
           </Button>
         </form>
+      </section>
+
+      <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-base font-medium">{t("profileName.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("profileName.description")}</p>
+        </div>
+        <DisplayNameCard currentName={displayName} nextChangeAt={nextNameChangeAt} />
       </section>
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">

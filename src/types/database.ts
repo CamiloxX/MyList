@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           id: string;
           display_name: string | null;
+          display_name_updated_at: string | null;
           avatar_url: string | null;
           locale: string;
           is_admin: boolean;
@@ -22,6 +23,7 @@ export type Database = {
         Insert: {
           id: string;
           display_name?: string | null;
+          display_name_updated_at?: string | null;
           avatar_url?: string | null;
           locale?: string;
           is_admin?: boolean;
@@ -31,6 +33,7 @@ export type Database = {
         Update: {
           id?: string;
           display_name?: string | null;
+          display_name_updated_at?: string | null;
           avatar_url?: string | null;
           locale?: string;
           is_admin?: boolean;
