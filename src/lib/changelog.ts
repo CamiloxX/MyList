@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-28",
+    tag: "new",
+    title: {
+      es: "Plataformas disponibles en el detalle",
+      en: "Available platforms on the detail page",
+    },
+    description: {
+      es: "La ficha de cada peli, serie o anime ahora muestra en qué plataformas está disponible (Netflix, Disney+, Prime, Crunchyroll…), además del botón para ir a verla.",
+      en: "Each movie, series or anime page now shows which platforms it's available on (Netflix, Disney+, Prime, Crunchyroll…), alongside the button to go watch it.",
+    },
+  },
+  {
+    date: "2026-05-28",
     tag: "improvement",
     title: {
       es: "Acciones de comentarios en un menú de ⋮",

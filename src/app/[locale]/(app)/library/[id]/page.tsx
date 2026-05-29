@@ -1,8 +1,11 @@
+import { PlayIcon } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { ProvidersRow } from "@/features/discover/components/providers-row";
+import { getMediaWatchUrl } from "@/features/library/actions";
 import { RemoveButton } from "@/features/library/components/remove-button";
 import { SeasonsList } from "@/features/library/components/seasons-list";
 import { StatusSelect } from "@/features/library/components/status-select";
@@ -15,10 +18,9 @@ import { Link } from "@/i18n/navigation";
 import { getJikanTrailer } from "@/lib/jikan/videos";
 import { loadingDemoDelay } from "@/lib/loading-demo";
 import { createClient } from "@/lib/supabase/server";
+import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
 import { getTmdbTrailer } from "@/lib/tmdb/videos";
 import { cn } from "@/lib/utils";
-import { PlayIcon } from "lucide-react";
-import { getMediaWatchUrl } from "@/features/library/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -40,7 +42,7 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
     notFound();
   }
 
-  const [watchUrl, { data: entries }, trailer] = await Promise.all([
+  const [watchUrl, { data: entries }, trailer, providers] = await Promise.all([
     getMediaWatchUrl(id).catch(() => null),
     supabase
       .from("watch_entries")
@@ -48,6 +50,7 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
       .eq("media_item_id", id)
       .order("watched_on", { ascending: false }),
     fetchTrailerFor(item.source, item.kind, item.source_id),
+    fetchWatchProviders(item.source, item.kind, item.source_id),
   ]);
 
   const entriesList = entries ?? [];
@@ -138,6 +141,28 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
               ) : null}
               <RemoveButton id={item.id} title={item.title} />
             </div>
+            {providers ? (
+              providers.type === "tmdb" ? (
+                <ProvidersRow data={providers.data} max={6} />
+              ) : (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                    {t("discover.providersRow.label")}
+                  </span>
+                  {providers.items.map((p) => (
+                    <a
+                      key={p.url}
+                      href={p.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-md border bg-muted/60 px-2 py-0.5 text-[11px] font-medium transition-colors hover:bg-muted"
+                    >
+                      {p.name}
+                    </a>
+                  ))}
+                </div>
+              )
+            ) : null}
             <p className="text-xs text-muted-foreground">
               {t("library.detail.entriesCount", { count: entriesList.length })}
             </p>
@@ -183,6 +208,46 @@ async function fetchTrailerFor(
   }
   if (source === "anilist" && kind === "anime") {
     return getJikanTrailer(sourceId);
+  }
+  return null;
+}
+
+type DetailProviders =
+  | { type: "tmdb"; data: WatchProvidersForTitle }
+  | { type: "anime"; items: { name: string; url: string }[] }
+  | null;
+
+/**
+ * Resolves where a title can be watched, for the "available on" row. TMDB
+ * movies/TV return provider logos (rendered via ProvidersRow); anime goes to
+ * Jikan, which gives per-provider names + direct URLs but no logos, so those
+ * render as linked chips. Region is fixed to Colombia, matching the watch URL.
+ */
+async function fetchWatchProviders(
+  source: string,
+  kind: string,
+  sourceId: string,
+): Promise<DetailProviders> {
+  if (source === "tmdb" && (kind === "movie" || kind === "tv")) {
+    const { getWatchProvidersForTitle } = await import("@/lib/tmdb/discover");
+    const data = await getWatchProvidersForTitle(Number.parseInt(sourceId, 10), kind, "CO").catch(
+      () => null,
+    );
+    return data ? { type: "tmdb", data } : null;
+  }
+  if (source === "anilist" && kind === "anime") {
+    try {
+      const res = await fetch(`https://api.jikan.moe/v4/anime/${sourceId}/streaming`);
+      if (res.ok) {
+        const json = (await res.json()) as { data?: { name?: string; url?: string }[] };
+        const items = (json.data ?? [])
+          .map((p) => ({ name: p.name ?? "", url: p.url ?? "" }))
+          .filter((p) => p.name !== "" && p.url !== "");
+        if (items.length > 0) return { type: "anime", items };
+      }
+    } catch (e) {
+      console.warn("[fetchWatchProviders] Failed to fetch Jikan streaming info:", e);
+    }
   }
   return null;
 }
