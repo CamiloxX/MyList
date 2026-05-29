@@ -59,7 +59,8 @@ function weekdayInTokyo(): string {
 }
 
 /**
- * Notifies users about shows they're *watching* that aired a new episode today.
+ * Notifies users about shows they opted into (notify_episodes flag) that aired
+ * a new episode today.
  *
  * - TV (TMDB): fires when `last_episode_to_air.air_date` equals today (Colombia).
  *   Exact season/episode is included.
@@ -89,7 +90,7 @@ export async function dispatchNewEpisodes(): Promise<NewEpisodesSummary> {
   const { data: items } = await admin
     .from("media_items")
     .select("id, user_id, title, source, source_id, kind")
-    .eq("status", "watching")
+    .eq("notify_episodes", true)
     .in("kind", ["tv", "anime"])
     .in("user_id", userIds);
   if (!items || items.length === 0) return empty;

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
 import { getMediaWatchUrl } from "@/features/library/actions";
+import { NotifyEpisodesToggle } from "@/features/library/components/notify-episodes-toggle";
 import { RemoveButton } from "@/features/library/components/remove-button";
 import { SeasonsList } from "@/features/library/components/seasons-list";
 import { StatusSelect } from "@/features/library/components/status-select";
@@ -15,10 +16,13 @@ import { WatchEntryTrigger } from "@/features/library/components/watch-entry-tri
 import type { MediaStatus } from "@/features/library/status";
 import { TitleComments } from "@/features/title-comments/components/title-comments";
 import { Link } from "@/i18n/navigation";
+import type { AiringStatus } from "@/lib/airing-status";
+import { getJikanAiringStatus } from "@/lib/jikan/airing";
 import { getJikanTrailer } from "@/lib/jikan/videos";
 import { loadingDemoDelay } from "@/lib/loading-demo";
 import { createClient } from "@/lib/supabase/server";
 import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
+import { getTmdbTvAiringStatus } from "@/lib/tmdb/tv";
 import { getTmdbTrailer } from "@/lib/tmdb/videos";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +46,7 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
     notFound();
   }
 
-  const [watchUrl, { data: entries }, trailer, providers] = await Promise.all([
+  const [watchUrl, { data: entries }, trailer, providers, airing] = await Promise.all([
     getMediaWatchUrl(id).catch(() => null),
     supabase
       .from("watch_entries")
@@ -51,6 +55,7 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
       .order("watched_on", { ascending: false }),
     fetchTrailerFor(item.source, item.kind, item.source_id),
     fetchWatchProviders(item.source, item.kind, item.source_id),
+    fetchAiringStatus(item.source, item.kind, item.source_id),
   ]);
 
   const entriesList = entries ?? [];
@@ -112,6 +117,20 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
                   {item.title}
                 </h1>
                 <Badge variant="secondary">{t(`kinds.${item.kind}`)}</Badge>
+                {airing !== "unknown" && (item.kind === "tv" || item.kind === "anime") ? (
+                  <Badge
+                    variant="secondary"
+                    className={cn(
+                      "border-transparent",
+                      airing === "airing" &&
+                        "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+                      airing === "upcoming" && "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+                      airing === "ended" && "bg-muted text-muted-foreground",
+                    )}
+                  >
+                    {t(`library.detail.airing.${airing}`)}
+                  </Badge>
+                ) : null}
                 {item.year ? (
                   <span className="text-sm text-muted-foreground">{item.year}</span>
                 ) : null}
@@ -138,6 +157,9 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
               ) : null}
               {trailer ? (
                 <TrailerButton youtubeKey={trailer.youtubeKey} title={item.title} />
+              ) : null}
+              {item.kind === "tv" || item.kind === "anime" ? (
+                <NotifyEpisodesToggle id={item.id} initial={item.notify_episodes} />
               ) : null}
               <RemoveButton id={item.id} title={item.title} />
             </div>
@@ -250,4 +272,18 @@ async function fetchWatchProviders(
     }
   }
   return null;
+}
+
+/**
+ * Resolves the airing state (en emisión / finalizada / próximamente) for the
+ * detail-page badge. Only series and anime have one; everything else is unknown.
+ */
+async function fetchAiringStatus(
+  source: string,
+  kind: string,
+  sourceId: string,
+): Promise<AiringStatus> {
+  if (source === "tmdb" && kind === "tv") return getTmdbTvAiringStatus(sourceId);
+  if (source === "anilist" && kind === "anime") return getJikanAiringStatus(sourceId);
+  return "unknown";
 }

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import type { AiringStatus } from "@/lib/airing-status";
 import { jikanFetch } from "./client";
 
 const animeAiringSchema = z.object({
@@ -50,5 +51,24 @@ export async function getJikanAiring(malId: string): Promise<JikanAiring | null>
   } catch (error) {
     console.warn("[jikan-airing] failed:", error);
     return null;
+  }
+}
+
+/**
+ * Classifies an anime's airing state for the detail-page badge and the
+ * "notify new episodes" auto-toggle. Returns "unknown" on failure.
+ */
+export async function getJikanAiringStatus(malId: string): Promise<AiringStatus> {
+  try {
+    const raw = await jikanFetch<unknown>(`/anime/${malId}`, { revalidate: 3600 });
+    const parsed = animeAiringSchema.parse(raw);
+    const d = parsed.data;
+    if (d.airing === true || d.status === "Currently Airing") return "airing";
+    if (d.status === "Not yet aired") return "upcoming";
+    if (d.status === "Finished Airing") return "ended";
+    return "unknown";
+  } catch (error) {
+    console.warn("[jikan-airing-status] failed:", error);
+    return "unknown";
   }
 }

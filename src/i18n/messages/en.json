@@ -200,7 +200,18 @@
       "history": "History",
       "entriesCount": "{count, plural, =0 {No views} =1 {1 view logged} other {# views logged}}.",
       "emptyHistory": "No views logged yet.",
-      "watchNow": "Watch now"
+      "watchNow": "Watch now",
+      "airing": {
+        "airing": "Airing",
+        "ended": "Ended",
+        "upcoming": "Upcoming"
+      },
+      "notifyEpisodes": {
+        "on": "Alerts on",
+        "off": "Notify me of episodes",
+        "onToast": "We'll notify you when a new episode airs",
+        "offToast": "We'll no longer notify you about new episodes"
+      }
     },
     "watchEntry": {
       "title": "Log a view",

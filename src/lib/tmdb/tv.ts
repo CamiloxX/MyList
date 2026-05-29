@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import type { AiringStatus } from "@/lib/airing-status";
 import { tmdbFetch } from "./client";
 
 const tmdbSeasonSchema = z.object({
@@ -87,5 +88,37 @@ export async function getTmdbTvLastEpisode(id: string): Promise<TmdbEpisode | nu
   } catch (error) {
     console.warn("[tmdb-tv-last-episode] failed:", error);
     return null;
+  }
+}
+
+const tmdbTvStatusSchema = z.object({
+  id: z.number(),
+  // "Returning Series" | "Ended" | "Canceled" | "In Production" | "Planned"
+  status: z.string().nullable().optional(),
+  next_episode_to_air: tmdbEpisodeSchema.nullable().optional(),
+  last_episode_to_air: tmdbEpisodeSchema.nullable().optional(),
+});
+
+/**
+ * Classifies a TMDB show's airing state for the detail-page badge and the
+ * "notify new episodes" auto-toggle. A pending `next_episode_to_air` is the
+ * strongest "more is coming" signal; otherwise we fall back to TMDB's `status`.
+ * Returns "unknown" on failure so callers just skip the badge.
+ */
+export async function getTmdbTvAiringStatus(id: string): Promise<AiringStatus> {
+  try {
+    const raw = await tmdbFetch<unknown>(`/tv/${id}`, { revalidate: 3600 });
+    const parsed = tmdbTvStatusSchema.parse(raw);
+    if (parsed.next_episode_to_air) return "airing";
+    const status = (parsed.status ?? "").toLowerCase();
+    if (status.includes("ended") || status.includes("cancel")) return "ended";
+    if (status === "returning series") return "airing";
+    if (status === "planned") return "upcoming";
+    if (status === "in production") return parsed.last_episode_to_air ? "airing" : "upcoming";
+    if (parsed.last_episode_to_air) return "ended";
+    return "unknown";
+  } catch (error) {
+    console.warn("[tmdb-tv-airing-status] failed:", error);
+    return "unknown";
   }
 }

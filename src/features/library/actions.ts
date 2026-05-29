@@ -4,7 +4,9 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { evaluateAndPersist } from "@/features/badges/evaluator";
 import type { BadgeDefinition } from "@/features/badges/types";
+import { getJikanAiringStatus } from "@/lib/jikan/airing";
 import { createClient } from "@/lib/supabase/server";
+import { getTmdbTvAiringStatus } from "@/lib/tmdb/tv";
 import type { Database, Json } from "@/types/database";
 import {
   type AddToLibraryInput,
@@ -26,6 +28,20 @@ const statusSchema = z.enum(["watching", "watched", "pending", "dropped"]);
 const idSchema = z.string().uuid();
 
 /**
+ * Whether a TV/anime title is currently airing (or returning with more
+ * episodes coming). Movies and any lookup failure resolve to false.
+ */
+async function isCurrentlyAiring(source: string, kind: string, sourceId: string): Promise<boolean> {
+  if (kind === "tv" && source === "tmdb") {
+    return (await getTmdbTvAiringStatus(sourceId)) === "airing";
+  }
+  if (kind === "anime" && source === "anilist") {
+    return (await getJikanAiringStatus(sourceId)) === "airing";
+  }
+  return false;
+}
+
+/**
  * Adds a TMDB or AniList item to the current user's library.
  * Idempotent via the unique (user_id, source, source_id, kind) constraint:
  * a second call updates metadata in place rather than creating a duplicate.
@@ -44,6 +60,14 @@ export async function addToLibrary(input: AddToLibraryInput): Promise<LibraryAct
     return { ok: false, error: "Inicia sesión primero" };
   }
 
+  // Auto-enable new-episode notifications when adding a still-airing series or
+  // anime, so the user starts getting alerts without an extra step.
+  const notifyEpisodes = await isCurrentlyAiring(
+    parsed.data.source,
+    parsed.data.kind,
+    parsed.data.sourceId,
+  );
+
   const { error } = await supabase.from("media_items").upsert(
     {
       user_id: user.id,
@@ -59,6 +83,7 @@ export async function addToLibrary(input: AddToLibraryInput): Promise<LibraryAct
       genres: parsed.data.genres as Json,
       raw_metadata: (parsed.data.rawMetadata ?? null) as Json,
       status: "pending",
+      notify_episodes: notifyEpisodes,
     },
     { onConflict: "user_id,source,source_id,kind" },
   );
@@ -94,9 +119,16 @@ export async function updateLibraryStatus(
     return { ok: false, error: "Inicia sesión primero" };
   }
 
+  // Stop pestering about a show the user finished or abandoned. Other statuses
+  // leave the flag untouched (add-time detection / the manual toggle own it).
+  const patch: { status: MediaStatus; notify_episodes?: boolean } = { status: parsedStatus.data };
+  if (parsedStatus.data === "watched" || parsedStatus.data === "dropped") {
+    patch.notify_episodes = false;
+  }
+
   const { data: updatedItem, error } = await supabase
     .from("media_items")
-    .update({ status: parsedStatus.data })
+    .update(patch)
     .eq("id", parsedId.data)
     .select("*")
     .single();
@@ -108,6 +140,41 @@ export async function updateLibraryStatus(
   const newBadges = await evaluateAndPersist(supabase, user.id);
   revalidatePath("/library");
   return { ok: true, data: updatedItem, newBadges };
+}
+
+/**
+ * Toggles per-title new-episode notifications. The new-episode cron only checks
+ * items with this flag on, so this is the single switch the user controls from
+ * the detail page.
+ */
+export async function setNotifyEpisodes(
+  id: string,
+  enabled: boolean,
+): Promise<LibraryActionResult> {
+  const parsedId = idSchema.safeParse(id);
+  if (!parsedId.success) {
+    return { ok: false, error: "Datos inválidos" };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { ok: false, error: "Inicia sesión primero" };
+  }
+
+  const { error } = await supabase
+    .from("media_items")
+    .update({ notify_episodes: enabled })
+    .eq("id", parsedId.data);
+
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+
+  revalidatePath(`/library/${parsedId.data}`);
+  return { ok: true };
 }
 
 /**

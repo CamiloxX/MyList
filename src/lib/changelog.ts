@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-28",
     tag: "new",
     title: {
+      es: "Estado de emisión y avisos de episodios por título",
+      en: "Airing status and per-title episode alerts",
+    },
+    description: {
+      es: "La ficha de series y anime ahora muestra si está «En emisión», «Finalizada» o «Próximamente». Al agregar algo que está en emisión activamos automáticamente los avisos de nuevos episodios, y puedes encenderlos o apagarlos por título desde su ficha.",
+      en: "Series and anime pages now show whether a title is «Airing», «Ended» or «Upcoming». When you add something that's currently airing we auto-enable new-episode alerts, and you can turn them on or off per title from its page.",
+    },
+  },
+  {
+    date: "2026-05-28",
+    tag: "new",
+    title: {
       es: "Plataformas disponibles en el detalle",
       en: "Available platforms on the detail page",
     },

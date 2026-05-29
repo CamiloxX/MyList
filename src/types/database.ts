@@ -58,6 +58,7 @@ export type Database = {
           genres: Json;
           raw_metadata: Json | null;
           status: Database["public"]["Enums"]["media_status"];
+          notify_episodes: boolean;
           visibility: Database["public"]["Enums"]["visibility_level"];
           created_at: string;
           updated_at: string;
@@ -77,6 +78,7 @@ export type Database = {
           genres?: Json;
           raw_metadata?: Json | null;
           status?: Database["public"]["Enums"]["media_status"];
+          notify_episodes?: boolean;
           visibility?: Database["public"]["Enums"]["visibility_level"];
           created_at?: string;
           updated_at?: string;
@@ -96,6 +98,7 @@ export type Database = {
           genres?: Json;
           raw_metadata?: Json | null;
           status?: Database["public"]["Enums"]["media_status"];
+          notify_episodes?: boolean;
           visibility?: Database["public"]["Enums"]["visibility_level"];
           created_at?: string;
           updated_at?: string;
