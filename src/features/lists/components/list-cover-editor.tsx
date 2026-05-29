@@ -12,7 +12,15 @@ import { removeListCover, uploadListCover } from "../actions";
 import { ListCover } from "./list-cover";
 
 /** Cover banner with upload / remove controls, for a list's detail page. */
-export function ListCoverEditor({ listId, coverUrl }: { listId: string; coverUrl: string | null }) {
+export function ListCoverEditor({
+  listId,
+  coverUrl,
+  posterUrls = [],
+}: {
+  listId: string;
+  coverUrl: string | null;
+  posterUrls?: string[];
+}) {
   const t = useTranslations("lists.cover");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -62,7 +70,12 @@ export function ListCoverEditor({ listId, coverUrl }: { listId: string; coverUrl
 
   return (
     <div className="relative">
-      <ListCover coverUrl={coverUrl} seed={listId} className="h-36 w-full rounded-xl sm:h-44" />
+      <ListCover
+        coverUrl={coverUrl}
+        seed={listId}
+        posterUrls={posterUrls}
+        className="h-36 w-full rounded-xl sm:h-44"
+      />
       <Popover>
         <PopoverTrigger
           aria-label={t("infoLabel")}

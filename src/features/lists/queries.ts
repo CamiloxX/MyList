@@ -7,28 +7,39 @@ export type ListSummary = {
   name: string;
   description: string | null;
   coverUrl: string | null;
+  posterUrls: string[];
   itemCount: number;
 };
 
-/** All of the current user's lists, with how many titles each holds. */
+/** All of the current user's lists, with title count + a few posters preview. */
 export async function getUserLists(): Promise<ListSummary[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("lists")
-    .select("id, name, description, cover_url, list_items(count)")
+    .select("id, name, description, cover_url, list_items(position, media_items(poster_url))")
     .order("created_at", { ascending: true });
   if (error) {
     throw new Error(`Error cargando listas: ${error.message}`);
   }
 
   return (data ?? []).map((row) => {
-    const counts = row.list_items as unknown as Array<{ count: number }>;
+    const items =
+      (row.list_items as unknown as Array<{
+        position: number;
+        media_items: { poster_url: string | null } | null;
+      }>) ?? [];
+    const posterUrls = [...items]
+      .sort((a, b) => a.position - b.position)
+      .map((it) => it.media_items?.poster_url)
+      .filter((p): p is string => Boolean(p))
+      .slice(0, 4);
     return {
       id: row.id,
       name: row.name,
       description: row.description,
       coverUrl: row.cover_url,
-      itemCount: counts?.[0]?.count ?? 0,
+      posterUrls,
+      itemCount: items.length,
     };
   });
 }

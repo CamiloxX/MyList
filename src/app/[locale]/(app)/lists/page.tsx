@@ -34,7 +34,12 @@ export default async function ListsPage() {
                 href={`/lists/${list.id}`}
                 className="flex flex-col overflow-hidden rounded-xl border bg-card transition-colors hover:bg-muted/30"
               >
-                <ListCover coverUrl={list.coverUrl} seed={list.id} className="h-24 w-full" />
+                <ListCover
+                  coverUrl={list.coverUrl}
+                  seed={list.id}
+                  posterUrls={list.posterUrls}
+                  className="h-24 w-full"
+                />
                 <div className="flex flex-col gap-1 p-4">
                   <span className="truncate font-medium">{list.name}</span>
                   {list.description ? (

@@ -49,7 +49,12 @@ export default async function SharedListPage({ params }: Props) {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
-      <ListCover coverUrl={list.coverUrl} seed={id} className="h-40 w-full rounded-xl sm:h-52" />
+      <ListCover
+        coverUrl={list.coverUrl}
+        seed={id}
+        posterUrls={list.items.map((i) => i.poster_url).filter((p): p is string => Boolean(p))}
+        className="h-40 w-full rounded-xl sm:h-52"
+      />
 
       <header className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">{list.name}</h1>

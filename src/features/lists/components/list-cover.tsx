@@ -19,10 +19,13 @@ function hueFromId(id: string): number {
 export function ListCover({
   coverUrl,
   seed,
+  posterUrls = [],
   className,
 }: {
   coverUrl: string | null;
   seed: string;
+  /** Posters used to build a collage default when there's no uploaded cover. */
+  posterUrls?: string[];
   className?: string;
 }) {
   if (coverUrl) {
@@ -35,6 +38,20 @@ export function ListCover({
           sizes="(min-width: 640px) 640px, 100vw"
           className="object-cover"
         />
+      </div>
+    );
+  }
+
+  // No uploaded cover but the list has titles: stitch their posters into a strip.
+  const collage = posterUrls.slice(0, 4);
+  if (collage.length > 0) {
+    return (
+      <div className={cn("relative flex overflow-hidden bg-muted", className)}>
+        {collage.map((url) => (
+          <div key={url} className="relative flex-1">
+            <Image src={url} alt="" fill sizes="160px" className="object-cover" />
+          </div>
+        ))}
       </div>
     );
   }

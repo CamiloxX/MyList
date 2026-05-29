@@ -34,7 +34,11 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
         {t("lists.back")}
       </Link>
 
-      <ListCoverEditor listId={data.id} coverUrl={data.coverUrl} />
+      <ListCoverEditor
+        listId={data.id}
+        coverUrl={data.coverUrl}
+        posterUrls={data.items.map((i) => i.poster_url).filter((p): p is string => Boolean(p))}
+      />
 
       <header className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1">
