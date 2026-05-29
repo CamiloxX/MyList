@@ -73,40 +73,55 @@ export default async function SettingsPage() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
       </header>
 
-      <section className="flex flex-col gap-2 rounded-xl border bg-card p-4">
-        <h2 className="text-base font-medium">{t("account")}</h2>
-        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-          <dt className="text-muted-foreground">{t("email")}</dt>
-          <dd>{user?.email ?? "—"}</dd>
-          <dt className="text-muted-foreground">{t("name")}</dt>
-          <dd>{displayName || "—"}</dd>
-        </dl>
-        <form action={signOut} className="mt-3">
-          <Button type="submit" variant="outline" size="sm">
-            {t("signOut")}
-          </Button>
-        </form>
-      </section>
-
-      <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-base font-medium">{t("profileName.title")}</h2>
-          <p className="text-sm text-muted-foreground">{t("profileName.description")}</p>
+      {/* Unified account/profile card: avatar, name, email, password and sign
+          out live together so all "who am I" settings are in one place. */}
+      <section className="flex flex-col divide-y rounded-xl border bg-card">
+        <div className="flex flex-col gap-2 p-4">
+          <h2 className="text-base font-medium">{t("account")}</h2>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+            <dt className="text-muted-foreground">{t("email")}</dt>
+            <dd>{user?.email ?? "—"}</dd>
+          </dl>
         </div>
-        <DisplayNameCard currentName={displayName} nextChangeAt={nextNameChangeAt} />
-      </section>
 
-      <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-base font-medium">{t("avatar.title")}</h2>
-          <p className="text-sm text-muted-foreground">{t("avatar.description")}</p>
+        <div className="flex flex-col gap-3 p-4">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-sm font-medium">{t("avatar.title")}</h3>
+            <p className="text-xs text-muted-foreground">{t("avatar.description")}</p>
+          </div>
+          <AvatarUploadCard
+            currentAvatarUrl={profile?.avatar_url ?? null}
+            displayName={
+              profile?.display_name ?? user?.user_metadata?.display_name ?? user?.email ?? null
+            }
+          />
         </div>
-        <AvatarUploadCard
-          currentAvatarUrl={profile?.avatar_url ?? null}
-          displayName={
-            profile?.display_name ?? user?.user_metadata?.display_name ?? user?.email ?? null
-          }
-        />
+
+        <div className="flex flex-col gap-3 p-4">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-sm font-medium">{t("profileName.title")}</h3>
+            <p className="text-xs text-muted-foreground">{t("profileName.description")}</p>
+          </div>
+          <DisplayNameCard currentName={displayName} nextChangeAt={nextNameChangeAt} />
+        </div>
+
+        <div className="flex flex-col gap-3 p-4">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-sm font-medium">{t("security.title")}</h3>
+            <p className="text-xs text-muted-foreground">
+              {canChangePassword ? t("security.description") : t("security.googleHint")}
+            </p>
+          </div>
+          {canChangePassword ? <ChangePasswordForm /> : null}
+        </div>
+
+        <div className="p-4">
+          <form action={signOut}>
+            <Button type="submit" variant="outline" size="sm">
+              {t("signOut")}
+            </Button>
+          </form>
+        </div>
       </section>
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
@@ -136,16 +151,6 @@ export default async function SettingsPage() {
           </ul>
         )}
       </section>
-
-      {canChangePassword ? (
-        <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-base font-medium">{t("security.title")}</h2>
-            <p className="text-sm text-muted-foreground">{t("security.description")}</p>
-          </div>
-          <ChangePasswordForm />
-        </section>
-      ) : null}
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
         <div className="flex flex-col gap-1">

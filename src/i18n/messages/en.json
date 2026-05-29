@@ -435,8 +435,9 @@
       }
     },
     "security": {
-      "title": "Security",
+      "title": "Password",
       "description": "Change your password. We ask for the current one to confirm it's you.",
+      "googleHint": "You signed in with Google, so you don't use a password here. Manage your access from your Google account.",
       "currentPassword": "Current password",
       "newPassword": "New password",
       "newPasswordHint": "Minimum 8 characters.",

@@ -435,8 +435,9 @@
       }
     },
     "security": {
-      "title": "Seguridad",
+      "title": "Contraseña",
       "description": "Cambia tu contraseña. Te pedimos la actual para confirmar que eres tú.",
+      "googleHint": "Iniciaste sesión con Google, así que no usas contraseña aquí. Gestiona tu acceso desde tu cuenta de Google.",
       "currentPassword": "Contraseña actual",
       "newPassword": "Nueva contraseña",
       "newPasswordHint": "Mínimo 8 caracteres.",
