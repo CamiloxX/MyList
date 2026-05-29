@@ -46,9 +46,9 @@ type Fired = {
   episodeName: string | null;
 };
 
-/** Today's date (YYYY-MM-DD) in the user's wall-clock zone (Chile). */
-function todayInChile(): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Santiago" }).format(new Date());
+/** Today's date (YYYY-MM-DD) in the user's wall-clock zone (Colombia, UTC-5). */
+function todayInColombia(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Bogota" }).format(new Date());
 }
 
 /** Current weekday ("Monday"…) in JST, where MAL broadcast days are expressed. */
@@ -61,7 +61,7 @@ function weekdayInTokyo(): string {
 /**
  * Notifies users about shows they're *watching* that aired a new episode today.
  *
- * - TV (TMDB): fires when `last_episode_to_air.air_date` equals today (Chile).
+ * - TV (TMDB): fires when `last_episode_to_air.air_date` equals today (Colombia).
  *   Exact season/episode is included.
  * - Anime (Jikan/MAL): MAL exposes only a recurring weekly broadcast day (in
  *   JST), not an exact date, so we fire when the show is currently airing and
@@ -103,7 +103,7 @@ export async function dispatchNewEpisodes(): Promise<NewEpisodesSummary> {
     else groups.set(key, { sample: it, members: [it] });
   }
 
-  const today = todayInChile();
+  const today = todayInColombia();
   const tokyoWeekday = weekdayInTokyo().toLowerCase();
   const fired: Fired[] = [];
 

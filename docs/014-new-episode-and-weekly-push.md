@@ -37,7 +37,7 @@ guard de `CRON_SECRET` y pg_cron en Supabase.
 - **Agrupa por show** (`kind:source:source_id`) para pegarle a cada fuente
   externa una sola vez por corrida.
 - **TV (TMDB)**: nuevo `getTmdbTvLastEpisode()` en `src/lib/tmdb/tv.ts` lee
-  `last_episode_to_air`. Dispara si `air_date == hoy` (fecha en `America/Santiago`).
+  `last_episode_to_air`. Dispara si `air_date == hoy` (fecha en `America/Bogota`).
   Incluye temporada/episodio (`T2E5` / `S2E5` según idioma) y nombre del episodio
   si lo hay.
 - **Anime (Jikan/MAL)**: nuevo `getJikanAiring()` en `src/lib/jikan/airing.ts` lee
@@ -55,9 +55,8 @@ guard de `CRON_SECRET` y pg_cron en Supabase.
   día falla el cron, ese aviso se pierde. Si en el futuro queremos ventana de
   varios días o reintentos, añadir tabla `notified_episodes(media_item_id, air_date)`
   con unique.
-- **Zona horaria fija en el schedule** (pg_cron corre en UTC, no ajusta DST).
-  Calibrado con Chile en horario de invierno (UTC-4). En verano (sept–abr, UTC-3)
-  los avisos llegan 1h más tarde de lo nominal. Aceptable para notificaciones.
+- **Zona horaria**: el usuario es de **Colombia (UTC-5, sin horario de verano)**,
+  así que el schedule en UTC es exacto todo el año (no hay desfase estacional).
 - **Anime por día de emisión, no por episodio concreto** (limitación de MAL).
 
 ## Setup pendiente (manual, una sola vez): programar los 2 jobs pg_cron
@@ -67,10 +66,10 @@ rutas usan el **mismo** secreto. Solo hay que crear 2 jobs nuevos. En el SQL
 Editor de Supabase (o vía Management API), con el dominio y el secreto reales:
 
 ```sql
--- Resumen semanal: domingos 20:00 Chile (UTC-4) = lunes 00:00 UTC
+-- Resumen semanal: domingos 20:00 Colombia (UTC-5) = lunes 01:00 UTC
 select cron.schedule(
   'weekly-summary',
-  '0 0 * * 1',
+  '0 1 * * 1',
   $cron$
   select net.http_post(
     url     := 'https://my-list-henna.vercel.app/api/cron/weekly-summary',
@@ -80,10 +79,10 @@ select cron.schedule(
   $cron$
 );
 
--- Episodio nuevo: diario 10:00 Chile (UTC-4) = 14:00 UTC
+-- Episodio nuevo: diario 10:00 Colombia (UTC-5) = 15:00 UTC
 select cron.schedule(
   'new-episodes',
-  '0 14 * * *',
+  '0 15 * * *',
   $cron$
   select net.http_post(
     url     := 'https://my-list-henna.vercel.app/api/cron/new-episodes',
