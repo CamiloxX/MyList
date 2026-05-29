@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-28",
+    tag: "new",
+    title: {
+      es: "Sugerencias mientras buscas (escritorio)",
+      en: "Search suggestions as you type (desktop)",
+    },
+    description: {
+      es: "La barra de búsqueda del escritorio ahora muestra un desplegable con coincidencias (póster, título y año) mientras escribes. Elige una con el mouse o con las flechas + Enter.",
+      en: "The desktop search bar now shows a dropdown of matches (poster, title and year) as you type. Pick one with the mouse or with arrow keys + Enter.",
+    },
+  },
+  {
+    date: "2026-05-28",
     tag: "improvement",
     title: {
       es: "Transición fluida del póster al abrir un título",
