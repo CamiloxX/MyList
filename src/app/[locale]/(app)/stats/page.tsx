@@ -1,7 +1,10 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import {
+  type ActivityStats,
+  getActivityStats,
+  getLibraryBreakdown,
   getTopOfYear,
   getTopRatedMedia,
   getUserOverview,
@@ -10,16 +13,20 @@ import {
 import { Link } from "@/i18n/navigation";
 import { currentYear } from "@/lib/dates";
 import { loadingDemoDelay } from "@/lib/loading-demo";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function StatsPage() {
   await loadingDemoDelay();
   const t = await getTranslations();
-  const [overview, topRated, topOfYear] = await Promise.all([
+  const locale = (await getLocale()) === "en" ? "en" : "es";
+  const [overview, topRated, topOfYear, activity, breakdown] = await Promise.all([
     getUserOverview(),
     getTopRatedMedia(5),
     getTopOfYear(Number.parseInt(currentYear(), 10), 5),
+    getActivityStats(),
+    getLibraryBreakdown(locale),
   ]);
 
   if (overview.totalEntries === 0) {
@@ -61,7 +68,30 @@ export default async function StatsPage() {
               {t("stats.totalHours", { hours: overview.totalHours })}
             </p>
           </div>
+          <div>
+            <p className="text-2xl font-semibold tabular-nums">{activity.currentStreak}</p>
+            <p className="text-xs text-muted-foreground">{t("stats.currentStreak")}</p>
+          </div>
+          <div>
+            <p className="text-2xl font-semibold tabular-nums">{activity.longestStreak}</p>
+            <p className="text-xs text-muted-foreground">{t("stats.longestStreak")}</p>
+          </div>
         </div>
+      </section>
+
+      {/* Activity heatmap */}
+      <section className="flex flex-col gap-3">
+        <div className="flex items-baseline justify-between gap-2">
+          <h2 className="text-base font-medium">{t("stats.heatmapTitle")}</h2>
+          <span className="text-xs text-muted-foreground">
+            {t("stats.activeDays", { days: activity.activeDays })}
+          </span>
+        </div>
+        <ActivityHeatmap
+          activity={activity}
+          lessLabel={t("stats.heatmapLess")}
+          moreLabel={t("stats.heatmapMore")}
+        />
       </section>
 
       {/* Hours by kind */}
@@ -94,6 +124,114 @@ export default async function StatsPage() {
           <TopList items={topOfYear} t={t} />
         )}
       </section>
+
+      {/* Top genres */}
+      <section className="flex flex-col gap-3">
+        <h2 className="text-base font-medium">{t("stats.genresTitle")}</h2>
+        {breakdown.topGenres.length === 0 ? (
+          <EmptyHint message={t("stats.genresEmpty")} />
+        ) : (
+          <BarList items={breakdown.topGenres.map((g) => ({ label: g.name, value: g.count }))} />
+        )}
+      </section>
+
+      {/* By decade */}
+      <section className="flex flex-col gap-3">
+        <h2 className="text-base font-medium">{t("stats.decadesTitle")}</h2>
+        {breakdown.decades.length === 0 ? (
+          <EmptyHint message={t("stats.decadesEmpty")} />
+        ) : (
+          <BarList
+            items={breakdown.decades.map((d) => ({
+              label: t("stats.decadeLabel", { decade: d.decade }),
+              value: d.count,
+            }))}
+          />
+        )}
+      </section>
+    </div>
+  );
+}
+
+const HEATMAP_LEVELS = [
+  "bg-muted",
+  "bg-emerald-500/30",
+  "bg-emerald-500/50",
+  "bg-emerald-500/70",
+  "bg-emerald-500",
+] as const;
+
+/** Maps a day's count to one of 5 intensity buckets (0 = empty). */
+function heatmapLevel(count: number): number {
+  if (count <= 0) return 0;
+  if (count === 1) return 1;
+  if (count === 2) return 2;
+  if (count <= 4) return 3;
+  return 4;
+}
+
+function ActivityHeatmap({
+  activity,
+  lessLabel,
+  moreLabel,
+}: {
+  activity: ActivityStats;
+  lessLabel: string;
+  moreLabel: string;
+}) {
+  const weeks: ActivityStats["days"][] = [];
+  for (let i = 0; i < activity.days.length; i += 7) {
+    weeks.push(activity.days.slice(i, i + 7));
+  }
+
+  return (
+    <div className="flex flex-col gap-3 rounded-xl border bg-card p-4">
+      <div className="overflow-x-auto">
+        <div className="flex min-w-max gap-1">
+          {weeks.map((week) => (
+            <div key={week[0]?.date} className="flex flex-col gap-1">
+              {week.map((day) => (
+                <span
+                  key={day.date}
+                  title={`${day.date}: ${day.count}`}
+                  className={cn("size-2.5 rounded-[2px]", HEATMAP_LEVELS[heatmapLevel(day.count)])}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex items-center justify-end gap-1.5 text-xs text-muted-foreground">
+        <span>{lessLabel}</span>
+        {HEATMAP_LEVELS.map((cls) => (
+          <span key={cls} className={cn("size-2.5 rounded-[2px]", cls)} aria-hidden />
+        ))}
+        <span>{moreLabel}</span>
+      </div>
+    </div>
+  );
+}
+
+function BarList({ items }: { items: { label: string; value: number }[] }) {
+  const max = Math.max(1, ...items.map((i) => i.value));
+  return (
+    <div className="flex flex-col gap-2 rounded-xl border bg-card p-4">
+      {items.map((item) => (
+        <div key={item.label} className="flex items-center gap-3 text-sm">
+          <span className="w-28 shrink-0 truncate" title={item.label}>
+            {item.label}
+          </span>
+          <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-chart-2"
+              style={{ width: `${(item.value / max) * 100}%` }}
+            />
+          </div>
+          <span className="w-6 shrink-0 text-right tabular-nums text-muted-foreground">
+            {item.value}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }

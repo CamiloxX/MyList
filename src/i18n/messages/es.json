@@ -350,7 +350,18 @@
     "topOfYearTitle": "Top de {year}",
     "topOfYearEmpty": "Nada calificado en {year} todavía.",
     "rating": "{rating}/10",
-    "noRating": "Sin calificar"
+    "noRating": "Sin calificar",
+    "currentStreak": "Racha actual (días)",
+    "longestStreak": "Mejor racha (días)",
+    "heatmapTitle": "Actividad",
+    "heatmapLess": "Menos",
+    "heatmapMore": "Más",
+    "activeDays": "{days, plural, =1 {1 día activo} other {# días activos}} en el último año",
+    "genresTitle": "Géneros más vistos",
+    "genresEmpty": "Aún no hay géneros para mostrar.",
+    "decadesTitle": "Por década",
+    "decadesEmpty": "Aún no hay años suficientes para mostrar.",
+    "decadeLabel": "{decade}s"
   },
   "settings": {
     "title": "Ajustes",

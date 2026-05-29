@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-28",
     tag: "new",
     title: {
+      es: "Estadísticas avanzadas: actividad, rachas y géneros",
+      en: "Advanced stats: activity, streaks and genres",
+    },
+    description: {
+      es: "La sección de estadísticas ahora trae un mapa de actividad del último año (estilo GitHub), tu racha actual y la mejor racha de días seguidos viendo algo, tus géneros más vistos y la distribución por década de lo que ves.",
+      en: "The stats section now includes a last-12-months activity heatmap (GitHub-style), your current and longest day streaks, your most-watched genres, and a by-decade breakdown of what you watch.",
+    },
+  },
+  {
+    date: "2026-05-28",
+    tag: "new",
+    title: {
       es: "Estado de emisión y avisos de episodios por título",
       en: "Airing status and per-title episode alerts",
     },

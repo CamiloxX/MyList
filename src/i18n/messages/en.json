@@ -350,7 +350,18 @@
     "topOfYearTitle": "Top of {year}",
     "topOfYearEmpty": "Nothing rated in {year} yet.",
     "rating": "{rating}/10",
-    "noRating": "Unrated"
+    "noRating": "Unrated",
+    "currentStreak": "Current streak (days)",
+    "longestStreak": "Longest streak (days)",
+    "heatmapTitle": "Activity",
+    "heatmapLess": "Less",
+    "heatmapMore": "More",
+    "activeDays": "{days, plural, =1 {1 active day} other {# active days}} in the last year",
+    "genresTitle": "Most-watched genres",
+    "genresEmpty": "No genres to show yet.",
+    "decadesTitle": "By decade",
+    "decadesEmpty": "Not enough years to show yet.",
+    "decadeLabel": "{decade}s"
   },
   "settings": {
     "title": "Settings",

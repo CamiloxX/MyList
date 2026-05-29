@@ -1,6 +1,7 @@
 import "server-only";
 
 import { yearMonthRange, yearRange } from "@/lib/dates";
+import { genreLabel } from "@/lib/genres";
 import { createClient } from "@/lib/supabase/server";
 
 export type MonthEntry = {
@@ -235,6 +236,176 @@ export async function getUserOverview(): Promise<UserOverview> {
       anime: Math.round((hoursByKind.anime / 60) * 10) / 10,
     },
   };
+}
+
+// ===========================================================================
+// Activity heatmap + viewing streak
+// ===========================================================================
+
+export type HeatmapDay = { date: string; count: number };
+
+export type ActivityStats = {
+  /** Chronological days covering the grid window, 7 per week starting Sunday. */
+  days: HeatmapDay[];
+  /** Highest single-day count in the window (for color scaling/labels). */
+  maxCount: number;
+  /** Days with at least one entry inside the grid window. */
+  activeDays: number;
+  /** Consecutive days up to today (or yesterday) with an entry. */
+  currentStreak: number;
+  /** Longest run of consecutive days across the user's whole history. */
+  longestStreak: number;
+};
+
+const HEATMAP_WEEKS = 53;
+
+/** Today's date (YYYY-MM-DD) in the user's wall-clock zone (Colombia, UTC-5). */
+function todayInColombia(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Bogota" }).format(new Date());
+}
+
+/** Shifts a YYYY-MM-DD string by `delta` days using UTC math (DST-safe). */
+function shiftDay(iso: string, delta: number): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + delta);
+  return d.toISOString().slice(0, 10);
+}
+
+function buildHeatmap(
+  counts: Map<string, number>,
+  today: string,
+): { days: HeatmapDay[]; maxCount: number; activeDays: number } {
+  // Anchor the last column to the Saturday of the current week so every column
+  // is a full Sun→Sat stripe, then walk back HEATMAP_WEEKS weeks.
+  const dow = new Date(`${today}T00:00:00Z`).getUTCDay(); // 0=Sun … 6=Sat
+  const end = shiftDay(today, 6 - dow);
+  const totalDays = HEATMAP_WEEKS * 7;
+  const start = shiftDay(end, -(totalDays - 1));
+
+  const days: HeatmapDay[] = [];
+  let maxCount = 0;
+  let activeDays = 0;
+  for (let i = 0; i < totalDays; i++) {
+    const date = shiftDay(start, i);
+    const count = counts.get(date) ?? 0;
+    if (count > maxCount) maxCount = count;
+    if (count > 0) activeDays += 1;
+    days.push({ date, count });
+  }
+  return { days, maxCount, activeDays };
+}
+
+function computeStreaks(dates: Set<string>, today: string): { current: number; longest: number } {
+  if (dates.size === 0) return { current: 0, longest: 0 };
+
+  const sorted = [...dates].sort();
+  let longest = 1;
+  let run = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    if (shiftDay(sorted[i - 1] as string, 1) === sorted[i]) {
+      run += 1;
+    } else {
+      run = 1;
+    }
+    if (run > longest) longest = run;
+  }
+
+  // The current streak stays "alive" if the user watched today or yesterday.
+  let cursor = today;
+  if (!dates.has(cursor)) {
+    cursor = shiftDay(today, -1);
+    if (!dates.has(cursor)) return { current: 0, longest };
+  }
+  let current = 0;
+  while (dates.has(cursor)) {
+    current += 1;
+    cursor = shiftDay(cursor, -1);
+  }
+  return { current, longest };
+}
+
+/**
+ * Computes the GitHub-style activity heatmap (last ~12 months) and the viewing
+ * streak from all of the user's watch_entries in a single query.
+ */
+export async function getActivityStats(): Promise<ActivityStats> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("watch_entries").select("watched_on");
+  if (error) {
+    throw new Error(`Error cargando actividad: ${error.message}`);
+  }
+
+  const counts = new Map<string, number>();
+  for (const row of data ?? []) {
+    counts.set(row.watched_on, (counts.get(row.watched_on) ?? 0) + 1);
+  }
+
+  const today = todayInColombia();
+  const grid = buildHeatmap(counts, today);
+  const { current, longest } = computeStreaks(new Set(counts.keys()), today);
+
+  return {
+    days: grid.days,
+    maxCount: grid.maxCount,
+    activeDays: grid.activeDays,
+    currentStreak: current,
+    longestStreak: longest,
+  };
+}
+
+// ===========================================================================
+// Top genres + decade distribution (across watched titles)
+// ===========================================================================
+
+export type GenreCount = { name: string; count: number };
+export type DecadeCount = { decade: number; count: number };
+export type LibraryBreakdown = { topGenres: GenreCount[]; decades: DecadeCount[] };
+
+/**
+ * Aggregates the user's *watched* titles (media_items with at least one
+ * watch_entry) into top genres and a release-decade distribution. Genres are
+ * localized via the shared genre map; unknown values are skipped/fall back.
+ */
+export async function getLibraryBreakdown(
+  locale: "es" | "en",
+  genresLimit = 8,
+): Promise<LibraryBreakdown> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("media_items")
+    .select("genres, year, watch_entries!inner ( id )");
+  if (error) {
+    throw new Error(`Error cargando desglose: ${error.message}`);
+  }
+
+  const genreCounts = new Map<string, number>();
+  const decadeCounts = new Map<number, number>();
+
+  for (const row of data ?? []) {
+    const genres = Array.isArray(row.genres) ? (row.genres as Array<string | number>) : [];
+    // Dedupe per title so a title counts once toward each of its genres.
+    const seen = new Set<string>();
+    for (const raw of genres) {
+      const label = genreLabel(raw, locale);
+      if (!label || seen.has(label)) continue;
+      seen.add(label);
+      genreCounts.set(label, (genreCounts.get(label) ?? 0) + 1);
+    }
+    if (typeof row.year === "number" && row.year > 1900) {
+      const decade = Math.floor(row.year / 10) * 10;
+      decadeCounts.set(decade, (decadeCounts.get(decade) ?? 0) + 1);
+    }
+  }
+
+  const topGenres = [...genreCounts.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, genresLimit);
+  const decades = [...decadeCounts.entries()]
+    .map(([decade, count]) => ({ decade, count }))
+    .sort((a, b) => a.decade - b.decade);
+
+  return { topGenres, decades };
 }
 
 /**
