@@ -332,9 +332,41 @@ export async function pickRandomPendingMediaItem(
   return { ok: true, item: picked };
 }
 
+type JikanStreamingEntry = { name?: string; url?: string };
+
+/** Anime providers we prefer when Jikan lists several (in priority order). */
+const PREFERRED_ANIME_PROVIDERS = ["crunchyroll", "netflix", "amazon prime video", "disney plus"];
+
 /**
- * Resolves the watch/streaming provider URL for a media item.
- * Falls back to IMDB, AniList or a generic Google Search if no direct flatrate links exist.
+ * Maps a streaming-provider name to a deep search URL on that platform's own
+ * site, or null when we have no reliable URL pattern for it. Returning null
+ * lets the caller fall back to a "where to watch" listing instead of guessing
+ * a URL that would land nowhere useful.
+ *
+ * Substring matching is intentional: TMDB/Jikan report names like "Amazon
+ * Prime Video" or "Disney Plus", and Star+ merged into Disney+ in Latin
+ * America so both resolve to Disney+.
+ */
+function platformSearchUrl(providerName: string, title: string): string | null {
+  const name = providerName.toLowerCase();
+  const q = encodeURIComponent(title);
+  if (name.includes("netflix")) return `https://www.netflix.com/search?q=${q}`;
+  if (name.includes("prime") || name.includes("amazon"))
+    return `https://www.primevideo.com/search?phrase=${q}`;
+  if (name.includes("disney") || name.includes("star"))
+    return `https://www.disneyplus.com/search?q=${q}`;
+  if (name.includes("max") || name.includes("hbo")) return `https://play.max.com/search?q=${q}`;
+  if (name.includes("apple")) return `https://tv.apple.com/search?term=${q}`;
+  if (name.includes("crunchyroll")) return `https://www.crunchyroll.com/search?q=${q}`;
+  if (name.includes("paramount")) return `https://www.paramountplus.com/search/?query=${q}`;
+  return null;
+}
+
+/**
+ * Resolves the best "watch now" URL for a media item, preferring a direct deep
+ * link into the streaming platform. When no platform can be addressed directly
+ * we fall back to TMDB's where-to-watch page (accurate, lists every provider)
+ * and finally to a JustWatch search — never a plain Google search.
  */
 export async function getMediaWatchUrl(id: string): Promise<string> {
   const parsedId = idSchema.safeParse(id);
@@ -353,6 +385,10 @@ export async function getMediaWatchUrl(id: string): Promise<string> {
     throw new Error("Item no encontrado");
   }
 
+  // JustWatch search for Colombia — the last-resort destination that still
+  // lists where the title is available, instead of a generic web search.
+  const justWatchFallback = `https://www.justwatch.com/co/buscar?q=${encodeURIComponent(item.title)}`;
+
   if (item.source === "tmdb") {
     try {
       const { getWatchProvidersForTitle } = await import("@/lib/tmdb/discover");
@@ -362,60 +398,43 @@ export async function getMediaWatchUrl(id: string): Promise<string> {
         "CO",
       );
 
-      if (providers && providers.flatrate.length > 0) {
-        // Find the most prominent provider
-        const first = providers.flatrate[0]?.provider_name?.toLowerCase() || "";
-        const titleQuery = encodeURIComponent(item.title);
-
-        if (first.includes("netflix")) {
-          return `https://www.netflix.com/search?q=${titleQuery}`;
+      if (providers) {
+        // Providers come sorted by TMDB display priority. Return the first one
+        // we can deep-link into directly rather than only checking flatrate[0].
+        for (const p of providers.flatrate) {
+          const url = platformSearchUrl(p.provider_name, item.title);
+          if (url) return url;
         }
-        if (first.includes("prime") || first.includes("amazon")) {
-          return `https://www.primevideo.com/search/ref=atv_sr_sug_1?phrase=${titleQuery}`;
-        }
-        if (first.includes("disney")) {
-          return `https://www.disneyplus.com/search?q=${titleQuery}`;
-        }
-        if (first.includes("max") || first.includes("hbo")) {
-          return `https://play.max.com/search?q=${titleQuery}`;
-        }
-        if (first.includes("apple")) {
-          return `https://tv.apple.com/search?term=${titleQuery}`;
-        }
-        if (first.includes("crunchyroll")) {
-          return `https://www.crunchyroll.com/search?q=${titleQuery}`;
-        }
+        // No deep-linkable provider, but TMDB's page lists them all with
+        // working JustWatch redirects — better than guessing.
+        if (providers.link) return providers.link;
       }
     } catch (e) {
       console.warn("[getMediaWatchUrl] Failed to fetch TMDB watch providers:", e);
     }
-    
-    // Fallback if no known platform or no providers
-    return `https://www.google.com/search?q=${encodeURIComponent(`dónde ver ${item.title}`)}`;
+    return justWatchFallback;
   }
 
   if (item.source === "anilist") {
     try {
+      // Jikan returns real per-provider URLs, so we can link straight to them.
       const res = await fetch(`https://api.jikan.moe/v4/anime/${item.source_id}/streaming`);
       if (res.ok) {
-        const json = await res.json();
-        if (json.data && json.data.length > 0) {
-          const preferred = json.data.find(
-            (p: any) =>
-              p.name === "Crunchyroll" ||
-              p.name === "Netflix" ||
-              p.name === "Amazon Prime Video" ||
-              p.name === "Disney Plus",
+        const json = (await res.json()) as { data?: JikanStreamingEntry[] };
+        const entries = json.data ?? [];
+        if (entries.length > 0) {
+          const preferred = entries.find((p) =>
+            PREFERRED_ANIME_PROVIDERS.includes((p.name ?? "").toLowerCase()),
           );
-          if (preferred) return preferred.url;
-          return json.data[0].url;
+          const chosen = preferred ?? entries[0];
+          if (chosen?.url) return chosen.url;
         }
       }
     } catch (e) {
       console.warn("[getMediaWatchUrl] Failed to fetch Jikan streaming info:", e);
     }
+    return justWatchFallback;
   }
 
-  // Definite fallback: Google search
-  return `https://www.google.com/search?q=${encodeURIComponent(`dónde ver ${item.title}`)}`;
+  return justWatchFallback;
 }
