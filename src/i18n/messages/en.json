@@ -644,5 +644,18 @@
       "improvement": "Improvement",
       "fix": "Fix"
     }
+  },
+  "push": {
+    "weekly": {
+      "title": "Your week on MyList",
+      "body": "This week: {views, plural, =0 {0 views} =1 {1 view} other {# views}}, {added, plural, =0 {0 new titles} =1 {1 new title} other {# new titles}} and {badges, plural, =0 {0 badges} =1 {1 badge} other {# badges}}."
+    },
+    "episode": {
+      "title": "New episode of {title}",
+      "bodyTvNamed": "{code} · {name} is out now.",
+      "bodyTv": "{code} is out now.",
+      "bodyTvUnknown": "A new episode is out.",
+      "bodyAnime": "A new episode airs today."
+    }
   }
 }

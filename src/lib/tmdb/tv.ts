@@ -43,3 +43,49 @@ export async function getTmdbTvSeasons(id: string): Promise<TmdbSeason[] | null>
   }
 }
 
+const tmdbEpisodeSchema = z.object({
+  air_date: z.string().nullable().optional(),
+  episode_number: z.number().nullable().optional(),
+  season_number: z.number().nullable().optional(),
+  name: z.string().nullable().optional(),
+});
+
+const tmdbTvAiringSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  last_episode_to_air: tmdbEpisodeSchema.nullable().optional(),
+});
+
+export type TmdbEpisode = {
+  airDate: string | null;
+  episodeNumber: number | null;
+  seasonNumber: number | null;
+  name: string | null;
+};
+
+/**
+ * Fetches the most recently aired episode of a TV show (TMDB's
+ * `last_episode_to_air`). Used by the new-episode cron to tell whether a show a
+ * user is watching dropped an episode today. Returns null if the show has no
+ * aired episode yet or the request fails.
+ *
+ * Cached for 1h: the cron runs once a day, so each daily run re-fetches fresh,
+ * but the short TTL also dedupes the case where many users track the same show.
+ */
+export async function getTmdbTvLastEpisode(id: string): Promise<TmdbEpisode | null> {
+  try {
+    const raw = await tmdbFetch<unknown>(`/tv/${id}`, { revalidate: 3600 });
+    const parsed = tmdbTvAiringSchema.parse(raw);
+    const ep = parsed.last_episode_to_air;
+    if (!ep) return null;
+    return {
+      airDate: ep.air_date ?? null,
+      episodeNumber: ep.episode_number ?? null,
+      seasonNumber: ep.season_number ?? null,
+      name: ep.name ?? null,
+    };
+  } catch (error) {
+    console.warn("[tmdb-tv-last-episode] failed:", error);
+    return null;
+  }
+}

@@ -644,5 +644,18 @@
       "improvement": "Mejora",
       "fix": "Corrección"
     }
+  },
+  "push": {
+    "weekly": {
+      "title": "Tu semana en MyList",
+      "body": "Esta semana: {views, plural, =0 {0 visionados} =1 {1 visionado} other {# visionados}}, {added, plural, =0 {0 títulos nuevos} =1 {1 título nuevo} other {# títulos nuevos}} y {badges, plural, =0 {0 logros} =1 {1 logro} other {# logros}}."
+    },
+    "episode": {
+      "title": "Nuevo episodio de {title}",
+      "bodyTvNamed": "{code} · {name} ya está disponible.",
+      "bodyTv": "{code} ya está disponible.",
+      "bodyTvUnknown": "Hay un nuevo episodio disponible.",
+      "bodyAnime": "Hoy se emite un nuevo episodio."
+    }
   }
 }

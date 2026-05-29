@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-28",
     tag: "new",
     title: {
+      es: "Avisos de episodios nuevos y resumen semanal",
+      en: "New-episode alerts and weekly recap",
+    },
+    description: {
+      es: "Si tienes las notificaciones activadas: cada día te avisamos cuando una serie o anime que estás viendo estrena episodio, y los domingos te llega un resumen de tu semana (lo que viste, lo que añadiste y los logros que desbloqueaste).",
+      en: "With notifications on: we ping you each day when a series or anime you're watching drops a new episode, and on Sundays you get a recap of your week (what you watched, what you added, and the badges you unlocked).",
+    },
+  },
+  {
+    date: "2026-05-28",
+    tag: "new",
+    title: {
       es: "Notificaciones programadas (admin)",
       en: "Scheduled notifications (admin)",
     },
