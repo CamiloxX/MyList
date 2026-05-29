@@ -1,7 +1,7 @@
 import { PlayIcon } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
@@ -17,12 +17,13 @@ import type { MediaStatus } from "@/features/library/status";
 import { TitleComments } from "@/features/title-comments/components/title-comments";
 import { Link } from "@/i18n/navigation";
 import type { AiringStatus } from "@/lib/airing-status";
+import { getAnilistNextEpisode } from "@/lib/anilist/next-episode";
 import { getJikanAiringStatus } from "@/lib/jikan/airing";
 import { getJikanTrailer } from "@/lib/jikan/videos";
 import { loadingDemoDelay } from "@/lib/loading-demo";
 import { createClient } from "@/lib/supabase/server";
 import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
-import { getTmdbTvAiringStatus } from "@/lib/tmdb/tv";
+import { getTmdbTvAiringStatus, getTmdbTvNextEpisode } from "@/lib/tmdb/tv";
 import { getTmdbTrailer } from "@/lib/tmdb/videos";
 import { cn } from "@/lib/utils";
 
@@ -46,7 +47,7 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
     notFound();
   }
 
-  const [watchUrl, { data: entries }, trailer, providers, airing] = await Promise.all([
+  const [watchUrl, { data: entries }, trailer, providers, airing, nextEpisode] = await Promise.all([
     getMediaWatchUrl(id).catch(() => null),
     supabase
       .from("watch_entries")
@@ -56,10 +57,37 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
     fetchTrailerFor(item.source, item.kind, item.source_id),
     fetchWatchProviders(item.source, item.kind, item.source_id),
     fetchAiringStatus(item.source, item.kind, item.source_id),
+    fetchNextEpisode(item.source, item.kind, item.source_id),
   ]);
 
   const entriesList = entries ?? [];
   const t = await getTranslations();
+  const format = await getFormatter();
+
+  // Build the "next episode" line: an episode code (T2E5 / Ep 5) plus a date
+  // formatted in Colombia time. TMDB gives a date only; AniList an exact instant.
+  let nextEpisodeCode: string | null = null;
+  let nextEpisodeDate: string | null = null;
+  if (nextEpisode) {
+    if (nextEpisode.seasonNumber != null && nextEpisode.episodeNumber != null) {
+      nextEpisodeCode = t("library.detail.nextEpisode.tvCode", {
+        season: nextEpisode.seasonNumber,
+        episode: nextEpisode.episodeNumber,
+      });
+    } else if (nextEpisode.episodeNumber != null) {
+      nextEpisodeCode = t("library.detail.nextEpisode.animeCode", {
+        episode: nextEpisode.episodeNumber,
+      });
+    }
+    if (nextEpisode.airDateIso) {
+      nextEpisodeDate = format.dateTime(new Date(nextEpisode.airDateIso), {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        timeZone: "America/Bogota",
+      });
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -137,6 +165,17 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
               </div>
               {item.original_title && item.original_title !== item.title ? (
                 <p className="text-sm text-muted-foreground">{item.original_title}</p>
+              ) : null}
+              {nextEpisodeDate ? (
+                <p className="text-sm">
+                  <span className="text-muted-foreground">
+                    {t("library.detail.nextEpisode.label")}:{" "}
+                  </span>
+                  <span className="font-medium">
+                    {nextEpisodeCode ? `${nextEpisodeCode} · ` : ""}
+                    {nextEpisodeDate}
+                  </span>
+                </p>
               ) : null}
             </header>
             <div className="flex flex-wrap items-center gap-2">
@@ -286,4 +325,42 @@ async function fetchAiringStatus(
   if (source === "tmdb" && kind === "tv") return getTmdbTvAiringStatus(sourceId);
   if (source === "anilist" && kind === "anime") return getJikanAiringStatus(sourceId);
   return "unknown";
+}
+
+type NextEpisodeInfo = {
+  seasonNumber: number | null;
+  episodeNumber: number | null;
+  /** ISO instant to format. TMDB date is anchored at noon UTC to avoid the
+   *  date-only value rolling to the previous day in Colombia (UTC-5). */
+  airDateIso: string | null;
+};
+
+/**
+ * Next scheduled episode for series (TMDB, exact date) and anime (AniList,
+ * exact timestamp via the stored MAL id). Null for movies / finished shows.
+ */
+async function fetchNextEpisode(
+  source: string,
+  kind: string,
+  sourceId: string,
+): Promise<NextEpisodeInfo | null> {
+  if (source === "tmdb" && kind === "tv") {
+    const ep = await getTmdbTvNextEpisode(sourceId);
+    if (!ep?.airDate) return null;
+    return {
+      seasonNumber: ep.seasonNumber,
+      episodeNumber: ep.episodeNumber,
+      airDateIso: `${ep.airDate}T12:00:00Z`,
+    };
+  }
+  if (source === "anilist" && kind === "anime") {
+    const ep = await getAnilistNextEpisode(sourceId);
+    if (!ep) return null;
+    return {
+      seasonNumber: null,
+      episodeNumber: ep.episode,
+      airDateIso: new Date(ep.airingAt * 1000).toISOString(),
+    };
+  }
+  return null;
 }

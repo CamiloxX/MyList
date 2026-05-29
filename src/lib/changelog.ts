@@ -24,8 +24,8 @@ export const CHANGELOG: ChangelogEntry[] = [
       en: "Airing status and per-title episode alerts",
     },
     description: {
-      es: "La ficha de series y anime ahora muestra si está «En emisión», «Finalizada» o «Próximamente». Al agregar algo que está en emisión activamos automáticamente los avisos de nuevos episodios, y puedes encenderlos o apagarlos por título desde su ficha.",
-      en: "Series and anime pages now show whether a title is «Airing», «Ended» or «Upcoming». When you add something that's currently airing we auto-enable new-episode alerts, and you can turn them on or off per title from its page.",
+      es: "La ficha de series y anime ahora muestra si está «En emisión», «Finalizada» o «Próximamente», y cuándo sale el próximo episodio (fecha exacta para series vía TMDB y para anime vía AniList). Al agregar algo en emisión activamos automáticamente los avisos de nuevos episodios, y puedes encenderlos o apagarlos por título.",
+      en: "Series and anime pages now show whether a title is «Airing», «Ended» or «Upcoming», plus when the next episode airs (exact date for series via TMDB and for anime via AniList). When you add something that's currently airing we auto-enable new-episode alerts, and you can turn them on or off per title.",
     },
   },
   {

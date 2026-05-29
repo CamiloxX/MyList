@@ -122,3 +122,26 @@ export async function getTmdbTvAiringStatus(id: string): Promise<AiringStatus> {
     return "unknown";
   }
 }
+
+/**
+ * Fetches the next episode scheduled to air for a TV show (TMDB's
+ * `next_episode_to_air`, which carries an exact date). Returns null when the
+ * show has nothing scheduled or the request fails.
+ */
+export async function getTmdbTvNextEpisode(id: string): Promise<TmdbEpisode | null> {
+  try {
+    const raw = await tmdbFetch<unknown>(`/tv/${id}`, { revalidate: 3600 });
+    const parsed = tmdbTvStatusSchema.parse(raw);
+    const ep = parsed.next_episode_to_air;
+    if (!ep) return null;
+    return {
+      airDate: ep.air_date ?? null,
+      episodeNumber: ep.episode_number ?? null,
+      seasonNumber: ep.season_number ?? null,
+      name: ep.name ?? null,
+    };
+  } catch (error) {
+    console.warn("[tmdb-tv-next-episode] failed:", error);
+    return null;
+  }
+}

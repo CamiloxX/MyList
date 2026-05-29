@@ -206,6 +206,11 @@
         "ended": "Finalizada",
         "upcoming": "Próximamente"
       },
+      "nextEpisode": {
+        "label": "Próximo episodio",
+        "tvCode": "T{season}E{episode}",
+        "animeCode": "Ep {episode}"
+      },
       "notifyEpisodes": {
         "on": "Avisos activados",
         "off": "Avisarme de episodios",
