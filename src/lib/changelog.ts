@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-28",
+    tag: "improvement",
+    title: {
+      es: "App más rápida y con soporte offline",
+      en: "Faster app with offline support",
+    },
+    description: {
+      es: "Si instalas MyList como app, ahora guarda en caché lo esencial: carga más rápido en visitas siguientes y muestra una pantalla básica aunque te quedes sin conexión.",
+      en: "If you install MyList as an app, it now caches the essentials: faster loads on repeat visits and a basic screen even when you go offline.",
+    },
+  },
+  {
+    date: "2026-05-28",
     tag: "new",
     title: {
       es: "Paleta de comandos (⌘K)",

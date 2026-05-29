@@ -1,22 +1,79 @@
-// Minimal service worker for PWA installability + Web Push.
-// Chromium requires a fetch handler to consider the page installable, so we
-// register a pass-through one. No caching is wired up yet — adding a
-// stale-while-revalidate strategy for static assets is the natural next step.
+// Service worker for PWA installability, Web Push, and offline caching.
+//
+// Caching strategy (conservative, online always wins):
+//  - Next static assets (/_next/static, content-hashed): cache-first.
+//  - Navigations (HTML): network-first, falling back to cache then "/" offline.
+//  - Everything else (APIs, cross-origin TMDB/Supabase): pass-through.
 
-const VERSION = "v3";
+const VERSION = "v4";
+const CACHE = `mylist-${VERSION}`;
+const OFFLINE_FALLBACK = "/";
 
-self.addEventListener("install", () => {
+self.addEventListener("install", (event) => {
+  // Seed the offline fallback; ignore failure so install never blocks on it.
+  event.waitUntil(
+    caches
+      .open(CACHE)
+      .then((cache) => cache.add(OFFLINE_FALLBACK))
+      .catch(() => undefined),
+  );
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+      await self.clients.claim();
+    })(),
+  );
 });
 
+async function cacheFirst(request) {
+  const cached = await caches.match(request);
+  if (cached) return cached;
+  const response = await fetch(request);
+  if (response.ok) {
+    const cache = await caches.open(CACHE);
+    cache.put(request, response.clone());
+  }
+  return response;
+}
+
+async function networkFirst(request) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(CACHE);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    const fallback = await caches.match(OFFLINE_FALLBACK);
+    if (fallback) return fallback;
+    throw error;
+  }
+}
+
 self.addEventListener("fetch", (event) => {
-  // Pass-through: let the browser handle the request normally.
-  // Wrapping this with respondWith would let us add caching later.
-  void event;
+  const { request } = event;
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+  // Only handle our own origin; leave TMDB/Supabase/etc. to the browser.
+  if (url.origin !== self.location.origin) return;
+
+  if (url.pathname.startsWith("/_next/static/")) {
+    event.respondWith(cacheFirst(request));
+    return;
+  }
+
+  if (request.mode === "navigate") {
+    event.respondWith(networkFirst(request));
+  }
 });
 
 // Web Push: the server sends a JSON payload shaped like
