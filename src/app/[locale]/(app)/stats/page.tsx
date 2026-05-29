@@ -1,3 +1,4 @@
+import { ClapperboardIcon, ClockIcon, FlameIcon, type LucideIcon, TrophyIcon } from "lucide-react";
 import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
@@ -52,30 +53,34 @@ export default async function StatsPage() {
         <p className="mt-1 text-sm text-muted-foreground">{t("stats.subtitle")}</p>
       </header>
 
-      {/* Summary card */}
-      <section className="flex flex-col gap-3 rounded-xl border bg-card p-5">
+      {/* Summary tiles */}
+      <section className="flex flex-col gap-3">
         <h2 className="text-base font-medium">{t("stats.summaryTitle")}</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          <div>
-            <p className="text-2xl font-semibold tabular-nums">{overview.totalEntries}</p>
-            <p className="text-xs text-muted-foreground">
-              {t("stats.totalEntries", { entries: overview.totalEntries })}
-            </p>
-          </div>
-          <div>
-            <p className="text-2xl font-semibold tabular-nums">{overview.totalHours}</p>
-            <p className="text-xs text-muted-foreground">
-              {t("stats.totalHours", { hours: overview.totalHours })}
-            </p>
-          </div>
-          <div>
-            <p className="text-2xl font-semibold tabular-nums">{activity.currentStreak}</p>
-            <p className="text-xs text-muted-foreground">{t("stats.currentStreak")}</p>
-          </div>
-          <div>
-            <p className="text-2xl font-semibold tabular-nums">{activity.longestStreak}</p>
-            <p className="text-xs text-muted-foreground">{t("stats.longestStreak")}</p>
-          </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatTile
+            Icon={ClapperboardIcon}
+            value={overview.totalEntries}
+            label={t("stats.labelEntries")}
+            iconClass="bg-chart-1/15 text-chart-1"
+          />
+          <StatTile
+            Icon={ClockIcon}
+            value={overview.totalHours}
+            label={t("stats.labelHours")}
+            iconClass="bg-chart-2/15 text-chart-2"
+          />
+          <StatTile
+            Icon={FlameIcon}
+            value={activity.currentStreak}
+            label={t("stats.currentStreak")}
+            iconClass="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+          />
+          <StatTile
+            Icon={TrophyIcon}
+            value={activity.longestStreak}
+            label={t("stats.longestStreak")}
+            iconClass="bg-amber-500/15 text-amber-600 dark:text-amber-400"
+          />
         </div>
       </section>
 
@@ -279,6 +284,30 @@ function KindHoursBar({
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function StatTile({
+  Icon,
+  value,
+  label,
+  iconClass,
+}: {
+  Icon: LucideIcon;
+  value: number;
+  label: string;
+  iconClass: string;
+}) {
+  return (
+    <div className="flex flex-col gap-2.5 rounded-xl border bg-card p-4">
+      <span className={cn("flex size-9 items-center justify-center rounded-lg", iconClass)}>
+        <Icon className="size-[18px]" aria-hidden />
+      </span>
+      <div className="flex flex-col gap-0.5">
+        <p className="text-2xl font-semibold leading-none tabular-nums">{value}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
+      </div>
     </div>
   );
 }

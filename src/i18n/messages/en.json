@@ -358,6 +358,8 @@
     "topOfYearEmpty": "Nothing rated in {year} yet.",
     "rating": "{rating}/10",
     "noRating": "Unrated",
+    "labelEntries": "Views",
+    "labelHours": "Hours watched",
     "currentStreak": "Current streak (days)",
     "longestStreak": "Longest streak (days)",
     "heatmapTitle": "Activity",

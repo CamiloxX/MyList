@@ -358,6 +358,8 @@
     "topOfYearEmpty": "Nada calificado en {year} todavía.",
     "rating": "{rating}/10",
     "noRating": "Sin calificar",
+    "labelEntries": "Visualizaciones",
+    "labelHours": "Horas vistas",
     "currentStreak": "Racha actual (días)",
     "longestStreak": "Mejor racha (días)",
     "heatmapTitle": "Actividad",
