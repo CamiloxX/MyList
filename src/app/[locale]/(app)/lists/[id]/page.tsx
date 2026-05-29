@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { ListCoverEditor } from "@/features/lists/components/list-cover-editor";
 import { ListSettings } from "@/features/lists/components/list-settings";
 import { RemoveFromListButton } from "@/features/lists/components/remove-from-list-button";
 import { getListWithItems } from "@/features/lists/queries";
@@ -31,6 +32,8 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
       >
         {t("lists.back")}
       </Link>
+
+      <ListCoverEditor listId={data.id} coverUrl={data.coverUrl} />
 
       <header className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1">

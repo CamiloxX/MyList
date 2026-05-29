@@ -1,6 +1,6 @@
-import { ListIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { CreateListButton } from "@/features/lists/components/create-list-button";
+import { ListCover } from "@/features/lists/components/list-cover";
 import { getUserLists } from "@/features/lists/queries";
 import { Link } from "@/i18n/navigation";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -32,18 +32,18 @@ export default async function ListsPage() {
             <li key={list.id}>
               <Link
                 href={`/lists/${list.id}`}
-                className="flex flex-col gap-1.5 rounded-xl border bg-card p-4 transition-colors hover:bg-muted/30"
+                className="flex flex-col overflow-hidden rounded-xl border bg-card transition-colors hover:bg-muted/30"
               >
-                <div className="flex items-center gap-2">
-                  <ListIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                <ListCover coverUrl={list.coverUrl} seed={list.id} className="h-24 w-full" />
+                <div className="flex flex-col gap-1 p-4">
                   <span className="truncate font-medium">{list.name}</span>
+                  {list.description ? (
+                    <p className="line-clamp-2 text-sm text-muted-foreground">{list.description}</p>
+                  ) : null}
+                  <span className="text-xs text-muted-foreground">
+                    {t("itemCount", { count: list.itemCount })}
+                  </span>
                 </div>
-                {list.description ? (
-                  <p className="line-clamp-2 text-sm text-muted-foreground">{list.description}</p>
-                ) : null}
-                <span className="text-xs text-muted-foreground">
-                  {t("itemCount", { count: list.itemCount })}
-                </span>
               </Link>
             </li>
           ))}

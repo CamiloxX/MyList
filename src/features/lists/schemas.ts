@@ -12,3 +12,7 @@ export const listFormSchema = z.object({
   description: z.string().trim().max(LIST_DESCRIPTION_MAX, "Descripción muy larga").optional(),
 });
 export type ListFormInput = z.infer<typeof listFormSchema>;
+
+export const MAX_COVER_BYTES = 3 * 1024 * 1024; // 3 MB
+export const ALLOWED_COVER_MIME = ["image/jpeg", "image/png", "image/webp"] as const;
+export type AllowedCoverMime = (typeof ALLOWED_COVER_MIME)[number];

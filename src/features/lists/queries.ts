@@ -6,6 +6,7 @@ export type ListSummary = {
   id: string;
   name: string;
   description: string | null;
+  coverUrl: string | null;
   itemCount: number;
 };
 
@@ -14,7 +15,7 @@ export async function getUserLists(): Promise<ListSummary[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("lists")
-    .select("id, name, description, list_items(count)")
+    .select("id, name, description, cover_url, list_items(count)")
     .order("created_at", { ascending: true });
   if (error) {
     throw new Error(`Error cargando listas: ${error.message}`);
@@ -26,6 +27,7 @@ export async function getUserLists(): Promise<ListSummary[]> {
       id: row.id,
       name: row.name,
       description: row.description,
+      coverUrl: row.cover_url,
       itemCount: counts?.[0]?.count ?? 0,
     };
   });
@@ -43,6 +45,7 @@ export type ListWithItems = {
   id: string;
   name: string;
   description: string | null;
+  coverUrl: string | null;
   items: ListItemMedia[];
 };
 
@@ -51,7 +54,7 @@ export async function getListWithItems(listId: string): Promise<ListWithItems | 
   const supabase = await createClient();
   const { data: list } = await supabase
     .from("lists")
-    .select("id, name, description")
+    .select("id, name, description, cover_url")
     .eq("id", listId)
     .maybeSingle();
   if (!list) return null;
@@ -63,7 +66,13 @@ export async function getListWithItems(listId: string): Promise<ListWithItems | 
     .order("position", { ascending: true });
 
   const items: ListItemMedia[] = (rows ?? []).map((r) => r.media_items as unknown as ListItemMedia);
-  return { id: list.id, name: list.name, description: list.description, items };
+  return {
+    id: list.id,
+    name: list.name,
+    description: list.description,
+    coverUrl: list.cover_url,
+    items,
+  };
 }
 
 export type ListMembership = { id: string; name: string; contains: boolean };

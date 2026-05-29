@@ -400,7 +400,15 @@
     "noListsYet": "Aún no tienes listas. Crea una abajo.",
     "newListPlaceholder": "Nueva lista...",
     "addedToNew": "Agregado a «{name}»",
-    "removeFromList": "Quitar de la lista"
+    "removeFromList": "Quitar de la lista",
+    "cover": {
+      "change": "Portada",
+      "remove": "Quitar portada",
+      "updated": "Portada actualizada",
+      "removed": "Portada quitada",
+      "errorMime": "Formato no soportado (jpg, png o webp)",
+      "errorSize": "La imagen pesa más de 3 MB"
+    }
   },
   "settings": {
     "title": "Ajustes",

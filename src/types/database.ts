@@ -173,6 +173,7 @@ export type Database = {
           user_id: string;
           name: string;
           description: string | null;
+          cover_url: string | null;
           visibility: Database["public"]["Enums"]["visibility_level"];
           created_at: string;
           updated_at: string;
@@ -182,6 +183,7 @@ export type Database = {
           user_id: string;
           name: string;
           description?: string | null;
+          cover_url?: string | null;
           visibility?: Database["public"]["Enums"]["visibility_level"];
           created_at?: string;
           updated_at?: string;
@@ -191,6 +193,7 @@ export type Database = {
           user_id?: string;
           name?: string;
           description?: string | null;
+          cover_url?: string | null;
           visibility?: Database["public"]["Enums"]["visibility_level"];
           created_at?: string;
           updated_at?: string;

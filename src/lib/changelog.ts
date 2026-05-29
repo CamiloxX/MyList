@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-28",
+    tag: "improvement",
+    title: {
+      es: "Portada para tus listas",
+      en: "Cover image for your lists",
+    },
+    description: {
+      es: "Ahora cada lista puede tener su propia portada: súbela desde la lista. Si no subes ninguna, se muestra una portada de color generada automáticamente.",
+      en: "Each list can now have its own cover image: upload one from the list. If you don't, a generated colored cover is shown by default.",
+    },
+  },
+  {
+    date: "2026-05-28",
     tag: "new",
     title: {
       es: "Listas personalizadas",

@@ -400,7 +400,15 @@
     "noListsYet": "No lists yet. Create one below.",
     "newListPlaceholder": "New list...",
     "addedToNew": "Added to \"{name}\"",
-    "removeFromList": "Remove from list"
+    "removeFromList": "Remove from list",
+    "cover": {
+      "change": "Cover",
+      "remove": "Remove cover",
+      "updated": "Cover updated",
+      "removed": "Cover removed",
+      "errorMime": "Unsupported format (jpg, png or webp)",
+      "errorSize": "Image is larger than 3 MB"
+    }
   },
   "settings": {
     "title": "Settings",
