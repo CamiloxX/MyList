@@ -47,7 +47,7 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          <ShareListButton listId={data.id} initialShared={data.shared} />
+          <ShareListButton listId={data.id} listName={data.name} initialShared={data.shared} />
           <ListSettings list={{ id: data.id, name: data.name, description: data.description }} />
         </div>
       </header>

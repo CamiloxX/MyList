@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -7,6 +8,35 @@ import { getSharedList } from "@/features/lists/queries";
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ locale: string; id: string }> };
+
+/**
+ * Social preview: when the share link is pasted into WhatsApp / X / etc. it
+ * shows the list's cover (or first poster) + name as a rich card.
+ */
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const list = await getSharedList(id);
+  if (!list) return {};
+
+  const image = list.coverUrl ?? list.items.find((i) => i.poster_url)?.poster_url ?? undefined;
+  const description = list.description ?? undefined;
+  return {
+    title: list.name,
+    description,
+    openGraph: {
+      title: list.name,
+      description,
+      type: "website",
+      images: image ? [{ url: image }] : undefined,
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title: list.name,
+      description,
+      images: image ? [image] : undefined,
+    },
+  };
+}
 
 export default async function SharedListPage({ params }: Props) {
   const { locale, id } = await params;

@@ -17,9 +17,11 @@ import { setListShared } from "../actions";
  */
 export function ShareListButton({
   listId,
+  listName,
   initialShared,
 }: {
   listId: string;
+  listName: string;
   initialShared: boolean;
 }) {
   const t = useTranslations("lists.share");
@@ -29,16 +31,31 @@ export function ShareListButton({
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
+  const shareUrl = () => `${window.location.origin}/${locale}/share/${listId}`;
+
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(`${window.location.origin}/${locale}/share/${listId}`);
+      await navigator.clipboard.writeText(shareUrl());
       toast.success(t("copied"));
     } catch {
       toast.error(t("copyError"));
     }
   };
 
-  const enableAndCopy = () => {
+  // Prefer the native share sheet on mobile; fall back to copying the link.
+  const shareOrCopy = async (title: string) => {
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      try {
+        await navigator.share({ title, url: shareUrl() });
+      } catch {
+        // User dismissed the sheet (or it failed) — nothing else to do.
+      }
+      return;
+    }
+    await copyLink();
+  };
+
+  const enableAndShare = (title: string) => {
     startTransition(async () => {
       const result = await setListShared(listId, true);
       if (!result.ok) {
@@ -46,7 +63,7 @@ export function ShareListButton({
         return;
       }
       setShared(true);
-      await copyLink();
+      await shareOrCopy(title);
       router.refresh();
     });
   };
@@ -73,7 +90,7 @@ export function ShareListButton({
         size="sm"
         className="gap-1.5"
         disabled={isPending}
-        onClick={enableAndCopy}
+        onClick={() => enableAndShare(listName)}
       >
         <Share2Icon className="size-4" aria-hidden />
         {t("button")}
