@@ -9,12 +9,19 @@
     "search": "Buscar",
     "discover": "Descubrir",
     "month": "Mes",
+    "year": "Año",
     "stats": "Stats",
     "badges": "Logros",
     "settings": "Ajustes",
     "changelog": "Novedades",
     "more": "Más",
     "primary": "Navegación principal"
+  },
+  "command": {
+    "title": "Paleta de comandos",
+    "placeholder": "Buscar o ir a...",
+    "searchFor": "Buscar «{query}»",
+    "empty": "Sin resultados"
   },
   "common": {
     "loading": "Cargando...",

@@ -7,6 +7,7 @@ import { BackgroundParticles } from "@/components/background-particles";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { CommandPalette } from "@/features/shell/components/command-palette";
 import { routing } from "@/i18n/routing";
 
 const geistSans = Geist({
@@ -99,6 +100,7 @@ export default async function LocaleLayout({
           >
             <BackgroundParticles />
             {children}
+            <CommandPalette />
             <Toaster />
             <ServiceWorkerRegister />
           </ThemeProvider>

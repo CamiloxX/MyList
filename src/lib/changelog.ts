@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-28",
     tag: "new",
     title: {
+      es: "Paleta de comandos (⌘K)",
+      en: "Command palette (⌘K)",
+    },
+    description: {
+      es: "Pulsa ⌘K (o Ctrl+K) en cualquier pantalla para saltar al instante a cualquier sección o lanzar una búsqueda, todo desde el teclado.",
+      en: "Press ⌘K (or Ctrl+K) on any screen to instantly jump to any section or start a search, all from the keyboard.",
+    },
+  },
+  {
+    date: "2026-05-28",
+    tag: "new",
+    title: {
       es: "Estadísticas avanzadas: actividad, rachas y géneros",
       en: "Advanced stats: activity, streaks and genres",
     },

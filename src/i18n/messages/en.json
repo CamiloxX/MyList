@@ -9,12 +9,19 @@
     "search": "Search",
     "discover": "Discover",
     "month": "Month",
+    "year": "Year",
     "stats": "Stats",
     "badges": "Badges",
     "settings": "Settings",
     "changelog": "What's new",
     "more": "More",
     "primary": "Main navigation"
+  },
+  "command": {
+    "title": "Command palette",
+    "placeholder": "Search or jump to...",
+    "searchFor": "Search for \"{query}\"",
+    "empty": "No results"
   },
   "common": {
     "loading": "Loading...",
