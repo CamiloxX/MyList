@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "@/i18n/navigation";
 import type { Database } from "@/types/database";
 import type { MediaStatus } from "../status";
+import { PosterTransitionLink } from "./poster-transition-link";
 import { RemoveButton } from "./remove-button";
 import { StatusSelect } from "./status-select";
 
@@ -13,7 +13,7 @@ export async function LibraryCard({ item }: { item: MediaItem }) {
   const t = await getTranslations();
   return (
     <article className="flex gap-4 rounded-xl border bg-card p-3 shadow-sm">
-      <Link
+      <PosterTransitionLink
         href={`/library/${item.id}`}
         className="relative aspect-[2/3] w-20 shrink-0 overflow-hidden rounded-md bg-muted"
       >
@@ -24,22 +24,23 @@ export async function LibraryCard({ item }: { item: MediaItem }) {
             fill
             sizes="80px"
             className="object-cover"
+            style={{ viewTransitionName: `poster-${item.id}` }}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-[10px] text-muted-foreground">
             {t("common.noPoster")}
           </div>
         )}
-      </Link>
+      </PosterTransitionLink>
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <header className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
-            <Link
+            <PosterTransitionLink
               href={`/library/${item.id}`}
               className="truncate text-base font-medium hover:underline"
             >
               {item.title}
-            </Link>
+            </PosterTransitionLink>
             <Badge variant="secondary">{t(`kinds.${item.kind}`)}</Badge>
             {item.year ? <span className="text-sm text-muted-foreground">{item.year}</span> : null}
           </div>

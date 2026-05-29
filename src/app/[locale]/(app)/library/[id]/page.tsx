@@ -131,6 +131,7 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
                 fill
                 sizes="(min-width: 640px) 160px, 128px"
                 className="object-cover"
+                style={{ viewTransitionName: `poster-${item.id}` }}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">

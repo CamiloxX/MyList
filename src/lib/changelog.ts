@@ -20,6 +20,18 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: "2026-05-28",
     tag: "improvement",
     title: {
+      es: "Transición fluida del póster al abrir un título",
+      en: "Smooth poster transition when opening a title",
+    },
+    description: {
+      es: "Al tocar un título en tu biblioteca, el póster ahora se anima suavemente hasta su ficha (en navegadores compatibles), para una sensación más pulida.",
+      en: "Tapping a title in your library now smoothly animates its poster into the detail page (on supported browsers) for a more polished feel.",
+    },
+  },
+  {
+    date: "2026-05-28",
+    tag: "improvement",
+    title: {
       es: "App más rápida y con soporte offline",
       en: "Faster app with offline support",
     },

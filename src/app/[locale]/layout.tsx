@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { ViewTransitions } from "next-view-transitions";
 import { BackgroundParticles } from "@/components/background-particles";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -91,20 +92,22 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <BackgroundParticles />
-            {children}
-            <CommandPalette />
-            <Toaster />
-            <ServiceWorkerRegister />
-          </ThemeProvider>
-        </NextIntlClientProvider>
+        <ViewTransitions>
+          <NextIntlClientProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <BackgroundParticles />
+              {children}
+              <CommandPalette />
+              <Toaster />
+              <ServiceWorkerRegister />
+            </ThemeProvider>
+          </NextIntlClientProvider>
+        </ViewTransitions>
       </body>
     </html>
   );
