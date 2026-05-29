@@ -6,8 +6,8 @@ import { useRef, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@/i18n/navigation";
+import { downscaleImageToWebp } from "@/lib/image";
 import { removeListCover, uploadListCover } from "../actions";
-import { ALLOWED_COVER_MIME, type AllowedCoverMime, MAX_COVER_BYTES } from "../schemas";
 import { ListCover } from "./list-cover";
 
 /** Cover banner with upload / remove controls, for a list's detail page. */
@@ -21,17 +21,22 @@ export function ListCoverEditor({ listId, coverUrl }: { listId: string; coverUrl
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    if (!ALLOWED_COVER_MIME.includes(file.type as AllowedCoverMime)) {
+    if (!file.type.startsWith("image/")) {
       toast.error(t("errorMime"));
       return;
     }
-    if (file.size > MAX_COVER_BYTES) {
-      toast.error(t("errorSize"));
-      return;
-    }
-    const formData = new FormData();
-    formData.set("file", file);
     startTransition(async () => {
+      // Resize + re-encode client-side so any photo (even a huge one) becomes a
+      // small WebP — avoids the Server Action body limit and the page error.
+      let blob: Blob;
+      try {
+        blob = await downscaleImageToWebp(file);
+      } catch {
+        toast.error(t("errorProcess"));
+        return;
+      }
+      const formData = new FormData();
+      formData.set("file", new File([blob], "cover.webp", { type: "image/webp" }));
       const result = await uploadListCover(listId, formData);
       if (!result.ok) {
         toast.error(result.error);
@@ -82,13 +87,7 @@ export function ListCoverEditor({ listId, coverUrl }: { listId: string; coverUrl
           </Button>
         ) : null}
       </div>
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        onChange={handleFile}
-        className="hidden"
-      />
+      <input ref={inputRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
     </div>
   );
 }

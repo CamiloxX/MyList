@@ -406,8 +406,9 @@
       "remove": "Remove cover",
       "updated": "Cover updated",
       "removed": "Cover removed",
-      "errorMime": "Unsupported format (jpg, png or webp)",
-      "errorSize": "Image is larger than 3 MB"
+      "errorMime": "Pick an image file",
+      "errorSize": "Image is larger than 3 MB",
+      "errorProcess": "We couldn't process the image"
     }
   },
   "settings": {

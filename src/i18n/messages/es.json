@@ -406,8 +406,9 @@
       "remove": "Quitar portada",
       "updated": "Portada actualizada",
       "removed": "Portada quitada",
-      "errorMime": "Formato no soportado (jpg, png o webp)",
-      "errorSize": "La imagen pesa más de 3 MB"
+      "errorMime": "Elige un archivo de imagen",
+      "errorSize": "La imagen pesa más de 3 MB",
+      "errorProcess": "No pudimos procesar la imagen"
     }
   },
   "settings": {
