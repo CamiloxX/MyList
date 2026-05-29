@@ -560,9 +560,10 @@
       "remove": "Remove",
       "confirmRemove": "Confirm",
       "cancel": "Cancel",
-      "hint": "JPG, PNG or WebP. Up to 2 MB.",
-      "errorMime": "Unsupported format",
+      "hint": "Upload any image; we adapt it automatically.",
+      "errorMime": "Pick an image file",
       "errorSize": "Image is larger than 2 MB",
+      "errorProcess": "We couldn't process the image",
       "successToast": "Photo updated",
       "removedToast": "Photo removed"
     },

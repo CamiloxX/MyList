@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@/i18n/navigation";
+import { downscaleImageToWebp } from "@/lib/image";
 import { removeAvatar, uploadAvatar } from "../actions";
-import { ALLOWED_AVATAR_MIME, MAX_AVATAR_BYTES } from "../schemas";
 import { AvatarCropDialog } from "./avatar-crop-dialog";
 
 type Props = {
@@ -27,16 +27,21 @@ export function AvatarUploadCard({ currentAvatarUrl, displayName }: Props) {
 
   const handlePick = () => inputRef.current?.click();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    if (!ALLOWED_AVATAR_MIME.includes(file.type as (typeof ALLOWED_AVATAR_MIME)[number])) {
+    if (!file.type.startsWith("image/")) {
       toast.error(t("errorMime"));
       return;
     }
-    if (file.size > MAX_AVATAR_BYTES) {
-      toast.error(t("errorSize"));
+    // Downscale to ≤1600px first so any photo (even a huge one) is light to
+    // crop and the final upload stays tiny — no size limit for the user.
+    let prepared: Blob;
+    try {
+      prepared = await downscaleImageToWebp(file, 1600, 0.9);
+    } catch {
+      toast.error(t("errorProcess"));
       return;
     }
     const reader = new FileReader();
@@ -44,7 +49,7 @@ export function AvatarUploadCard({ currentAvatarUrl, displayName }: Props) {
       setPreviewSrc(reader.result as string);
       setCropOpen(true);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(prepared);
   };
 
   const handleCropConfirm = async (blob: Blob) => {
@@ -133,7 +138,7 @@ export function AvatarUploadCard({ currentAvatarUrl, displayName }: Props) {
         <input
           ref={inputRef}
           type="file"
-          accept={ALLOWED_AVATAR_MIME.join(",")}
+          accept="image/*"
           className="hidden"
           onChange={handleFileChange}
         />
