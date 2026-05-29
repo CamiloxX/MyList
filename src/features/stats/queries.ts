@@ -325,24 +325,33 @@ function computeStreaks(dates: Set<string>, today: string): { current: number; l
 }
 
 /**
- * Computes the GitHub-style activity heatmap (last ~12 months) and the viewing
- * streak from all of the user's watch_entries in a single query.
+ * Computes the GitHub-style activity heatmap (last ~12 months) from the user's
+ * watch_entries, and the "usage" streak from the union of days they logged a
+ * view OR opened the app (user_activity). Heatmap stays view-based (it shows
+ * what was watched); the streak counts showing up.
  */
 export async function getActivityStats(): Promise<ActivityStats> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from("watch_entries").select("watched_on");
-  if (error) {
-    throw new Error(`Error cargando actividad: ${error.message}`);
+  const [entriesRes, visitsRes] = await Promise.all([
+    supabase.from("watch_entries").select("watched_on"),
+    supabase.from("user_activity").select("active_on"),
+  ]);
+  if (entriesRes.error) {
+    throw new Error(`Error cargando actividad: ${entriesRes.error.message}`);
   }
 
   const counts = new Map<string, number>();
-  for (const row of data ?? []) {
+  for (const row of entriesRes.data ?? []) {
     counts.set(row.watched_on, (counts.get(row.watched_on) ?? 0) + 1);
   }
 
   const today = todayInColombia();
   const grid = buildHeatmap(counts, today);
-  const { current, longest } = computeStreaks(new Set(counts.keys()), today);
+
+  // Streak = days watched ∪ days the app was opened.
+  const streakDates = new Set<string>(counts.keys());
+  for (const row of visitsRes.data ?? []) streakDates.add(row.active_on);
+  const { current, longest } = computeStreaks(streakDates, today);
 
   return {
     days: grid.days,

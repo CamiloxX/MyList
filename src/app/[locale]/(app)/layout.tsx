@@ -5,6 +5,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { BadgeCelebrationProvider } from "@/features/badges/components/badge-celebration-provider";
 import { BottomNav } from "@/features/shell/components/bottom-nav";
+import { DailyVisitTracker } from "@/features/shell/components/daily-visit-tracker";
 import { HeaderSearch } from "@/features/shell/components/header-search";
 import { NavMore } from "@/features/shell/components/nav-more";
 import { Link, redirect } from "@/i18n/navigation";
@@ -75,6 +76,7 @@ export default async function AppLayout({
         </header>
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pb-24 md:pb-6">{children}</main>
         <BottomNav />
+        <DailyVisitTracker />
       </div>
     </BadgeCelebrationProvider>
   );

@@ -9,6 +9,24 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      user_activity: {
+        Row: {
+          user_id: string;
+          active_on: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          active_on: string;
+          created_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          active_on?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
           id: string;

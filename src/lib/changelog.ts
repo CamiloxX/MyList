@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-28",
+    tag: "improvement",
+    title: {
+      es: "Tu racha cuenta con solo abrir la app",
+      en: "Your streak counts just by opening the app",
+    },
+    description: {
+      es: "Antes la racha solo subía al registrar una visualización. Ahora un día cuenta si abres la app o registras algo, así es más fácil mantenerla viva.",
+      en: "Your streak used to grow only when you logged a view. Now a day counts if you open the app or log something, so it's easier to keep alive.",
+    },
+  },
+  {
+    date: "2026-05-28",
     tag: "new",
     title: {
       es: "Sugerencias mientras buscas (escritorio)",
