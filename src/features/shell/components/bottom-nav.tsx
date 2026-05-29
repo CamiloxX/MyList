@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BarChart3Icon,
   CalendarIcon,
   CompassIcon,
   LibraryIcon,
@@ -31,6 +32,7 @@ const PRIMARY = [
 ] as const;
 
 const SECONDARY = [
+  { href: "/stats" as const, labelKey: "stats", Icon: BarChart3Icon },
   { href: "/badges" as const, labelKey: "badges", Icon: TrophyIcon },
   { href: "/settings" as const, labelKey: "settings", Icon: SettingsIcon },
   { href: "/changelog" as const, labelKey: "changelog", Icon: NewspaperIcon },
@@ -87,8 +89,7 @@ export function BottomNav() {
               </DrawerHeader>
               <ul className="flex flex-col gap-1 px-1 pb-2">
                 {SECONDARY.map(({ href, labelKey, Icon }) => {
-                  const isActive =
-                    pathname === href || pathname.startsWith(`${href}/`);
+                  const isActive = pathname === href || pathname.startsWith(`${href}/`);
                   return (
                     <li key={href}>
                       <DrawerClose
@@ -97,9 +98,7 @@ export function BottomNav() {
                             href={href}
                             className={cn(
                               "flex items-center gap-3 rounded-lg px-3 py-3 text-sm transition-colors",
-                              isActive
-                                ? "bg-primary/10 text-primary"
-                                : "hover:bg-muted",
+                              isActive ? "bg-primary/10 text-primary" : "hover:bg-muted",
                             )}
                             aria-current={isActive ? "page" : undefined}
                           />
