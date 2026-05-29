@@ -1,6 +1,13 @@
 "use client";
 
-import { ChevronDownIcon, LogOutIcon, NewspaperIcon, SettingsIcon, TrophyIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ListIcon,
+  LogOutIcon,
+  NewspaperIcon,
+  SettingsIcon,
+  TrophyIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,6 +17,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const ITEMS = [
+  { href: "/lists", labelKey: "lists", Icon: ListIcon },
   { href: "/badges", labelKey: "badges", Icon: TrophyIcon },
   { href: "/changelog", labelKey: "changelog", Icon: NewspaperIcon },
   { href: "/settings", labelKey: "settings", Icon: SettingsIcon },

@@ -14,6 +14,8 @@ import { TrailerButton } from "@/features/library/components/trailer-button";
 import { WatchEntryList } from "@/features/library/components/watch-entry-list";
 import { WatchEntryTrigger } from "@/features/library/components/watch-entry-trigger";
 import type { MediaStatus } from "@/features/library/status";
+import { AddToListButton } from "@/features/lists/components/add-to-list-button";
+import { getListsForItem } from "@/features/lists/queries";
 import { TitleComments } from "@/features/title-comments/components/title-comments";
 import { Link } from "@/i18n/navigation";
 import type { AiringStatus } from "@/lib/airing-status";
@@ -47,18 +49,20 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
     notFound();
   }
 
-  const [watchUrl, { data: entries }, trailer, providers, airing, nextEpisode] = await Promise.all([
-    getMediaWatchUrl(id).catch(() => null),
-    supabase
-      .from("watch_entries")
-      .select("id, watched_on, rating, platform, notes, season_number")
-      .eq("media_item_id", id)
-      .order("watched_on", { ascending: false }),
-    fetchTrailerFor(item.source, item.kind, item.source_id),
-    fetchWatchProviders(item.source, item.kind, item.source_id),
-    fetchAiringStatus(item.source, item.kind, item.source_id),
-    fetchNextEpisode(item.source, item.kind, item.source_id),
-  ]);
+  const [watchUrl, { data: entries }, trailer, providers, airing, nextEpisode, listMemberships] =
+    await Promise.all([
+      getMediaWatchUrl(id).catch(() => null),
+      supabase
+        .from("watch_entries")
+        .select("id, watched_on, rating, platform, notes, season_number")
+        .eq("media_item_id", id)
+        .order("watched_on", { ascending: false }),
+      fetchTrailerFor(item.source, item.kind, item.source_id),
+      fetchWatchProviders(item.source, item.kind, item.source_id),
+      fetchAiringStatus(item.source, item.kind, item.source_id),
+      fetchNextEpisode(item.source, item.kind, item.source_id),
+      getListsForItem(item.id),
+    ]);
 
   const entriesList = entries ?? [];
   const t = await getTranslations();
@@ -201,6 +205,7 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
               {item.kind === "tv" || item.kind === "anime" ? (
                 <NotifyEpisodesToggle id={item.id} initial={item.notify_episodes} />
               ) : null}
+              <AddToListButton mediaItemId={item.id} lists={listMemberships} />
               <RemoveButton id={item.id} title={item.title} />
             </div>
             {providers ? (

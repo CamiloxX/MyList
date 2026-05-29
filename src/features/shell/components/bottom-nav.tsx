@@ -5,6 +5,7 @@ import {
   CalendarIcon,
   CompassIcon,
   LibraryIcon,
+  ListIcon,
   MoreHorizontalIcon,
   NewspaperIcon,
   SearchIcon,
@@ -32,6 +33,7 @@ const PRIMARY = [
 ] as const;
 
 const SECONDARY = [
+  { href: "/lists" as const, labelKey: "lists", Icon: ListIcon },
   { href: "/stats" as const, labelKey: "stats", Icon: BarChart3Icon },
   { href: "/badges" as const, labelKey: "badges", Icon: TrophyIcon },
   { href: "/settings" as const, labelKey: "settings", Icon: SettingsIcon },

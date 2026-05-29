@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-28",
+    tag: "new",
+    title: {
+      es: "Listas personalizadas",
+      en: "Custom lists",
+    },
+    description: {
+      es: "Crea tus propias listas (Para ver, Favoritas, lo que quieras), agrégales títulos desde su ficha con «Agregar a lista», y míralas o edítalas desde la sección Listas.",
+      en: "Create your own lists (To watch, Favorites, whatever you like), add titles from their page with “Add to list”, and view or edit them from the Lists section.",
+    },
+  },
+  {
+    date: "2026-05-28",
     tag: "improvement",
     title: {
       es: "Tu racha cuenta con solo abrir la app",
