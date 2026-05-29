@@ -155,6 +155,30 @@ export async function removeItemFromList(
 }
 
 /**
+ * Lists for the current user, each flagged with whether it already contains the
+ * given title. Used by the card "add to list" control to lazy-load on open
+ * (avoids one query per card on the library grid).
+ */
+export async function loadListMemberships(
+  mediaItemId: string,
+): Promise<{ id: string; name: string; contains: boolean }[]> {
+  if (!idSchema.safeParse(mediaItemId).success) return [];
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const [listsRes, membersRes] = await Promise.all([
+    supabase.from("lists").select("id, name").order("created_at", { ascending: true }),
+    supabase.from("list_items").select("list_id").eq("media_item_id", mediaItemId),
+  ]);
+  const inSet = new Set((membersRes.data ?? []).map((m) => m.list_id));
+  return (listsRes.data ?? []).map((l) => ({ id: l.id, name: l.name, contains: inSet.has(l.id) }));
+}
+
+/**
  * Toggles link-sharing for a list: `unlisted` (viewable by anyone with the
  * link, not listed anywhere) when on, `private` when off. RLS guarantees only
  * the owner can flip it.

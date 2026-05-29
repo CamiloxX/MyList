@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
+import { AddToListButton } from "@/features/lists/components/add-to-list-button";
 import type { Database } from "@/types/database";
 import type { MediaStatus } from "../status";
 import { PosterTransitionLink } from "./poster-transition-link";
@@ -50,6 +51,7 @@ export async function LibraryCard({ item }: { item: MediaItem }) {
         </header>
         <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
           <StatusSelect id={item.id} current={item.status as MediaStatus} />
+          <AddToListButton mediaItemId={item.id} variant="icon" />
           <RemoveButton id={item.id} title={item.title} />
         </div>
       </div>
