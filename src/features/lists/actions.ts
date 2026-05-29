@@ -154,6 +154,31 @@ export async function removeItemFromList(
   return { ok: true };
 }
 
+/**
+ * Toggles link-sharing for a list: `unlisted` (viewable by anyone with the
+ * link, not listed anywhere) when on, `private` when off. RLS guarantees only
+ * the owner can flip it.
+ */
+export async function setListShared(id: string, shared: boolean): Promise<ListActionResult> {
+  const parsedId = idSchema.safeParse(id);
+  if (!parsedId.success) return { ok: false, error: INVALID_DATA };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: NOT_SIGNED_IN };
+
+  const { error } = await supabase
+    .from("lists")
+    .update({ visibility: shared ? "unlisted" : "private" })
+    .eq("id", parsedId.data);
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath(`/lists/${parsedId.data}`);
+  return { ok: true };
+}
+
 const COVER_EXT: Record<AllowedCoverMime, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",

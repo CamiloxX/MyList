@@ -18,6 +18,18 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-05-28",
+    tag: "new",
+    title: {
+      es: "Comparte tus listas con un enlace",
+      en: "Share your lists with a link",
+    },
+    description: {
+      es: "Desde una lista, pulsa «Compartir» para generar un enlace: cualquiera que lo tenga puede verla (solo lectura), sin necesidad de cuenta. Puedes dejar de compartirla cuando quieras y vuelve a ser privada. Las listas siguen privadas hasta que tú las compartes.",
+      en: "From a list, tap “Share” to generate a link: anyone with it can view the list (read-only), no account needed. You can stop sharing anytime and it goes private again. Lists stay private until you share them.",
+    },
+  },
+  {
+    date: "2026-05-28",
     tag: "improvement",
     title: {
       es: "Portada para tus listas",

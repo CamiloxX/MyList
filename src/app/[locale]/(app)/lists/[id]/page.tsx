@@ -6,6 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { ListCoverEditor } from "@/features/lists/components/list-cover-editor";
 import { ListSettings } from "@/features/lists/components/list-settings";
 import { RemoveFromListButton } from "@/features/lists/components/remove-from-list-button";
+import { ShareListButton } from "@/features/lists/components/share-list-button";
 import { getListWithItems } from "@/features/lists/queries";
 import { Link } from "@/i18n/navigation";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -45,7 +46,10 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
             {t("lists.itemCount", { count: data.items.length })}
           </p>
         </div>
-        <ListSettings list={{ id: data.id, name: data.name, description: data.description }} />
+        <div className="flex shrink-0 items-center gap-1">
+          <ShareListButton listId={data.id} initialShared={data.shared} />
+          <ListSettings list={{ id: data.id, name: data.name, description: data.description }} />
+        </div>
       </header>
 
       {data.items.length === 0 ? (

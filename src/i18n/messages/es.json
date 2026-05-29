@@ -408,7 +408,19 @@
       "removed": "Portada quitada",
       "errorMime": "Elige un archivo de imagen",
       "errorSize": "La imagen pesa más de 3 MB",
-      "errorProcess": "No pudimos procesar la imagen"
+      "errorProcess": "No pudimos procesar la imagen",
+      "info": "Usa una imagen horizontal (recomendado 1600×500 px). Se recorta para llenar el banner.",
+      "infoLabel": "Tamaño recomendado de la portada"
+    },
+    "share": {
+      "button": "Compartir",
+      "copy": "Copiar enlace",
+      "copied": "¡Enlace copiado!",
+      "copyError": "No pudimos copiar el enlace",
+      "stop": "Dejar de compartir",
+      "stopped": "La lista volvió a ser privada",
+      "sharedHint": "Cualquiera con el enlace puede ver esta lista.",
+      "poweredBy": "Lista compartida con MyList"
     }
   },
   "settings": {

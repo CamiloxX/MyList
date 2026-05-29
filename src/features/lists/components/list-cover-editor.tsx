@@ -1,10 +1,11 @@
 "use client";
 
-import { ImageUpIcon, Trash2Icon } from "lucide-react";
+import { ImageUpIcon, InfoIcon, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useRouter } from "@/i18n/navigation";
 import { downscaleImageToWebp } from "@/lib/image";
 import { removeListCover, uploadListCover } from "../actions";
@@ -62,6 +63,17 @@ export function ListCoverEditor({ listId, coverUrl }: { listId: string; coverUrl
   return (
     <div className="relative">
       <ListCover coverUrl={coverUrl} seed={listId} className="h-36 w-full rounded-xl sm:h-44" />
+      <Popover>
+        <PopoverTrigger
+          aria-label={t("infoLabel")}
+          className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur transition-colors hover:bg-black/60"
+        >
+          <InfoIcon className="size-4" aria-hidden />
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-60 text-xs text-muted-foreground">
+          {t("info")}
+        </PopoverContent>
+      </Popover>
       <div className="absolute right-2 bottom-2 flex gap-1.5">
         <Button
           type="button"

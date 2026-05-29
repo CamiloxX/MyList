@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 
 export type ListSummary = {
   id: string;
@@ -46,6 +46,7 @@ export type ListWithItems = {
   name: string;
   description: string | null;
   coverUrl: string | null;
+  shared: boolean;
   items: ListItemMedia[];
 };
 
@@ -54,7 +55,7 @@ export async function getListWithItems(listId: string): Promise<ListWithItems | 
   const supabase = await createClient();
   const { data: list } = await supabase
     .from("lists")
-    .select("id, name, description, cover_url")
+    .select("id, name, description, cover_url, visibility")
     .eq("id", listId)
     .maybeSingle();
   if (!list) return null;
@@ -71,8 +72,41 @@ export async function getListWithItems(listId: string): Promise<ListWithItems | 
     name: list.name,
     description: list.description,
     coverUrl: list.cover_url,
+    shared: list.visibility !== "private",
     items,
   };
+}
+
+export type SharedList = {
+  name: string;
+  description: string | null;
+  coverUrl: string | null;
+  items: ListItemMedia[];
+};
+
+/**
+ * Public read of a shared list, by anyone with the link. Uses the service-role
+ * client to bypass owner-only RLS, but ONLY returns the list when it's been
+ * shared (visibility != 'private') and exposes just display fields — never the
+ * owner or private data. Returns null for private/unknown lists.
+ */
+export async function getSharedList(listId: string): Promise<SharedList | null> {
+  const admin = createServiceRoleClient();
+  const { data: list } = await admin
+    .from("lists")
+    .select("name, description, cover_url, visibility")
+    .eq("id", listId)
+    .maybeSingle();
+  if (!list || list.visibility === "private") return null;
+
+  const { data: rows } = await admin
+    .from("list_items")
+    .select("position, media_items ( id, title, poster_url, kind, year )")
+    .eq("list_id", listId)
+    .order("position", { ascending: true });
+
+  const items: ListItemMedia[] = (rows ?? []).map((r) => r.media_items as unknown as ListItemMedia);
+  return { name: list.name, description: list.description, coverUrl: list.cover_url, items };
 }
 
 export type ListMembership = { id: string; name: string; contains: boolean };

@@ -408,7 +408,19 @@
       "removed": "Cover removed",
       "errorMime": "Pick an image file",
       "errorSize": "Image is larger than 3 MB",
-      "errorProcess": "We couldn't process the image"
+      "errorProcess": "We couldn't process the image",
+      "info": "Use a landscape image (1600×500 px recommended). It's cropped to fill the banner.",
+      "infoLabel": "Recommended cover size"
+    },
+    "share": {
+      "button": "Share",
+      "copy": "Copy link",
+      "copied": "Link copied!",
+      "copyError": "We couldn't copy the link",
+      "stop": "Stop sharing",
+      "stopped": "List is private again",
+      "sharedHint": "Anyone with the link can view this list.",
+      "poweredBy": "List shared with MyList"
     }
   },
   "settings": {
