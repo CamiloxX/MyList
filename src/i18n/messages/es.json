@@ -401,6 +401,8 @@
     "newListPlaceholder": "Nueva lista...",
     "addedToNew": "Agregado a «{name}»",
     "removeFromList": "Quitar de la lista",
+    "moveUp": "Subir",
+    "moveDown": "Bajar",
     "cover": {
       "change": "Portada",
       "remove": "Quitar portada",

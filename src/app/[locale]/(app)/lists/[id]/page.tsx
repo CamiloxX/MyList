@@ -6,6 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { ListCoverEditor } from "@/features/lists/components/list-cover-editor";
 import { ListSettings } from "@/features/lists/components/list-settings";
 import { RemoveFromListButton } from "@/features/lists/components/remove-from-list-button";
+import { ReorderItemButtons } from "@/features/lists/components/reorder-item-buttons";
 import { ShareListButton } from "@/features/lists/components/share-list-button";
 import { getListWithItems } from "@/features/lists/queries";
 import { Link } from "@/i18n/navigation";
@@ -62,11 +63,17 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
         </div>
       ) : (
         <ul className="flex flex-col gap-3">
-          {data.items.map((item) => (
+          {data.items.map((item, index) => (
             <li
               key={item.id}
               className="flex items-center gap-4 rounded-xl border bg-card p-3 shadow-sm"
             >
+              <ReorderItemButtons
+                listId={data.id}
+                mediaItemId={item.id}
+                isFirst={index === 0}
+                isLast={index === data.items.length - 1}
+              />
               <Link
                 href={`/library/${item.id}`}
                 className="relative aspect-[2/3] w-16 shrink-0 overflow-hidden rounded-md bg-muted"

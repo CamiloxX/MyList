@@ -155,6 +155,63 @@ export async function removeItemFromList(
 }
 
 /**
+ * Moves a title one slot up or down within a list by swapping its `position`
+ * with the adjacent neighbour. RLS guarantees the list belongs to the user.
+ * No-op (still `ok`) when the item is already at the relevant edge.
+ */
+export async function moveListItem(
+  listId: string,
+  mediaItemId: string,
+  direction: "up" | "down",
+): Promise<ListActionResult> {
+  if (!idSchema.safeParse(listId).success || !idSchema.safeParse(mediaItemId).success) {
+    return { ok: false, error: INVALID_DATA };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: NOT_SIGNED_IN };
+
+  const { data: rows, error: loadError } = await supabase
+    .from("list_items")
+    .select("media_item_id, position")
+    .eq("list_id", listId)
+    .order("position", { ascending: true });
+  if (loadError) return { ok: false, error: loadError.message };
+
+  const ordered = rows ?? [];
+  const index = ordered.findIndex((r) => r.media_item_id === mediaItemId);
+  if (index === -1) return { ok: false, error: INVALID_DATA };
+
+  const neighbourIndex = direction === "up" ? index - 1 : index + 1;
+  const current = ordered[index];
+  const neighbour = ordered[neighbourIndex];
+  // Already at the top/bottom — nothing to do.
+  if (!current || !neighbour) return { ok: true };
+
+  // Swap the two stored positions (gap-safe: we exchange values, not indices).
+  const [{ error: e1 }, { error: e2 }] = await Promise.all([
+    supabase
+      .from("list_items")
+      .update({ position: neighbour.position })
+      .eq("list_id", listId)
+      .eq("media_item_id", current.media_item_id),
+    supabase
+      .from("list_items")
+      .update({ position: current.position })
+      .eq("list_id", listId)
+      .eq("media_item_id", neighbour.media_item_id),
+  ]);
+  if (e1 || e2) return { ok: false, error: (e1 ?? e2)?.message ?? INVALID_DATA };
+
+  revalidatePath("/lists");
+  revalidatePath(`/lists/${listId}`);
+  return { ok: true };
+}
+
+/**
  * Lists for the current user, each flagged with whether it already contains the
  * given title. Used by the card "add to list" control to lazy-load on open
  * (avoids one query per card on the library grid).

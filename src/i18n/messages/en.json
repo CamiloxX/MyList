@@ -401,6 +401,8 @@
     "newListPlaceholder": "New list...",
     "addedToNew": "Added to \"{name}\"",
     "removeFromList": "Remove from list",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
     "cover": {
       "change": "Cover",
       "remove": "Remove cover",
