@@ -403,6 +403,13 @@
     "removeFromList": "Quitar de la lista",
     "moveUp": "Subir",
     "moveDown": "Bajar",
+    "sortLabel": "Ordenar por",
+    "sort": {
+      "title": "Título (A-Z)",
+      "year_desc": "Año (recientes primero)",
+      "year_asc": "Año (antiguos primero)",
+      "kind": "Tipo"
+    },
     "cover": {
       "change": "Portada",
       "remove": "Quitar portada",

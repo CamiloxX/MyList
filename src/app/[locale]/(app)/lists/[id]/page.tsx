@@ -8,6 +8,7 @@ import { ListSettings } from "@/features/lists/components/list-settings";
 import { RemoveFromListButton } from "@/features/lists/components/remove-from-list-button";
 import { ReorderItemButtons } from "@/features/lists/components/reorder-item-buttons";
 import { ShareListButton } from "@/features/lists/components/share-list-button";
+import { SortListMenu } from "@/features/lists/components/sort-list-menu";
 import { getListWithItems } from "@/features/lists/queries";
 import { Link } from "@/i18n/navigation";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -52,6 +53,7 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
+          {data.items.length > 1 ? <SortListMenu listId={data.id} /> : null}
           <ShareListButton listId={data.id} listName={data.name} initialShared={data.shared} />
           <ListSettings list={{ id: data.id, name: data.name, description: data.description }} />
         </div>

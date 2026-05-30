@@ -211,6 +211,97 @@ export async function moveListItem(
   return { ok: true };
 }
 
+export const LIST_SORT_CRITERIA = ["title", "year_desc", "year_asc", "kind"] as const;
+export type ListSortCriterion = (typeof LIST_SORT_CRITERIA)[number];
+const sortCriterionSchema = z.enum(LIST_SORT_CRITERIA);
+
+// Display/group order for the "kind" sort; titles stay alpha within each kind.
+const KIND_RANK: Record<string, number> = { movie: 0, tv: 1, anime: 2 };
+
+/**
+ * Reorders every title in a list by the given criterion and persists the result
+ * by rewriting `position` to 0..n-1. After this the manual up/down arrows still
+ * work — the sort is just a bulk reassignment of positions. RLS guarantees the
+ * list belongs to the user.
+ */
+export async function sortListItems(
+  listId: string,
+  criterion: ListSortCriterion,
+): Promise<ListActionResult> {
+  if (!idSchema.safeParse(listId).success) return { ok: false, error: INVALID_DATA };
+  const parsedCriterion = sortCriterionSchema.safeParse(criterion);
+  if (!parsedCriterion.success) return { ok: false, error: INVALID_DATA };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: NOT_SIGNED_IN };
+
+  const { data: rows, error: loadError } = await supabase
+    .from("list_items")
+    .select("media_item_id, media_items!inner ( title, year, kind )")
+    .eq("list_id", listId);
+  if (loadError) return { ok: false, error: loadError.message };
+
+  type Row = {
+    media_item_id: string;
+    media_items: { title: string; year: number | null; kind: string } | null;
+  };
+  const items = (rows ?? []) as unknown as Row[];
+
+  const byTitle = (a: Row, b: Row) =>
+    (a.media_items?.title ?? "").localeCompare(b.media_items?.title ?? "", undefined, {
+      sensitivity: "base",
+      numeric: true,
+    });
+  // Titles without a year sink to the bottom regardless of asc/desc direction.
+  const byYear = (dir: 1 | -1) => (a: Row, b: Row) => {
+    const ya = a.media_items?.year;
+    const yb = b.media_items?.year;
+    if (ya == null && yb == null) return byTitle(a, b);
+    if (ya == null) return 1;
+    if (yb == null) return -1;
+    return ya === yb ? byTitle(a, b) : (ya - yb) * dir;
+  };
+
+  const sorted = [...items];
+  switch (parsedCriterion.data) {
+    case "title":
+      sorted.sort(byTitle);
+      break;
+    case "year_desc":
+      sorted.sort(byYear(-1));
+      break;
+    case "year_asc":
+      sorted.sort(byYear(1));
+      break;
+    case "kind":
+      sorted.sort((a, b) => {
+        const ra = KIND_RANK[a.media_items?.kind ?? ""] ?? 99;
+        const rb = KIND_RANK[b.media_items?.kind ?? ""] ?? 99;
+        return ra === rb ? byTitle(a, b) : ra - rb;
+      });
+      break;
+  }
+
+  const { error } = await supabase
+    .from("list_items")
+    .upsert(
+      sorted.map((row, position) => ({
+        list_id: listId,
+        media_item_id: row.media_item_id,
+        position,
+      })),
+      { onConflict: "list_id,media_item_id" },
+    );
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/lists");
+  revalidatePath(`/lists/${listId}`);
+  return { ok: true };
+}
+
 /**
  * Lists for the current user, each flagged with whether it already contains the
  * given title. Used by the card "add to list" control to lazy-load on open

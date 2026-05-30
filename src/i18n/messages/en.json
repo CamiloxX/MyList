@@ -403,6 +403,13 @@
     "removeFromList": "Remove from list",
     "moveUp": "Move up",
     "moveDown": "Move down",
+    "sortLabel": "Sort by",
+    "sort": {
+      "title": "Title (A-Z)",
+      "year_desc": "Year (newest first)",
+      "year_asc": "Year (oldest first)",
+      "kind": "Type"
+    },
     "cover": {
       "change": "Cover",
       "remove": "Remove cover",
