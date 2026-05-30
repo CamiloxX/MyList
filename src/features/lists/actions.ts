@@ -76,6 +76,64 @@ export async function updateList(id: string, input: ListFormInput): Promise<List
   return { ok: true };
 }
 
+/**
+ * Clones a list (name + description + all its titles, preserving order) into a
+ * new private list owned by the same user, and returns the new id. The cover is
+ * not copied — the new list falls back to the auto-generated poster collage.
+ * `newName` is supplied by the client so the "(copy)" label stays in i18n.
+ */
+export async function duplicateList(
+  sourceId: string,
+  newName: string,
+): Promise<ListActionResultWith<{ id: string }>> {
+  if (!idSchema.safeParse(sourceId).success) return { ok: false, error: INVALID_DATA };
+  const parsedName = listFormSchema.shape.name.safeParse(newName);
+  if (!parsedName.success) {
+    return { ok: false, error: parsedName.error.issues[0]?.message ?? INVALID_DATA };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: NOT_SIGNED_IN };
+
+  // RLS scopes this to the owner; a list that isn't theirs reads back as null.
+  const { data: source } = await supabase
+    .from("lists")
+    .select("description")
+    .eq("id", sourceId)
+    .maybeSingle();
+  if (!source) return { ok: false, error: INVALID_DATA };
+
+  const { data: created, error: createError } = await supabase
+    .from("lists")
+    .insert({ user_id: user.id, name: parsedName.data, description: source.description })
+    .select("id")
+    .single();
+  if (createError || !created) return { ok: false, error: createError?.message ?? INVALID_DATA };
+
+  const { data: items, error: itemsError } = await supabase
+    .from("list_items")
+    .select("media_item_id, position")
+    .eq("list_id", sourceId);
+  if (itemsError) return { ok: false, error: itemsError.message };
+
+  if (items && items.length > 0) {
+    const { error: copyError } = await supabase.from("list_items").insert(
+      items.map((it) => ({
+        list_id: created.id,
+        media_item_id: it.media_item_id,
+        position: it.position,
+      })),
+    );
+    if (copyError) return { ok: false, error: copyError.message };
+  }
+
+  revalidatePath("/lists");
+  return { ok: true, data: { id: created.id } };
+}
+
 export async function deleteList(id: string): Promise<ListActionResult> {
   const parsedId = idSchema.safeParse(id);
   if (!parsedId.success) return { ok: false, error: INVALID_DATA };

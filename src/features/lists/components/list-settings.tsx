@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreVerticalIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { CopyIcon, MoreVerticalIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -8,7 +8,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { deleteList } from "../actions";
+import { deleteList, duplicateList } from "../actions";
+import { LIST_NAME_MAX } from "../schemas";
 import { ListFormDrawer } from "./list-form-drawer";
 
 type ListInfo = { id: string; name: string; description: string | null };
@@ -31,6 +32,22 @@ export function ListSettings({ list }: { list: ListInfo }) {
       }
       toast.success(t("deleted"));
       router.push("/lists");
+    });
+  };
+
+  const onDuplicate = () => {
+    // Build "{name} (copy)" in i18n, trimming the base so it fits the limit.
+    const suffix = t("copySuffix");
+    const base = list.name.slice(0, LIST_NAME_MAX - suffix.length).trimEnd();
+    startTransition(async () => {
+      const result = await duplicateList(list.id, `${base}${suffix}`);
+      if (!result.ok) {
+        toast.error(result.error);
+        return;
+      }
+      setMenuOpen(false);
+      toast.success(t("duplicated"));
+      router.push(`/lists/${result.data.id}`);
     });
   };
 
@@ -86,6 +103,15 @@ export function ListSettings({ list }: { list: ListInfo }) {
               >
                 <PencilIcon className="size-4 text-muted-foreground" aria-hidden />
                 {t("rename")}
+              </button>
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={onDuplicate}
+                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors hover:bg-muted disabled:opacity-50"
+              >
+                <CopyIcon className="size-4 text-muted-foreground" aria-hidden />
+                {t("duplicate")}
               </button>
               <button
                 type="button"
