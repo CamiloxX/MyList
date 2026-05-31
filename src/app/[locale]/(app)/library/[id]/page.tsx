@@ -151,6 +151,14 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
                 {t("common.noPoster")}
               </div>
             )}
+            {nextEpisode?.airDateIso && nextEpisodeDate ? (
+              <NextEpisodeCard
+                airDateIso={nextEpisode.airDateIso}
+                episodeCode={nextEpisodeCode}
+                dateLabel={nextEpisodeDate}
+                timeLabel={nextEpisodeTime}
+              />
+            ) : null}
           </div>
           <div className="flex flex-col gap-3">
             <header className="flex flex-col gap-1">
@@ -181,14 +189,6 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
                 <p className="text-sm text-muted-foreground">{item.original_title}</p>
               ) : null}
             </header>
-            {nextEpisode?.airDateIso && nextEpisodeDate ? (
-              <NextEpisodeCard
-                airDateIso={nextEpisode.airDateIso}
-                episodeCode={nextEpisodeCode}
-                dateLabel={nextEpisodeDate}
-                timeLabel={nextEpisodeTime}
-              />
-            ) : null}
             <div className="flex flex-wrap items-center gap-2">
               <StatusSelect id={item.id} current={item.status as MediaStatus} />
               {watchUrl ? (

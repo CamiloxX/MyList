@@ -1,10 +1,10 @@
-# 022 — Tarjeta de próximo episodio con cuenta regresiva
+# 022 — Próximo episodio con cuenta regresiva (pill sobre el póster)
 
 ## Qué se hizo
 
 La fecha del próximo episodio en el detalle de la biblioteca pasó de una línea
-de texto plana (`Próximo episodio: T2E5 · mié, 5 jun`) a una **tarjeta
-destacada con cuenta regresiva viva**.
+de texto plana (`Próximo episodio: T2E5 · mié, 5 jun`) a una **pill flotante
+sobre el póster con cuenta regresiva viva**.
 
 - **`NextEpisodeCard`** (`features/library/components/next-episode-card.tsx`),
   client component:
@@ -15,16 +15,20 @@ destacada con cuenta regresiva viva**.
   - Se calcula en cliente con `Date.now()` dentro de un `useEffect` (re-tick cada
     minuto), así se mantiene fresca y **evita mismatch de hidratación**: en SSR
     se ve la fecha absoluta y al montar aparece el contador.
-  - **Acento de color por cercanía**: verde (esmeralda) si falta ≤ ~1,5 días
-    (inminente), azul (cielo) si falta más. Icono `CalendarClock`.
-  - Línea secundaria con el código (T2E5 / Ep 5) + fecha absoluta + hora.
+  - Es una **pill flotante** (`absolute inset-x-1.5 bottom-1.5`) anclada al pie
+    del póster, con fondo `bg-black/70` + `backdrop-blur` para legibilidad sobre
+    cualquier imagen. Dos líneas: countdown (blanco, bold) + detalle tenue
+    (código T2E5 / Ep 5 · fecha · hora), con `truncate`.
+  - **Acento de color por cercanía** en el icono `CalendarClock`: verde
+    (esmeralda) si falta ≤ ~1,5 días (inminente), azul (cielo) si falta más.
 
 - En `library/[id]/page.tsx`:
-  - El formateo server-side ahora produce `nextEpisodeDate` (día) y, solo para
-    anime, `nextEpisodeTime` (hora) — ambos en `America/Bogota`.
+  - El formateo server-side produce `nextEpisodeDate` (día) y, solo para anime,
+    `nextEpisodeTime` (hora) — ambos en `America/Bogota`.
   - Se añadió `hasExactTime` a `NextEpisodeInfo`: AniList da instante exacto
     (mostramos hora), TMDB solo fecha (no).
-  - La tarjeta se renderiza fuera del `<header>`, como bloque propio.
+  - La pill se renderiza dentro del contenedor `relative` del póster (que ya
+    tiene `overflow-hidden`, así queda recortada sobre la imagen).
 
 ## Por qué así
 
