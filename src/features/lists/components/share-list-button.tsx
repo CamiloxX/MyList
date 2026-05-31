@@ -8,7 +8,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { type ListVisibility, setListVisibility } from "../actions";
+import { setListVisibility } from "../actions";
+import type { ListVisibility } from "../constants";
 
 /**
  * Share control with three visibility states:

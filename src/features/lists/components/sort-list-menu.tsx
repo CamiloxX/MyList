@@ -8,7 +8,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { type ListSortCriterion, LIST_SORT_CRITERIA, sortListItems } from "../actions";
+import { sortListItems } from "../actions";
+import { type ListSortCriterion, LIST_SORT_CRITERIA } from "../constants";
 
 /** "Sort by" menu on a list's detail page; persists the new order. */
 export function SortListMenu({ listId }: { listId: string }) {

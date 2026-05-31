@@ -4,6 +4,12 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import {
+  LIST_SORT_CRITERIA,
+  LIST_VISIBILITY,
+  type ListSortCriterion,
+  type ListVisibility,
+} from "./constants";
+import {
   ALLOWED_COVER_MIME,
   type AllowedCoverMime,
   type ListFormInput,
@@ -269,8 +275,6 @@ export async function moveListItem(
   return { ok: true };
 }
 
-export const LIST_SORT_CRITERIA = ["title", "year_desc", "year_asc", "kind"] as const;
-export type ListSortCriterion = (typeof LIST_SORT_CRITERIA)[number];
 const sortCriterionSchema = z.enum(LIST_SORT_CRITERIA);
 
 // Display/group order for the "kind" sort; titles stay alpha within each kind.
@@ -384,8 +388,6 @@ export async function loadListMemberships(
   return (listsRes.data ?? []).map((l) => ({ id: l.id, name: l.name, contains: inSet.has(l.id) }));
 }
 
-export const LIST_VISIBILITY = ["private", "unlisted", "public"] as const;
-export type ListVisibility = (typeof LIST_VISIBILITY)[number];
 const visibilitySchema = z.enum(LIST_VISIBILITY);
 
 /**
