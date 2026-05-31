@@ -432,7 +432,18 @@
       "stop": "Dejar de compartir",
       "stopped": "La lista volvió a ser privada",
       "sharedHint": "Cualquiera con el enlace puede ver esta lista.",
+      "publicHint": "Visible para todos en Descubrir.",
+      "makePublic": "Mostrar en Descubrir",
+      "makeUnlisted": "Quitar de Descubrir",
       "poweredBy": "Lista compartida con MyList"
+    },
+    "discover": {
+      "link": "Descubrir",
+      "title": "Descubrir listas",
+      "subtitle": "Listas públicas creadas por la comunidad.",
+      "empty": "Todavía no hay listas públicas.",
+      "by": "por {name}",
+      "someone": "alguien"
     }
   },
   "settings": {

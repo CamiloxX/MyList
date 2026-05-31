@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkIcon, LockIcon, Share2Icon } from "lucide-react";
+import { GlobeIcon, LinkIcon, LockIcon, Share2Icon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -8,26 +8,27 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { setListShared } from "../actions";
+import { type ListVisibility, setListVisibility } from "../actions";
 
 /**
- * Share-by-link control. Off by default: the first tap makes the list
- * `unlisted` and copies the public link. Once shared, a popover offers copy
- * link / stop sharing.
+ * Share control with three visibility states:
+ * - `private`: not shared. First tap makes it `unlisted` and copies the link.
+ * - `unlisted`: anyone with the link. Popover offers copy / make public / stop.
+ * - `public`: also shown in the Discover feed.
  */
 export function ShareListButton({
   listId,
   listName,
-  initialShared,
+  initialVisibility,
 }: {
   listId: string;
   listName: string;
-  initialShared: boolean;
+  initialVisibility: ListVisibility;
 }) {
   const t = useTranslations("lists.share");
   const locale = useLocale();
   const router = useRouter();
-  const [shared, setShared] = useState(initialShared);
+  const [visibility, setVisibility] = useState<ListVisibility>(initialVisibility);
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -55,34 +56,20 @@ export function ShareListButton({
     await copyLink();
   };
 
-  const enableAndShare = (title: string) => {
+  const changeVisibility = (next: ListVisibility, after?: () => void | Promise<void>) => {
     startTransition(async () => {
-      const result = await setListShared(listId, true);
+      const result = await setListVisibility(listId, next);
       if (!result.ok) {
         toast.error(result.error);
         return;
       }
-      setShared(true);
-      await shareOrCopy(title);
+      setVisibility(next);
+      await after?.();
       router.refresh();
     });
   };
 
-  const stopSharing = () => {
-    startTransition(async () => {
-      const result = await setListShared(listId, false);
-      if (!result.ok) {
-        toast.error(result.error);
-        return;
-      }
-      setShared(false);
-      setOpen(false);
-      toast.success(t("stopped"));
-      router.refresh();
-    });
-  };
-
-  if (!shared) {
+  if (visibility === "private") {
     return (
       <Button
         type="button"
@@ -90,7 +77,7 @@ export function ShareListButton({
         size="sm"
         className="gap-1.5"
         disabled={isPending}
-        onClick={() => enableAndShare(listName)}
+        onClick={() => changeVisibility("unlisted", () => shareOrCopy(listName))}
       >
         <Share2Icon className="size-4" aria-hidden />
         {t("button")}
@@ -98,16 +85,24 @@ export function ShareListButton({
     );
   }
 
+  const isPublic = visibility === "public";
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "gap-1.5")}
       >
-        <Share2Icon className="size-4" aria-hidden />
+        {isPublic ? (
+          <GlobeIcon className="size-4" aria-hidden />
+        ) : (
+          <Share2Icon className="size-4" aria-hidden />
+        )}
         {t("button")}
       </PopoverTrigger>
       <PopoverContent align="end" className="w-64 p-1.5">
-        <p className="px-2.5 pt-1.5 pb-1 text-xs text-muted-foreground">{t("sharedHint")}</p>
+        <p className="px-2.5 pt-1.5 pb-1 text-xs text-muted-foreground">
+          {isPublic ? t("publicHint") : t("sharedHint")}
+        </p>
         <button
           type="button"
           onClick={copyLink}
@@ -118,9 +113,23 @@ export function ShareListButton({
         </button>
         <button
           type="button"
-          onClick={stopSharing}
           disabled={isPending}
-          className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-destructive transition-colors hover:bg-destructive/10"
+          onClick={() => changeVisibility(isPublic ? "unlisted" : "public")}
+          className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors hover:bg-muted disabled:opacity-50"
+        >
+          <GlobeIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+          {isPublic ? t("makeUnlisted") : t("makePublic")}
+        </button>
+        <button
+          type="button"
+          disabled={isPending}
+          onClick={() =>
+            changeVisibility("private", () => {
+              setOpen(false);
+              toast.success(t("stopped"));
+            })
+          }
+          className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50"
         >
           <LockIcon className="size-4 shrink-0" aria-hidden />
           {t("stop")}

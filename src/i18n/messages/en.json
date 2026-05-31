@@ -432,7 +432,18 @@
       "stop": "Stop sharing",
       "stopped": "List is private again",
       "sharedHint": "Anyone with the link can view this list.",
+      "publicHint": "Visible to everyone in Discover.",
+      "makePublic": "Show in Discover",
+      "makeUnlisted": "Remove from Discover",
       "poweredBy": "List shared with MyList"
+    },
+    "discover": {
+      "link": "Discover",
+      "title": "Discover lists",
+      "subtitle": "Public lists created by the community.",
+      "empty": "No public lists yet.",
+      "by": "by {name}",
+      "someone": "someone"
     }
   },
   "settings": {

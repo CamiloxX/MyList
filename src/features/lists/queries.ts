@@ -52,12 +52,14 @@ export type ListItemMedia = {
   year: number | null;
 };
 
+export type ListVisibility = "private" | "unlisted" | "public";
+
 export type ListWithItems = {
   id: string;
   name: string;
   description: string | null;
   coverUrl: string | null;
-  shared: boolean;
+  visibility: ListVisibility;
   items: ListItemMedia[];
 };
 
@@ -83,9 +85,67 @@ export async function getListWithItems(listId: string): Promise<ListWithItems | 
     name: list.name,
     description: list.description,
     coverUrl: list.cover_url,
-    shared: list.visibility !== "private",
+    visibility: list.visibility as ListVisibility,
     items,
   };
+}
+
+export type PublicList = {
+  id: string;
+  name: string;
+  description: string | null;
+  coverUrl: string | null;
+  posterUrls: string[];
+  itemCount: number;
+  author: { name: string | null; avatarUrl: string | null };
+};
+
+/**
+ * Every list marked `public`, for the "Discover" feed. Uses the service-role
+ * client to read across users (owner-only RLS would hide them), but only ever
+ * exposes public lists and display-only author fields. Most recent first.
+ */
+export async function getPublicLists(): Promise<PublicList[]> {
+  const admin = createServiceRoleClient();
+  const { data: lists } = await admin
+    .from("lists")
+    .select("id, name, description, cover_url, user_id, list_items(position, media_items(poster_url))")
+    .eq("visibility", "public")
+    .order("created_at", { ascending: false });
+  if (!lists || lists.length === 0) return [];
+
+  // lists.user_id and profiles.id both reference auth.users — no direct FK for a
+  // PostgREST embed, so resolve the authors in a second query.
+  const userIds = [...new Set(lists.map((l) => l.user_id as string))];
+  const { data: profiles } = await admin
+    .from("profiles")
+    .select("id, display_name, avatar_url")
+    .in("id", userIds);
+  const authorById = new Map(
+    (profiles ?? []).map((p) => [p.id, { name: p.display_name, avatarUrl: p.avatar_url }]),
+  );
+
+  return lists.map((row) => {
+    const items =
+      (row.list_items as unknown as Array<{
+        position: number;
+        media_items: { poster_url: string | null } | null;
+      }>) ?? [];
+    const posterUrls = [...items]
+      .sort((a, b) => a.position - b.position)
+      .map((it) => it.media_items?.poster_url)
+      .filter((p): p is string => Boolean(p))
+      .slice(0, 4);
+    return {
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      coverUrl: row.cover_url,
+      posterUrls,
+      itemCount: items.length,
+      author: authorById.get(row.user_id as string) ?? { name: null, avatarUrl: null },
+    };
+  });
 }
 
 export type SharedList = {

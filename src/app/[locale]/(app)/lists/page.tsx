@@ -1,9 +1,12 @@
+import { CompassIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { buttonVariants } from "@/components/ui/button";
 import { CreateListButton } from "@/features/lists/components/create-list-button";
 import { ListCover } from "@/features/lists/components/list-cover";
 import { getUserLists } from "@/features/lists/queries";
 import { Link } from "@/i18n/navigation";
 import { loadingDemoDelay } from "@/lib/loading-demo";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +22,16 @@ export default async function ListsPage() {
           <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <CreateListButton />
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href="/lists/discover"
+            className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "gap-1.5")}
+          >
+            <CompassIcon className="size-4" aria-hidden />
+            {t("discover.link")}
+          </Link>
+          <CreateListButton />
+        </div>
       </header>
 
       {lists.length === 0 ? (

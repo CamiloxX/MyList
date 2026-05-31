@@ -384,14 +384,26 @@ export async function loadListMemberships(
   return (listsRes.data ?? []).map((l) => ({ id: l.id, name: l.name, contains: inSet.has(l.id) }));
 }
 
+export const LIST_VISIBILITY = ["private", "unlisted", "public"] as const;
+export type ListVisibility = (typeof LIST_VISIBILITY)[number];
+const visibilitySchema = z.enum(LIST_VISIBILITY);
+
 /**
- * Toggles link-sharing for a list: `unlisted` (viewable by anyone with the
- * link, not listed anywhere) when on, `private` when off. RLS guarantees only
- * the owner can flip it.
+ * Sets a list's visibility:
+ * - `private`: only the owner.
+ * - `unlisted`: anyone with the link (not listed anywhere).
+ * - `public`: shown in the public "Discover" feed too.
+ * RLS guarantees only the owner can change it.
  */
-export async function setListShared(id: string, shared: boolean): Promise<ListActionResult> {
+export async function setListVisibility(
+  id: string,
+  visibility: ListVisibility,
+): Promise<ListActionResult> {
   const parsedId = idSchema.safeParse(id);
-  if (!parsedId.success) return { ok: false, error: INVALID_DATA };
+  const parsedVisibility = visibilitySchema.safeParse(visibility);
+  if (!parsedId.success || !parsedVisibility.success) {
+    return { ok: false, error: INVALID_DATA };
+  }
 
   const supabase = await createClient();
   const {
@@ -401,10 +413,12 @@ export async function setListShared(id: string, shared: boolean): Promise<ListAc
 
   const { error } = await supabase
     .from("lists")
-    .update({ visibility: shared ? "unlisted" : "private" })
+    .update({ visibility: parsedVisibility.data })
     .eq("id", parsedId.data);
   if (error) return { ok: false, error: error.message };
 
+  revalidatePath("/lists");
+  revalidatePath("/lists/discover");
   revalidatePath(`/lists/${parsedId.data}`);
   return { ok: true };
 }
