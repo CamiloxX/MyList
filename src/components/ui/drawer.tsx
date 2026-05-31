@@ -42,21 +42,27 @@ function DrawerContent({
   return (
     <DrawerPrimitive.Portal>
       <DrawerOverlay />
-      <DrawerPrimitive.Popup
-        data-slot="drawer-content"
-        className={cn(
-          "fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85vh] w-full max-w-2xl flex-col gap-4 rounded-t-2xl bg-popover p-4 pt-3 text-popover-foreground ring-1 ring-foreground/10 shadow-2xl outline-none duration-300 data-open:animate-in data-open:slide-in-from-bottom data-closed:animate-out data-closed:slide-out-to-bottom",
-          className,
-        )}
-        {...props}
-      >
-        {/* Drag handle indicator: a fat pill-shaped bar at the top of the
-            sheet that signals "swipe me down to dismiss". */}
-        <DrawerPrimitive.SwipeArea>
-          <div className="mx-auto h-1.5 w-12 shrink-0 cursor-grab rounded-full bg-muted-foreground/30 active:cursor-grabbing" />
-        </DrawerPrimitive.SwipeArea>
-        {children}
-      </DrawerPrimitive.Popup>
+      {/* Viewport is the positioning + swipe container Base UI requires around
+          the popup: it pins the sheet to the bottom of the screen and enables
+          swipe-to-dismiss / touch scroll locking. Without it Base UI warns and
+          the drag handle does nothing. */}
+      <DrawerPrimitive.Viewport className="fixed inset-0 z-50 flex flex-col justify-end">
+        <DrawerPrimitive.Popup
+          data-slot="drawer-content"
+          className={cn(
+            "mx-auto flex max-h-[85vh] w-full max-w-2xl flex-col gap-4 rounded-t-2xl bg-popover p-4 pt-3 text-popover-foreground ring-1 ring-foreground/10 shadow-2xl outline-none duration-300 data-open:animate-in data-open:slide-in-from-bottom data-closed:animate-out data-closed:slide-out-to-bottom",
+            className,
+          )}
+          {...props}
+        >
+          {/* Drag handle indicator: a fat pill-shaped bar at the top of the
+              sheet that signals "swipe me down to dismiss". */}
+          <DrawerPrimitive.SwipeArea>
+            <div className="mx-auto h-1.5 w-12 shrink-0 cursor-grab rounded-full bg-muted-foreground/30 active:cursor-grabbing" />
+          </DrawerPrimitive.SwipeArea>
+          {children}
+        </DrawerPrimitive.Popup>
+      </DrawerPrimitive.Viewport>
     </DrawerPrimitive.Portal>
   );
 }
