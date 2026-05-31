@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
 import { getMediaWatchUrl } from "@/features/library/actions";
+import { NextEpisodeCard } from "@/features/library/components/next-episode-card";
 import { NotifyEpisodesToggle } from "@/features/library/components/notify-episodes-toggle";
 import { RemoveButton } from "@/features/library/components/remove-button";
 import { SeasonsList } from "@/features/library/components/seasons-list";
@@ -68,11 +69,13 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
   const t = await getTranslations();
   const format = await getFormatter();
 
-  // Build the "next episode" line: an episode code (T2E5 / Ep 5) plus a date
-  // formatted in Colombia time. TMDB gives a date only; AniList an exact instant.
+  // Build the "next episode" card data: an episode code (T2E5 / Ep 5) plus an
+  // absolute date (and time for anime) formatted in Colombia time. The live
+  // countdown itself is computed client-side in <NextEpisodeCard>.
   let nextEpisodeCode: string | null = null;
   let nextEpisodeDate: string | null = null;
-  if (nextEpisode) {
+  let nextEpisodeTime: string | null = null;
+  if (nextEpisode?.airDateIso) {
     if (nextEpisode.seasonNumber != null && nextEpisode.episodeNumber != null) {
       nextEpisodeCode = t("library.detail.nextEpisode.tvCode", {
         season: nextEpisode.seasonNumber,
@@ -83,11 +86,17 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
         episode: nextEpisode.episodeNumber,
       });
     }
-    if (nextEpisode.airDateIso) {
-      nextEpisodeDate = format.dateTime(new Date(nextEpisode.airDateIso), {
-        weekday: "short",
-        day: "numeric",
-        month: "short",
+    const airDate = new Date(nextEpisode.airDateIso);
+    nextEpisodeDate = format.dateTime(airDate, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      timeZone: "America/Bogota",
+    });
+    if (nextEpisode.hasExactTime) {
+      nextEpisodeTime = format.dateTime(airDate, {
+        hour: "numeric",
+        minute: "2-digit",
         timeZone: "America/Bogota",
       });
     }
@@ -171,18 +180,15 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
               {item.original_title && item.original_title !== item.title ? (
                 <p className="text-sm text-muted-foreground">{item.original_title}</p>
               ) : null}
-              {nextEpisodeDate ? (
-                <p className="text-sm">
-                  <span className="text-muted-foreground">
-                    {t("library.detail.nextEpisode.label")}:{" "}
-                  </span>
-                  <span className="font-medium">
-                    {nextEpisodeCode ? `${nextEpisodeCode} · ` : ""}
-                    {nextEpisodeDate}
-                  </span>
-                </p>
-              ) : null}
             </header>
+            {nextEpisode?.airDateIso && nextEpisodeDate ? (
+              <NextEpisodeCard
+                airDateIso={nextEpisode.airDateIso}
+                episodeCode={nextEpisodeCode}
+                dateLabel={nextEpisodeDate}
+                timeLabel={nextEpisodeTime}
+              />
+            ) : null}
             <div className="flex flex-wrap items-center gap-2">
               <StatusSelect id={item.id} current={item.status as MediaStatus} />
               {watchUrl ? (
@@ -339,6 +345,8 @@ type NextEpisodeInfo = {
   /** ISO instant to format. TMDB date is anchored at noon UTC to avoid the
    *  date-only value rolling to the previous day in Colombia (UTC-5). */
   airDateIso: string | null;
+  /** AniList gives an exact airing instant (show the time); TMDB only a date. */
+  hasExactTime: boolean;
 };
 
 /**
@@ -357,6 +365,7 @@ async function fetchNextEpisode(
       seasonNumber: ep.seasonNumber,
       episodeNumber: ep.episodeNumber,
       airDateIso: `${ep.airDate}T12:00:00Z`,
+      hasExactTime: false,
     };
   }
   if (source === "anilist" && kind === "anime") {
@@ -366,6 +375,7 @@ async function fetchNextEpisode(
       seasonNumber: null,
       episodeNumber: ep.episode,
       airDateIso: new Date(ep.airingAt * 1000).toISOString(),
+      hasExactTime: true,
     };
   }
   return null;
