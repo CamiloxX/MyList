@@ -45,7 +45,7 @@ function libraryItemToPoster(item: MediaItem): PosterItem {
     posterUrl: item.poster_url,
     kind: item.kind as MediaKind,
     meta: item.year ? String(item.year) : undefined,
-    href: `/library/${item.id}`,
+    href: `/library-v2/${item.id}`,
   };
 }
 

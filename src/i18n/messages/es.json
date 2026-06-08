@@ -999,6 +999,20 @@
     "myLibrary": "Mi Biblioteca",
     "seasons": "{count, plural, =1 {1 temporada} other {# temporadas}}",
     "episodes": "{count, plural, =1 {1 episodio} other {# episodios}}",
-    "prototypeNote": "Prototipo de escritorio — no reemplaza tu biblioteca actual."
+    "prototypeNote": "Prototipo de escritorio — no reemplaza tu biblioteca actual.",
+    "detail": {
+      "synopsis": "Sinopsis",
+      "noSynopsis": "Sin sinopsis disponible.",
+      "episodes": "Episodios",
+      "details": "Detalles",
+      "progress": "Tu progreso",
+      "progressLine": "{watched} de {total} episodios",
+      "availableOn": "Disponible en",
+      "labelType": "Tipo",
+      "labelYear": "Año",
+      "labelOriginalTitle": "Título original",
+      "labelStatus": "Estado",
+      "labelScore": "Puntuación"
+    }
   }
 }

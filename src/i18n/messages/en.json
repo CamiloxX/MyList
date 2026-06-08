@@ -999,6 +999,20 @@
     "myLibrary": "My Library",
     "seasons": "{count, plural, =1 {1 season} other {# seasons}}",
     "episodes": "{count, plural, =1 {1 episode} other {# episodes}}",
-    "prototypeNote": "Desktop prototype — does not replace your current library."
+    "prototypeNote": "Desktop prototype — does not replace your current library.",
+    "detail": {
+      "synopsis": "Synopsis",
+      "noSynopsis": "No synopsis available.",
+      "episodes": "Episodes",
+      "details": "Details",
+      "progress": "Your progress",
+      "progressLine": "{watched} of {total} episodes",
+      "availableOn": "Available on",
+      "labelType": "Type",
+      "labelYear": "Year",
+      "labelOriginalTitle": "Original title",
+      "labelStatus": "Status",
+      "labelScore": "Rating"
+    }
   }
 }
