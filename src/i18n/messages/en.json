@@ -1012,7 +1012,8 @@
       "labelYear": "Year",
       "labelOriginalTitle": "Original title",
       "labelStatus": "Status",
-      "labelScore": "Rating"
+      "labelScore": "Rating",
+      "notInLibrary": "Not in your library yet"
     }
   }
 }

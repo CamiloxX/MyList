@@ -20,9 +20,13 @@ function yearFrom(date: string | undefined): string | undefined {
   return /^\d{4}$/.test(y) ? y : undefined;
 }
 
-/** Recommendation cards link into the real search flow so they're actionable. */
-function searchHref(title: string): string {
-  return `/search?q=${encodeURIComponent(title)}`;
+/**
+ * Recommendation / discover cards link to the in-app title preview, where the
+ * user can read the info and add it to their library (or, if it's already in
+ * the library, the preview route redirects them to the full detail view).
+ */
+function titleHref(source: string, kind: string, sourceId: string | number): string {
+  return `/library-v2/title/${source}/${kind}/${sourceId}`;
 }
 
 export function movieToPoster(m: TmdbMovie): PosterItem {
@@ -32,7 +36,7 @@ export function movieToPoster(m: TmdbMovie): PosterItem {
     posterUrl: tmdbImage(m.poster_path, "w342"),
     kind: "movie",
     meta: yearFrom(m.release_date),
-    href: searchHref(m.title),
+    href: titleHref("tmdb", "movie", m.id),
   };
 }
 
@@ -43,7 +47,7 @@ export function tvToPoster(t: TmdbTv): PosterItem {
     posterUrl: tmdbImage(t.poster_path, "w342"),
     kind: "tv",
     meta: yearFrom(t.first_air_date),
-    href: searchHref(t.name),
+    href: titleHref("tmdb", "tv", t.id),
   };
 }
 
@@ -55,7 +59,7 @@ export function animeToPoster(a: JikanAnime): PosterItem {
     posterUrl: jikanPoster(a),
     kind: "anime",
     meta: a.year ? String(a.year) : undefined,
-    href: searchHref(title),
+    href: titleHref("anilist", "anime", a.mal_id),
   };
 }
 
