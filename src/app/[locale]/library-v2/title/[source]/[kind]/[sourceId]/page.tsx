@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { RatingsBadge } from "@/features/discover/components/ratings-badge";
 import { AddToLibraryButton } from "@/features/library/components/add-to-library-button";
+import { TrailerButton } from "@/features/library/components/trailer-button";
 import { loadTitlePreview } from "@/features/library-v2/preview-data";
 import { Link, redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -125,6 +127,20 @@ export default async function TitlePreviewPage({ params }: PreviewPageProps) {
             </span>
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="secondary">{t(`kinds.${preview.kind}`)}</Badge>
+              {preview.airing !== "unknown" ? (
+                <Badge
+                  variant="secondary"
+                  className={cn(
+                    "border-transparent",
+                    preview.airing === "airing" &&
+                      "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+                    preview.airing === "upcoming" && "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+                    preview.airing === "ended" && "bg-muted text-muted-foreground",
+                  )}
+                >
+                  {t(`library.detail.airing.${preview.airing}`)}
+                </Badge>
+              ) : null}
               {preview.genreNames.slice(0, 4).map((g) => (
                 <Badge key={g} variant="outline" className="bg-background/40 backdrop-blur">
                   {g}
@@ -152,6 +168,7 @@ export default async function TitlePreviewPage({ params }: PreviewPageProps) {
                 </>
               ) : null}
             </div>
+            {preview.ratings ? <RatingsBadge ratings={preview.ratings} /> : null}
           </div>
         </div>
       </header>
@@ -161,6 +178,9 @@ export default async function TitlePreviewPage({ params }: PreviewPageProps) {
         <div className="flex min-w-0 flex-col gap-8">
           <div className="flex flex-wrap items-center gap-2">
             <AddToLibraryButton {...preview.addPayload} />
+            {preview.trailer ? (
+              <TrailerButton youtubeKey={preview.trailer.youtubeKey} title={preview.title} />
+            ) : null}
           </div>
 
           <section className="flex flex-col gap-2">

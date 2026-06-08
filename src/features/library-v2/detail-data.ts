@@ -6,11 +6,13 @@ import type { AiringStatus } from "@/lib/airing-status";
 import { getAnilistNextEpisode } from "@/lib/anilist/next-episode";
 import { getJikanAiringStatus } from "@/lib/jikan/airing";
 import { getJikanTrailer } from "@/lib/jikan/videos";
+import type { OmdbRatings } from "@/lib/omdb/schemas";
 import { createClient } from "@/lib/supabase/server";
 import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
 import { getTmdbTvAiringStatus, getTmdbTvNextEpisode } from "@/lib/tmdb/tv";
 import { getTmdbTrailer } from "@/lib/tmdb/videos";
 import type { Database } from "@/types/database";
+import { fetchTitleRatings } from "./ratings";
 
 type MediaItem = Database["public"]["Tables"]["media_items"]["Row"];
 type WatchEntry = {
@@ -43,6 +45,7 @@ export type SeriesDetailData = {
   airing: AiringStatus;
   nextEpisode: NextEpisodeInfo | null;
   lists: Awaited<ReturnType<typeof getListsForItem>>;
+  ratings: OmdbRatings | null;
 };
 
 /**
@@ -57,7 +60,7 @@ export async function loadSeriesDetail(id: string): Promise<SeriesDetailData | n
   const { data: item } = await supabase.from("media_items").select("*").eq("id", id).maybeSingle();
   if (!item) return null;
 
-  const [watchUrl, { data: entries }, trailer, providers, airing, nextEpisode, lists] =
+  const [watchUrl, { data: entries }, trailer, providers, airing, nextEpisode, lists, ratings] =
     await Promise.all([
       getMediaWatchUrl(id).catch(() => null),
       supabase
@@ -70,6 +73,7 @@ export async function loadSeriesDetail(id: string): Promise<SeriesDetailData | n
       fetchAiringStatus(item.source, item.kind, item.source_id),
       fetchNextEpisode(item.source, item.kind, item.source_id),
       getListsForItem(item.id),
+      fetchTitleRatings(item.source, item.kind, item.source_id),
     ]);
 
   return {
@@ -81,6 +85,7 @@ export async function loadSeriesDetail(id: string): Promise<SeriesDetailData | n
     airing,
     nextEpisode,
     lists,
+    ratings,
   };
 }
 

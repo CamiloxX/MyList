@@ -2,11 +2,18 @@ import "server-only";
 
 import { z } from "zod";
 import type { AddToLibraryInput } from "@/features/library/schemas";
+import type { AiringStatus } from "@/lib/airing-status";
+import { getJikanAiringStatus } from "@/lib/jikan/airing";
 import { jikanFetch } from "@/lib/jikan/client";
 import { jikanAnimeSchema } from "@/lib/jikan/schemas";
 import { jikanOriginalTitle, jikanPoster, jikanTitle } from "@/lib/jikan/search";
+import { getJikanTrailer } from "@/lib/jikan/videos";
+import type { OmdbRatings } from "@/lib/omdb/schemas";
 import { tmdbFetch } from "@/lib/tmdb/client";
 import { tmdbImage } from "@/lib/tmdb/images";
+import { getTmdbTvAiringStatus } from "@/lib/tmdb/tv";
+import { getTmdbTrailer } from "@/lib/tmdb/videos";
+import { fetchTitleRatings } from "./ratings";
 
 /**
  * Normalized title data for the "not yet in your library" preview page. Carries
@@ -28,7 +35,13 @@ export type TitlePreview = {
   synopsis: string | null;
   /** Spread straight into <AddToLibraryButton />. */
   addPayload: AddToLibraryInput;
+  trailer: { youtubeKey: string } | null;
+  airing: AiringStatus;
+  ratings: OmdbRatings | null;
 };
+
+/** The metadata half of a preview, before trailer/airing/ratings are attached. */
+type BaseTitlePreview = Omit<TitlePreview, "trailer" | "airing" | "ratings">;
 
 const tmdbGenre = z.object({ id: z.number(), name: z.string() });
 
@@ -76,14 +89,63 @@ function backdrop(path: string | null | undefined): string | null {
 }
 
 /**
- * Fetches and normalizes a not-yet-added title from its source. Returns null on
- * any failure (bad id, network) so the caller can 404 gracefully.
+ * Fetches and normalizes a not-yet-added title from its source, plus its
+ * trailer, airing state and OMDb ratings (in parallel). Returns null on any
+ * failure (bad id, network) so the caller can 404 gracefully.
  */
 export async function loadTitlePreview(
   source: string,
   kind: string,
   sourceId: string,
 ): Promise<TitlePreview | null> {
+  const base = await loadBase(source, kind, sourceId);
+  if (!base) return null;
+
+  const [trailer, airing, ratings] = await Promise.all([
+    fetchTrailer(source, kind, sourceId),
+    fetchAiring(source, kind, sourceId),
+    fetchTitleRatings(source, kind, sourceId),
+  ]);
+
+  return { ...base, trailer, airing, ratings };
+}
+
+async function fetchTrailer(
+  source: string,
+  kind: string,
+  sourceId: string,
+): Promise<{ youtubeKey: string } | null> {
+  try {
+    if (source === "tmdb" && (kind === "movie" || kind === "tv")) {
+      return await getTmdbTrailer(kind, sourceId);
+    }
+    if (source === "anilist" && kind === "anime") {
+      return await getJikanTrailer(sourceId);
+    }
+  } catch {
+    // Trailer is optional; never break the preview over it.
+  }
+  return null;
+}
+
+async function fetchAiring(source: string, kind: string, sourceId: string): Promise<AiringStatus> {
+  try {
+    if (source === "tmdb" && kind === "tv") return await getTmdbTvAiringStatus(sourceId);
+    if (source === "anilist" && kind === "anime") return await getJikanAiringStatus(sourceId);
+  } catch {
+    // Fall through to "unknown".
+  }
+  return "unknown";
+}
+
+/**
+ * Fetches and normalizes the metadata for a not-yet-added title from its source.
+ */
+async function loadBase(
+  source: string,
+  kind: string,
+  sourceId: string,
+): Promise<BaseTitlePreview | null> {
   try {
     if (source === "tmdb" && kind === "movie") {
       const raw = await tmdbFetch<unknown>(`/movie/${sourceId}`, { revalidate: 86400 });

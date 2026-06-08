@@ -20,6 +20,11 @@ function yearFrom(date: string | undefined): string | undefined {
   return /^\d{4}$/.test(y) ? y : undefined;
 }
 
+/** Source score (TMDB / MAL) formatted one-decimal, or undefined when absent. */
+function fmtScore(value: number | null | undefined): string | undefined {
+  return typeof value === "number" && value > 0 ? value.toFixed(1) : undefined;
+}
+
 /**
  * Recommendation / discover cards link to the in-app title preview, where the
  * user can read the info and add it to their library (or, if it's already in
@@ -37,6 +42,7 @@ export function movieToPoster(m: TmdbMovie): PosterItem {
     kind: "movie",
     meta: yearFrom(m.release_date),
     href: titleHref("tmdb", "movie", m.id),
+    score: fmtScore(m.vote_average),
   };
 }
 
@@ -48,6 +54,7 @@ export function tvToPoster(t: TmdbTv): PosterItem {
     kind: "tv",
     meta: yearFrom(t.first_air_date),
     href: titleHref("tmdb", "tv", t.id),
+    score: fmtScore(t.vote_average),
   };
 }
 
@@ -60,6 +67,7 @@ export function animeToPoster(a: JikanAnime): PosterItem {
     kind: "anime",
     meta: a.year ? String(a.year) : undefined,
     href: titleHref("anilist", "anime", a.mal_id),
+    score: fmtScore(a.score),
   };
 }
 

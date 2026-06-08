@@ -5,6 +5,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
+import { RatingsBadge } from "@/features/discover/components/ratings-badge";
 import { EpisodeTracker } from "@/features/library/components/episode-tracker";
 import { NextEpisodeCard } from "@/features/library/components/next-episode-card";
 import { NotifyEpisodesToggle } from "@/features/library/components/notify-episodes-toggle";
@@ -41,7 +42,7 @@ export default async function LibraryV2DetailPage({ params, searchParams }: Deta
 
   const data = await loadSeriesDetail(id);
   if (!data) notFound();
-  const { item, entries, watchUrl, trailer, providers, airing, nextEpisode, lists } = data;
+  const { item, entries, watchUrl, trailer, providers, airing, nextEpisode, lists, ratings } = data;
 
   const t = await getTranslations();
   const format = await getFormatter();
@@ -232,6 +233,7 @@ export default async function LibraryV2DetailPage({ params, searchParams }: Deta
                 </>
               ) : null}
             </div>
+            {ratings ? <RatingsBadge ratings={ratings} /> : null}
           </div>
         </div>
       </header>

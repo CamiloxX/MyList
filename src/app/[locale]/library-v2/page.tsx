@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getForYou } from "@/features/discover/recommend";
 import type { MediaKind } from "@/features/library/status";
@@ -13,6 +14,9 @@ import {
   parseGenre,
   tvToPoster,
 } from "@/features/library-v2/data";
+import { getSourceScore } from "@/features/library-v2/detail-data";
+import { fetchPosterRatings } from "@/features/library-v2/ratings";
+import { RATINGS_COOKIE, ratingsEnabledFromCookie } from "@/features/library-v2/ratings-prefs";
 import type { PosterItem } from "@/features/library-v2/types";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database";
@@ -46,6 +50,7 @@ function libraryItemToPoster(item: MediaItem): PosterItem {
     kind: item.kind as MediaKind,
     meta: item.year ? String(item.year) : undefined,
     href: `/library-v2/${item.id}`,
+    score: getSourceScore(item) ?? undefined,
   };
 }
 
@@ -83,8 +88,26 @@ export default async function LibraryV2Page({ searchParams }: PageProps) {
     genreRowsQuery,
   ]);
 
+  // RT/IMDb on the (bounded) recommendations row only — fetched lazily and only
+  // when the cover-ratings toggle is on, so it never burns OMDb quota silently.
+  const showRatings = ratingsEnabledFromCookie((await cookies()).get(RATINGS_COOKIE)?.value);
+  const recRatings = showRatings
+    ? await fetchPosterRatings([
+        ...forYou.movies.map((m) => ({ id: m.id, kind: "movie" as const })),
+        ...forYou.tv.map((tv) => ({ id: tv.id, kind: "tv" as const })),
+      ])
+    : new Map();
+  const withRatings = (p: PosterItem): PosterItem => ({
+    ...p,
+    ratings: recRatings.get(p.key) ?? null,
+  });
+
   const recommendations = interleave(
-    [forYou.movies.map(movieToPoster), forYou.tv.map(tvToPoster), forYou.anime.map(animeToPoster)],
+    [
+      forYou.movies.map(movieToPoster).map(withRatings),
+      forYou.tv.map(tvToPoster).map(withRatings),
+      forYou.anime.map(animeToPoster),
+    ],
     16,
   );
 

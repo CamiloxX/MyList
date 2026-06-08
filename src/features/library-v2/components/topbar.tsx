@@ -1,8 +1,11 @@
 import { ChevronDown } from "lucide-react";
+import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { LibrarySearchInput } from "@/features/library/components/library-search-input";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { RATINGS_COOKIE, ratingsEnabledFromCookie } from "../ratings-prefs";
+import { RatingsToggle } from "./ratings-toggle";
 
 type Props = {
   /** Display name shown next to the avatar; falls back to an empty avatar. */
@@ -18,6 +21,7 @@ type Props = {
 export async function Topbar({ userName, defaultQuery = "" }: Props) {
   const t = await getTranslations();
   const initial = userName.trim().charAt(0).toUpperCase() || "?";
+  const ratingsOn = ratingsEnabledFromCookie((await cookies()).get(RATINGS_COOKIE)?.value);
 
   return (
     <div className="flex flex-wrap items-center gap-3 border-b bg-background/80 px-4 py-3 backdrop-blur lg:px-6">
@@ -39,6 +43,8 @@ export async function Topbar({ userName, defaultQuery = "" }: Props) {
       </nav>
 
       <div className="ml-auto flex flex-1 items-center justify-end gap-3">
+        <RatingsToggle initialOn={ratingsOn} />
+
         <button
           type="button"
           className="hidden items-center gap-1.5 rounded-lg border px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
