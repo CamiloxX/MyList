@@ -1,7 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/features/auth/actions";
-import { BADGE_BY_ID } from "@/features/badges/catalog";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { getRecentEarnedBadges } from "@/features/badges/queries";
 import { ExportCard } from "@/features/export/components/export-card";
@@ -135,19 +134,20 @@ export default async function SettingsPage() {
           <p className="text-sm text-muted-foreground">{tBadges("recentEmpty")}</p>
         ) : (
           <ul className="flex flex-wrap gap-2">
-            {recentBadges.map((earned) => {
-              const def = BADGE_BY_ID.get(earned.badgeId);
-              if (!def) return null;
-              return (
-                <li
-                  key={earned.badgeId}
-                  className="flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-xs"
-                >
-                  <BadgeIcon iconKey={def.iconKey} className="size-3.5" />
-                  {tBadges(`items.${def.i18nKey}.name`)}
-                </li>
-              );
-            })}
+            {recentBadges.map((badge) => (
+              <li
+                key={badge.id}
+                className="flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-xs"
+              >
+                <BadgeIcon
+                  iconKey={badge.iconKey}
+                  iconUrl={badge.iconUrl}
+                  name={badge.name}
+                  className="size-3.5"
+                />
+                {badge.name}
+              </li>
+            ))}
           </ul>
         )}
       </section>

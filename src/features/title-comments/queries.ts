@@ -47,7 +47,7 @@ export async function listCommentsByTitle(args: {
       id: row.id,
       displayName: row.display_name,
       avatarUrl: row.avatar_url,
-      badgeIds: badgesByUser.get(row.id) ?? [],
+      badges: badgesByUser.get(row.id) ?? [],
       isAdmin: row.is_admin ?? false,
     });
   }

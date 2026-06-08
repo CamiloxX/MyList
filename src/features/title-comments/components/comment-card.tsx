@@ -62,7 +62,7 @@ export function CommentCard({ comment, viewerId, viewerIsAdmin }: Props) {
       <AuthorAside
         name={comment.author?.displayName ?? null}
         avatarUrl={comment.author?.avatarUrl ?? null}
-        badgeIds={comment.author?.badgeIds ?? []}
+        badges={comment.author?.badges ?? []}
         verified={comment.author?.isAdmin ?? false}
         verifiedLabel={t("verified")}
         verifiedChipLabel={t("adminChip")}
@@ -75,7 +75,7 @@ export function CommentCard({ comment, viewerId, viewerIsAdmin }: Props) {
           <AuthorAside
             name={comment.author?.displayName ?? null}
             avatarUrl={comment.author?.avatarUrl ?? null}
-            badgeIds={comment.author?.badgeIds ?? []}
+            badges={comment.author?.badges ?? []}
             verified={comment.author?.isAdmin ?? false}
             verifiedLabel={t("verified")}
             verifiedChipLabel={t("adminChip")}

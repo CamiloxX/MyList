@@ -1,9 +1,9 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import { BADGE_BY_ID } from "./catalog";
+import { loadBadgeMap } from "./catalog";
 import { getAllBadgesWithStatus } from "./evaluator";
-import type { BadgeWithStatus, EarnedBadge } from "./types";
+import type { BadgeDefinition, BadgeWithStatus, EarnedBadge } from "./types";
 
 /**
  * Server entry-point for the /badges page.
@@ -21,8 +21,8 @@ export async function getBadgesForCurrentUser(): Promise<BadgeWithStatus[] | nul
 
 /**
  * Latest N earned badges for the current user — used by the /settings
- * "recent achievements" mini-section. Filters out unknown badge ids
- * (which can happen if a badge was removed from the catalog).
+ * "recent achievements" mini-section. Drops ids missing from the catalog
+ * (e.g. a badge that was deleted by an admin).
  */
 export async function getRecentEarnedBadges(limit = 3): Promise<EarnedBadge[]> {
   const supabase = await createClient();
@@ -31,36 +31,49 @@ export async function getRecentEarnedBadges(limit = 3): Promise<EarnedBadge[]> {
   } = await supabase.auth.getUser();
   if (!user) return [];
 
-  const { data, error } = await supabase
-    .from("user_badges")
-    .select("badge_id, earned_at")
-    .eq("user_id", user.id)
-    .order("earned_at", { ascending: false })
-    .limit(limit);
+  const [earnedRes, catalog] = await Promise.all([
+    supabase
+      .from("user_badges")
+      .select("badge_id, earned_at")
+      .eq("user_id", user.id)
+      .order("earned_at", { ascending: false })
+      .limit(limit),
+    loadBadgeMap(supabase),
+  ]);
 
-  if (error || !data) return [];
+  if (earnedRes.error || !earnedRes.data) return [];
 
-  return data
-    .filter((row) => BADGE_BY_ID.has(row.badge_id))
-    .map((row) => ({ badgeId: row.badge_id, earnedAt: row.earned_at }));
+  const result: EarnedBadge[] = [];
+  for (const row of earnedRes.data) {
+    const def = catalog.get(row.badge_id);
+    if (def) result.push({ ...def, earnedAt: row.earned_at });
+  }
+  return result;
 }
 
 /**
- * Returns up to 4 most recently earned badge ids per user, keyed by user id.
+ * Returns up to 4 most recently earned badges per user, keyed by user id.
  * Used to render badge chips next to author names in comment threads.
  */
-export async function fetchBadgesByUserIds(userIds: string[]): Promise<Map<string, string[]>> {
-  const map = new Map<string, string[]>();
+export async function fetchBadgesByUserIds(
+  userIds: string[],
+): Promise<Map<string, BadgeDefinition[]>> {
+  const map = new Map<string, BadgeDefinition[]>();
   if (userIds.length === 0) return map;
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("user_badges")
-    .select("user_id, badge_id, earned_at")
-    .in("user_id", userIds)
-    .order("earned_at", { ascending: false });
-  for (const row of data ?? []) {
+  const [badgesRes, catalog] = await Promise.all([
+    supabase
+      .from("user_badges")
+      .select("user_id, badge_id, earned_at")
+      .in("user_id", userIds)
+      .order("earned_at", { ascending: false }),
+    loadBadgeMap(supabase),
+  ]);
+  for (const row of badgesRes.data ?? []) {
+    const def = catalog.get(row.badge_id);
+    if (!def) continue;
     const list = map.get(row.user_id) ?? [];
-    if (list.length < 4) list.push(row.badge_id);
+    if (list.length < 4) list.push(def);
     map.set(row.user_id, list);
   }
   return map;

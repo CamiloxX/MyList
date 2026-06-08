@@ -2,7 +2,7 @@ import "server-only";
 
 import type { MediaKind } from "@/features/library/status";
 import type { createClient } from "@/lib/supabase/server";
-import { BADGE_CATALOG } from "./catalog";
+import { loadBadgeCatalog } from "./catalog";
 import { pushNewBadges } from "./push-notify";
 import type {
   BadgeCriterion,
@@ -23,16 +23,27 @@ const EMPTY_STATS: BadgeStats = {
   uniqueDecades: 0,
   maxSameDayEntries: 0,
   longestDailyStreak: 0,
+  watchedTitleSeasons: new Set(),
 };
 
+/** Stable key for a watched (title, season) pair — see title_season criterion. */
+function titleSeasonKey(source: string, sourceId: string, season: number): string {
+  return `${source}:${sourceId}:${season}`;
+}
+
 async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeStats> {
-  const [entriesRes, completedRes] = await Promise.all([
+  const [entriesRes, completedRes, seasonsRes] = await Promise.all([
     supabase.from("watch_entries").select("watched_on, rating").eq("user_id", userId),
     supabase
       .from("media_items")
       .select("kind, genres, year")
       .eq("user_id", userId)
       .eq("status", "watched"),
+    supabase
+      .from("watch_entries")
+      .select("season_number, media_items!inner(source, source_id)")
+      .eq("user_id", userId)
+      .not("season_number", "is", null),
   ]);
 
   if (entriesRes.error || completedRes.error) {
@@ -84,6 +95,18 @@ async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeS
     }
   }
 
+  // (title, season) pairs the user has marked watched, for title_season badges.
+  const watchedTitleSeasons = new Set<string>();
+  for (const row of seasonsRes.data ?? []) {
+    if (row.season_number == null) continue;
+    // PostgREST returns the to-one embed as an object, but type inference can
+    // widen it to an array — normalize both shapes.
+    const media = Array.isArray(row.media_items) ? row.media_items[0] : row.media_items;
+    if (media?.source && media?.source_id != null) {
+      watchedTitleSeasons.add(titleSeasonKey(media.source, media.source_id, row.season_number));
+    }
+  }
+
   return {
     totalEntries,
     ratedEntries,
@@ -92,26 +115,42 @@ async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeS
     uniqueDecades: decadeSet.size,
     maxSameDayEntries,
     longestDailyStreak,
+    watchedTitleSeasons,
   };
 }
 
 function progressFor(criterion: BadgeCriterion, stats: BadgeStats): BadgeProgress {
-  const target = criterion.target;
   switch (criterion.kind) {
     case "watch_entries_count":
-      return { current: Math.min(stats.totalEntries, target), target };
+      return { current: Math.min(stats.totalEntries, criterion.target), target: criterion.target };
     case "ratings_count":
-      return { current: Math.min(stats.ratedEntries, target), target };
+      return { current: Math.min(stats.ratedEntries, criterion.target), target: criterion.target };
     case "media_completed_count":
-      return { current: Math.min(stats.completedByKind[criterion.mediaKind], target), target };
+      return {
+        current: Math.min(stats.completedByKind[criterion.mediaKind], criterion.target),
+        target: criterion.target,
+      };
     case "unique_genres_count":
-      return { current: Math.min(stats.uniqueGenres, target), target };
+      return { current: Math.min(stats.uniqueGenres, criterion.target), target: criterion.target };
     case "unique_decades_count":
-      return { current: Math.min(stats.uniqueDecades, target), target };
+      return { current: Math.min(stats.uniqueDecades, criterion.target), target: criterion.target };
     case "same_day_entries":
-      return { current: Math.min(stats.maxSameDayEntries, target), target };
+      return {
+        current: Math.min(stats.maxSameDayEntries, criterion.target),
+        target: criterion.target,
+      };
     case "daily_streak":
-      return { current: Math.min(stats.longestDailyStreak, target), target };
+      return {
+        current: Math.min(stats.longestDailyStreak, criterion.target),
+        target: criterion.target,
+      };
+    case "title_season": {
+      const key = titleSeasonKey(criterion.source, criterion.sourceId, criterion.season);
+      return { current: stats.watchedTitleSeasons.has(key) ? 1 : 0, target: 1 };
+    }
+    case "manual":
+      // Never auto-granted; only an admin awards it. Shown as 0/1 until earned.
+      return { current: 0, target: 1 };
   }
 }
 
@@ -125,14 +164,14 @@ export async function evaluateAndPersist(
   supabase: ServerClient,
   userId: string,
 ): Promise<BadgeDefinition[]> {
-  const earnedRes = await supabase
-    .from("user_badges")
-    .select("badge_id")
-    .eq("user_id", userId);
+  const [catalog, earnedRes] = await Promise.all([
+    loadBadgeCatalog(supabase),
+    supabase.from("user_badges").select("badge_id").eq("user_id", userId),
+  ]);
   if (earnedRes.error) return [];
 
   const alreadyEarned = new Set(earnedRes.data?.map((r) => r.badge_id) ?? []);
-  const pending = BADGE_CATALOG.filter((b) => !alreadyEarned.has(b.id));
+  const pending = catalog.filter((b) => !alreadyEarned.has(b.id));
   if (pending.length === 0) return [];
 
   const stats = await loadStats(supabase, userId);
@@ -172,7 +211,8 @@ export async function getAllBadgesWithStatus(
 ): Promise<BadgeWithStatus[]> {
   await evaluateAndPersist(supabase, userId);
 
-  const [earnedRes, stats] = await Promise.all([
+  const [catalog, earnedRes, stats] = await Promise.all([
+    loadBadgeCatalog(supabase),
     supabase.from("user_badges").select("badge_id, earned_at").eq("user_id", userId),
     loadStats(supabase, userId),
   ]);
@@ -182,7 +222,7 @@ export async function getAllBadgesWithStatus(
     earnedMap.set(row.badge_id, row.earned_at);
   }
 
-  return BADGE_CATALOG.map((badge) => ({
+  return catalog.map((badge) => ({
     ...badge,
     progress: progressFor(badge.criterion, stats),
     earnedAt: earnedMap.get(badge.id) ?? null,

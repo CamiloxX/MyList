@@ -25,20 +25,21 @@ export function BadgeCard({ badge }: { badge: BadgeWithStatus }) {
       <div className="flex items-start gap-3">
         <div
           className={cn(
-            "flex size-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br",
+            "flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br",
             TIER_STYLES[badge.tier],
             !earned && "grayscale",
           )}
         >
-          <BadgeIcon iconKey={badge.iconKey} className="size-6" />
+          <BadgeIcon
+            iconKey={badge.iconKey}
+            iconUrl={badge.iconUrl}
+            name={badge.name}
+            className="size-6"
+          />
         </div>
         <div className="flex min-w-0 flex-1 flex-col">
-          <h3 className="font-medium leading-tight">
-            {t(`items.${badge.i18nKey}.name`)}
-          </h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {t(`items.${badge.i18nKey}.description`)}
-          </p>
+          <h3 className="font-medium leading-tight">{badge.name}</h3>
+          <p className="mt-1 text-xs text-muted-foreground">{badge.description}</p>
         </div>
       </div>
 

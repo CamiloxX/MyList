@@ -22,11 +22,9 @@ export async function pushNewBadges(
     if (badges.length === 1) {
       const b = badges[0];
       if (!b) return;
-      const name = tBadges(`items.${b.i18nKey}.name`);
-      const description = tBadges(`items.${b.i18nKey}.description`);
       await sendPushToUser(userId, {
         title: tBadges("toast.unlocked"),
-        body: `${name} — ${description}`,
+        body: `${b.name} — ${b.description}`,
         url: "/badges",
         tag: `badge:${b.id}`,
       });
@@ -34,7 +32,7 @@ export async function pushNewBadges(
     }
     const names = badges
       .slice(0, 3)
-      .map((b) => tBadges(`items.${b.i18nKey}.name`))
+      .map((b) => b.name)
       .join(", ");
     const extra = badges.length > 3 ? ` +${badges.length - 3}` : "";
     await sendPushToUser(userId, {

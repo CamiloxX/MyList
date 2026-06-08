@@ -1,5 +1,14 @@
 import type { MediaKind } from "@/features/library/status";
 
+/** Catalog source for a title-based badge — mirrors the media_source enum. */
+export type MediaSource = "tmdb" | "anilist";
+
+/**
+ * Mirrors the `criterion` JSON stored on each row of public.badges.
+ * Counter-style criteria are evaluated against aggregate stats; `title_season`
+ * is unlocked by watching a specific season of a specific title; `manual`
+ * is never auto-granted (an admin awards it by hand).
+ */
 export type BadgeCriterion =
   | { kind: "watch_entries_count"; target: number }
   | { kind: "media_completed_count"; mediaKind: MediaKind; target: number }
@@ -7,15 +16,32 @@ export type BadgeCriterion =
   | { kind: "unique_genres_count"; target: number }
   | { kind: "unique_decades_count"; target: number }
   | { kind: "same_day_entries"; target: number }
-  | { kind: "daily_streak"; target: number };
+  | { kind: "daily_streak"; target: number }
+  | {
+      kind: "title_season";
+      source: MediaSource;
+      sourceId: string;
+      mediaKind: MediaKind;
+      season: number;
+    }
+  | { kind: "manual" };
+
+export type BadgeCriterionKind = BadgeCriterion["kind"];
 
 export type BadgeTier = "bronze" | "silver" | "gold";
 
+/**
+ * A badge ready to display: its text is already resolved (from next-intl for
+ * built-ins, or straight from the DB for admin-created ones), and its icon is
+ * either a Lucide key (`iconKey`) or an uploaded image (`iconUrl`).
+ */
 export interface BadgeDefinition {
   id: string;
   criterion: BadgeCriterion;
-  iconKey: string;
-  i18nKey: string;
+  iconKey: string | null;
+  iconUrl: string | null;
+  name: string;
+  description: string;
   tier: BadgeTier;
 }
 
@@ -24,14 +50,14 @@ export interface BadgeProgress {
   target: number;
 }
 
-export interface EarnedBadge {
-  badgeId: string;
-  earnedAt: string;
-}
-
 export type BadgeWithStatus = BadgeDefinition & {
   progress: BadgeProgress;
   earnedAt: string | null;
+};
+
+/** A badge the user has unlocked, with the unlock timestamp. */
+export type EarnedBadge = BadgeDefinition & {
+  earnedAt: string;
 };
 
 /**
@@ -46,4 +72,6 @@ export interface BadgeStats {
   uniqueDecades: number;
   maxSameDayEntries: number;
   longestDailyStreak: number;
+  /** Set of `${source}:${sourceId}:${season}` the user has marked watched. */
+  watchedTitleSeasons: Set<string>;
 }

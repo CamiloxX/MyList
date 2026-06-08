@@ -61,7 +61,7 @@ export function BadgeUnlockOverlay({
     <div
       role="alertdialog"
       aria-live="assertive"
-      aria-label={t(`items.${badge.i18nKey}.name`)}
+      aria-label={badge.name}
       className={cn(
         "fixed inset-0 z-50 flex items-center justify-center p-4",
         leaving
@@ -104,7 +104,12 @@ export function BadgeUnlockOverlay({
             TIER_RING[badge.tier],
           )}
         >
-          <BadgeIcon iconKey={badge.iconKey} className="size-14 drop-shadow-md" />
+          <BadgeIcon
+            iconKey={badge.iconKey}
+            iconUrl={badge.iconUrl}
+            name={badge.name}
+            className="size-14 drop-shadow-md"
+          />
           {/* Rotating sheen */}
           <span
             className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
@@ -117,12 +122,8 @@ export function BadgeUnlockOverlay({
         <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
           {t("toast.unlocked")}
         </p>
-        <h2 className="text-2xl font-extrabold leading-tight tracking-tight">
-          {t(`items.${badge.i18nKey}.name`)}
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          {t(`items.${badge.i18nKey}.description`)}
-        </p>
+        <h2 className="text-2xl font-extrabold leading-tight tracking-tight">{badge.name}</h2>
+        <p className="text-sm text-muted-foreground">{badge.description}</p>
 
         <p className="mt-2 text-[11px] uppercase tracking-wider text-muted-foreground/70">
           {t("dismissHint")}

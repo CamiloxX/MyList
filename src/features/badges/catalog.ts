@@ -1,122 +1,104 @@
-import type { BadgeDefinition } from "./types";
+import "server-only";
+
+import { getTranslations } from "next-intl/server";
+import type { createClient } from "@/lib/supabase/server";
+import type { BadgeCriterion, BadgeDefinition, BadgeTier } from "./types";
 
 /**
- * Source of truth for every badge in MyList. Adding a badge here is enough —
- * the evaluator and the /badges page pick it up automatically.
- *
- * Conventions:
- * - `id` is a stable string never shown to the user (used as PK in user_badges).
- * - `iconKey` must be a valid Lucide icon name (resolved in lucide-icon.tsx).
- * - `i18nKey` resolves to `badges.items.<i18nKey>.{name,description}`.
+ * The badge catalog lives in the `public.badges` table (DB-driven so admins can
+ * add custom badges). This module loads it and resolves each badge's display
+ * text: built-in badges carry an `i18n_key` and prefer the next-intl
+ * translation; admin-created badges fall back to the `name`/`description`
+ * columns. Server-only — never import from a Client Component.
  */
-export const BADGE_CATALOG: ReadonlyArray<BadgeDefinition> = [
-  {
-    id: "first_watch",
-    criterion: { kind: "watch_entries_count", target: 1 },
-    iconKey: "Sparkles",
-    i18nKey: "first_watch",
-    tier: "bronze",
-  },
-  {
-    id: "cinephile_10",
-    criterion: { kind: "media_completed_count", mediaKind: "movie", target: 10 },
-    iconKey: "Film",
-    i18nKey: "cinephile_10",
-    tier: "bronze",
-  },
-  {
-    id: "series_finisher_5",
-    criterion: { kind: "media_completed_count", mediaKind: "tv", target: 5 },
-    iconKey: "Tv",
-    i18nKey: "series_finisher_5",
-    tier: "silver",
-  },
-  {
-    id: "otaku_5",
-    criterion: { kind: "media_completed_count", mediaKind: "anime", target: 5 },
-    iconKey: "Sword",
-    i18nKey: "otaku_5",
-    tier: "silver",
-  },
-  {
-    id: "critic_20",
-    criterion: { kind: "ratings_count", target: 20 },
-    iconKey: "Star",
-    i18nKey: "critic_20",
-    tier: "bronze",
-  },
-  {
-    id: "marathon_3",
-    criterion: { kind: "same_day_entries", target: 3 },
-    iconKey: "Zap",
-    i18nKey: "marathon_3",
-    tier: "silver",
-  },
-  {
-    id: "genre_explorer_5",
-    criterion: { kind: "unique_genres_count", target: 5 },
-    iconKey: "Compass",
-    i18nKey: "genre_explorer_5",
-    tier: "silver",
-  },
-  {
-    id: "streak_7",
-    criterion: { kind: "daily_streak", target: 7 },
-    iconKey: "Flame",
-    i18nKey: "streak_7",
-    tier: "gold",
-  },
-  {
-    id: "cinephile_50",
-    criterion: { kind: "media_completed_count", mediaKind: "movie", target: 50 },
-    iconKey: "Clapperboard",
-    i18nKey: "cinephile_50",
-    tier: "gold",
-  },
-  {
-    id: "series_finisher_20",
-    criterion: { kind: "media_completed_count", mediaKind: "tv", target: 20 },
-    iconKey: "MonitorPlay",
-    i18nKey: "series_finisher_20",
-    tier: "gold",
-  },
-  {
-    id: "otaku_20",
-    criterion: { kind: "media_completed_count", mediaKind: "anime", target: 20 },
-    iconKey: "Swords",
-    i18nKey: "otaku_20",
-    tier: "gold",
-  },
-  {
-    id: "critic_50",
-    criterion: { kind: "ratings_count", target: 50 },
-    iconKey: "Award",
-    i18nKey: "critic_50",
-    tier: "silver",
-  },
-  {
-    id: "marathon_5",
-    criterion: { kind: "same_day_entries", target: 5 },
-    iconKey: "BatteryWarning",
-    i18nKey: "marathon_5",
-    tier: "gold",
-  },
-  {
-    id: "streak_30",
-    criterion: { kind: "daily_streak", target: 30 },
-    iconKey: "Trophy",
-    i18nKey: "streak_30",
-    tier: "gold",
-  },
-  {
-    id: "decade_explorer_4",
-    criterion: { kind: "unique_decades_count", target: 4 },
-    iconKey: "Hourglass",
-    i18nKey: "decade_explorer_4",
-    tier: "silver",
-  },
-] as const;
 
-export const BADGE_BY_ID: ReadonlyMap<string, BadgeDefinition> = new Map(
-  BADGE_CATALOG.map((b) => [b.id, b]),
-);
+type ServerClient = Awaited<ReturnType<typeof createClient>>;
+type Translator = Awaited<ReturnType<typeof getTranslations>>;
+
+type BadgeRow = {
+  id: string;
+  name: string;
+  description: string;
+  i18n_key: string | null;
+  icon_key: string | null;
+  icon_url: string | null;
+  tier: string;
+  criterion: unknown;
+  sort_order: number;
+  is_active: boolean;
+};
+
+const BADGE_COLUMNS =
+  "id, name, description, i18n_key, icon_key, icon_url, tier, criterion, sort_order, is_active";
+
+const VALID_TIERS: ReadonlySet<string> = new Set(["bronze", "silver", "gold"]);
+
+function asTier(value: string): BadgeTier {
+  return VALID_TIERS.has(value) ? (value as BadgeTier) : "bronze";
+}
+
+/**
+ * The `criterion` column is written only by our own admin actions and the seed,
+ * so the stored shape is trusted to match BadgeCriterion. Anything malformed
+ * degrades to a `manual` badge (never auto-granted) rather than throwing.
+ */
+function parseCriterion(raw: unknown): BadgeCriterion {
+  if (raw && typeof raw === "object" && "kind" in raw) {
+    return raw as BadgeCriterion;
+  }
+  return { kind: "manual" };
+}
+
+function resolveText(
+  t: Translator | null,
+  row: BadgeRow,
+): { name: string; description: string } {
+  // Only built-ins carry an i18n_key; those entries always exist in messages,
+  // so the `.has` check is just defensive for partial translation files.
+  if (t && row.i18n_key && (t.has?.(`items.${row.i18n_key}.name`) ?? true)) {
+    return {
+      name: t(`items.${row.i18n_key}.name`),
+      description: t(`items.${row.i18n_key}.description`),
+    };
+  }
+  return { name: row.name, description: row.description };
+}
+
+function toDefinition(t: Translator | null, row: BadgeRow): BadgeDefinition {
+  const { name, description } = resolveText(t, row);
+  return {
+    id: row.id,
+    criterion: parseCriterion(row.criterion),
+    iconKey: row.icon_key,
+    iconUrl: row.icon_url,
+    name,
+    description,
+    tier: asTier(row.tier),
+  };
+}
+
+async function safeTranslator(): Promise<Translator | null> {
+  // getTranslations needs request/locale context; outside it (e.g. a cron job)
+  // it throws. Fall back to the DB text in that case.
+  try {
+    return await getTranslations("badges");
+  } catch {
+    return null;
+  }
+}
+
+/** Every active badge, ordered for display, with text + icons resolved. */
+export async function loadBadgeCatalog(supabase: ServerClient): Promise<BadgeDefinition[]> {
+  const [res, t] = await Promise.all([
+    supabase.from("badges").select(BADGE_COLUMNS).order("sort_order", { ascending: true }),
+    safeTranslator(),
+  ]);
+  if (res.error || !res.data) return [];
+  return res.data.map((row) => toDefinition(t, row as unknown as BadgeRow));
+}
+
+/** Same as loadBadgeCatalog, keyed by id for O(1) lookup. */
+export async function loadBadgeMap(supabase: ServerClient): Promise<Map<string, BadgeDefinition>> {
+  const list = await loadBadgeCatalog(supabase);
+  return new Map(list.map((badge) => [badge.id, badge]));
+}

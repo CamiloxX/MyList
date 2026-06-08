@@ -236,6 +236,51 @@ export type Database = {
           },
         ];
       };
+      badges: {
+        Row: {
+          id: string;
+          name: string;
+          description: string;
+          i18n_key: string | null;
+          icon_key: string | null;
+          icon_url: string | null;
+          tier: string;
+          criterion: Json;
+          sort_order: number;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          name: string;
+          description: string;
+          i18n_key?: string | null;
+          icon_key?: string | null;
+          icon_url?: string | null;
+          tier?: string;
+          criterion?: Json;
+          sort_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          description?: string;
+          i18n_key?: string | null;
+          icon_key?: string | null;
+          icon_url?: string | null;
+          tier?: string;
+          criterion?: Json;
+          sort_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       user_badges: {
         Row: {
           user_id: string;
@@ -252,7 +297,15 @@ export type Database = {
           badge_id?: string;
           earned_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey";
+            columns: ["badge_id"];
+            isOneToOne: false;
+            referencedRelation: "badges";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       push_subscriptions: {
         Row: {

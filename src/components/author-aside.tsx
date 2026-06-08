@@ -1,13 +1,13 @@
 import { BadgeCheckIcon } from "lucide-react";
-import { BADGE_BY_ID } from "@/features/badges/catalog";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
+import type { BadgeDefinition } from "@/features/badges/types";
 import { Avatar } from "@/components/avatar";
 import { cn } from "@/lib/utils";
 
 type AuthorAsideProps = {
   name: string | null;
   avatarUrl: string | null;
-  badgeIds: string[];
+  badges: BadgeDefinition[];
   variant?: "sidebar" | "compact";
   fallbackLabel?: string;
   chip?: string | null;
@@ -25,7 +25,7 @@ type AuthorAsideProps = {
 export function AuthorAside({
   name,
   avatarUrl,
-  badgeIds,
+  badges,
   variant = "sidebar",
   fallbackLabel,
   chip,
@@ -35,7 +35,7 @@ export function AuthorAside({
   className,
 }: AuthorAsideProps) {
   const displayName = name?.trim() || fallbackLabel || "?";
-  const visibleBadges = badgeIds.slice(0, 4);
+  const visibleBadges = badges.slice(0, 4);
 
   if (variant === "compact") {
     return (
@@ -92,22 +92,23 @@ export function AuthorAside({
       </div>
       {visibleBadges.length > 0 ? (
         <ul className="flex flex-wrap items-center justify-center gap-1">
-          {visibleBadges.map((badgeId) => {
-            const def = BADGE_BY_ID.get(badgeId);
-            if (!def) return null;
-            return (
-              <li
-                key={badgeId}
-                className={cn(
-                  "flex size-6 items-center justify-center rounded-full border bg-background",
-                  badgeTierColor(def.tier),
-                )}
-                title={badgeId}
-              >
-                <BadgeIcon iconKey={def.iconKey} className="size-3.5" />
-              </li>
-            );
-          })}
+          {visibleBadges.map((def) => (
+            <li
+              key={def.id}
+              className={cn(
+                "flex size-6 items-center justify-center overflow-hidden rounded-full border bg-background",
+                badgeTierColor(def.tier),
+              )}
+              title={def.name}
+            >
+              <BadgeIcon
+                iconKey={def.iconKey}
+                iconUrl={def.iconUrl}
+                name={def.name}
+                className="size-3.5"
+              />
+            </li>
+          ))}
         </ul>
       ) : null}
     </aside>
