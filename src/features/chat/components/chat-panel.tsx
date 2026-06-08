@@ -10,6 +10,7 @@ import { sendChatMessage } from "../actions";
 import { chatSendSchema } from "../schemas";
 import type { ChatMessageListItem } from "../types";
 import { ChatMessageItem } from "./chat-message-item";
+import { ChatTypingIndicator } from "./chat-typing-indicator";
 
 type Props = {
   messages: ChatMessageListItem[];
@@ -54,13 +55,6 @@ export function ChatPanel({
     });
   };
 
-  const typingLine =
-    typingNames.length === 1
-      ? t("typingOne", { name: typingNames[0] ?? "" })
-      : typingNames.length > 1
-        ? t("typingMany")
-        : null;
-
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex-1 space-y-3 overflow-y-auto px-4 py-3">
@@ -76,11 +70,9 @@ export function ChatPanel({
             />
           ))
         )}
+        {/* WhatsApp-style typing bubble at the bottom of the conversation. */}
+        <ChatTypingIndicator names={typingNames} />
         <div ref={bottomRef} />
-      </div>
-
-      <div className="h-5 px-4 text-xs text-muted-foreground" aria-live="polite">
-        {typingLine ? <span className="italic">{typingLine}</span> : null}
       </div>
 
       {muted ? (

@@ -223,3 +223,27 @@
     overflow-x: auto;
   }
 }
+
+/* WhatsApp-style typing indicator: three dots bouncing in a staggered loop. */
+@keyframes mylist-typing-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.mylist-typing-dot {
+  animation: mylist-typing-dot 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mylist-typing-dot {
+    animation: none;
+  }
+}
