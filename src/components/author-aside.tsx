@@ -1,7 +1,7 @@
 import { BadgeCheckIcon } from "lucide-react";
+import { Avatar } from "@/components/avatar";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import type { BadgeDefinition } from "@/features/badges/types";
-import { Avatar } from "@/components/avatar";
 import { cn } from "@/lib/utils";
 
 type AuthorAsideProps = {
@@ -44,10 +44,7 @@ export function AuthorAside({
         <div className="flex items-center gap-1.5 text-sm">
           <span className="font-medium">{displayName}</span>
           {verified ? (
-            <BadgeCheckIcon
-              className="size-4 text-sky-500"
-              aria-label={verifiedLabel}
-            />
+            <BadgeCheckIcon className="size-4 text-sky-500" aria-label={verifiedLabel} />
           ) : null}
           {verified && verifiedChipLabel ? (
             <span className="rounded-md bg-sky-500/15 px-1.5 py-0.5 text-[10px] font-medium text-sky-700 dark:text-sky-300">
@@ -65,18 +62,13 @@ export function AuthorAside({
   }
 
   return (
-    <aside
-      className={cn("flex flex-col items-center gap-2 text-center", className)}
-    >
+    <aside className={cn("flex flex-col items-center gap-2 text-center", className)}>
       <Avatar src={avatarUrl} name={displayName} size="lg" />
       <div className="flex flex-col items-center gap-0.5">
         <div className="inline-flex items-center justify-center gap-1">
           <span className="line-clamp-2 text-sm font-medium leading-tight">{displayName}</span>
           {verified ? (
-            <BadgeCheckIcon
-              className="size-4 shrink-0 text-sky-500"
-              aria-label={verifiedLabel}
-            />
+            <BadgeCheckIcon className="size-4 shrink-0 text-sky-500" aria-label={verifiedLabel} />
           ) : null}
         </div>
         {verified && verifiedChipLabel ? (
@@ -91,12 +83,12 @@ export function AuthorAside({
         ) : null}
       </div>
       {visibleBadges.length > 0 ? (
-        <ul className="flex flex-wrap items-center justify-center gap-1">
+        <ul className="flex flex-wrap items-center justify-center gap-1.5">
           {visibleBadges.map((def) => (
             <li
               key={def.id}
               className={cn(
-                "flex size-6 items-center justify-center overflow-hidden rounded-full border bg-background",
+                "flex size-8 items-center justify-center overflow-hidden rounded-full border bg-background",
                 badgeTierColor(def.tier),
               )}
               title={def.name}
@@ -105,7 +97,7 @@ export function AuthorAside({
                 iconKey={def.iconKey}
                 iconUrl={def.iconUrl}
                 name={def.name}
-                className="size-3.5"
+                className="size-5"
               />
             </li>
           ))}
