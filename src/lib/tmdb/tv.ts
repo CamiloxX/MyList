@@ -44,6 +44,24 @@ export async function getTmdbTvSeasons(id: string): Promise<TmdbSeason[] | null>
   }
 }
 
+/**
+ * Like getTmdbTvSeasons but also returns the show's display name. Used by the
+ * admin badge panel so an already-selected `title_season` shows the series
+ * title (not just its numeric id) when editing.
+ */
+export async function getTmdbTvSummary(
+  id: string,
+): Promise<{ name: string; seasons: TmdbSeason[] } | null> {
+  try {
+    const raw = await tmdbFetch<unknown>(`/tv/${id}`, { revalidate: 86400 });
+    const parsed = tmdbTvDetailSchema.parse(raw);
+    return { name: parsed.name, seasons: parsed.seasons.filter((s) => s.season_number > 0) };
+  } catch (error) {
+    console.warn("[tmdb-tv-summary] failed:", error);
+    return null;
+  }
+}
+
 const tmdbEpisodeSchema = z.object({
   air_date: z.string().nullable().optional(),
   episode_number: z.number().nullable().optional(),

@@ -29,6 +29,11 @@ export default async function AppLayout({
     redirect({ href: "/login", locale });
   }
 
+  const { data: profile } = user
+    ? await supabase.from("profiles").select("is_admin").eq("id", user.id).maybeSingle()
+    : { data: null };
+  const isAdmin = profile?.is_admin ?? false;
+
   const t = await getTranslations();
 
   // Header nav links (desktop only). "Buscar" is replaced by the HeaderSearch
@@ -40,6 +45,7 @@ export default async function AppLayout({
     { href: "/discover" as const, label: t("nav.discover") },
     { href: "/month" as const, label: t("nav.month") },
     { href: "/stats" as const, label: t("nav.stats") },
+    ...(isAdmin ? [{ href: "/admin" as const, label: t("nav.admin") }] : []),
   ];
 
   return (
@@ -75,7 +81,7 @@ export default async function AppLayout({
           </div>
         </header>
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pb-24 md:pb-6">{children}</main>
-        <BottomNav />
+        <BottomNav isAdmin={isAdmin} />
         <DailyVisitTracker />
       </div>
     </BadgeCelebrationProvider>

@@ -16,7 +16,94 @@
     "settings": "Ajustes",
     "changelog": "Novedades",
     "more": "Más",
-    "primary": "Navegación principal"
+    "primary": "Navegación principal",
+    "admin": "Admin"
+  },
+  "admin": {
+    "title": "Administración",
+    "subtitle": "Gestiona los logros del hotel.",
+    "inactive": "Inactivo",
+    "badges": {
+      "title": "Logros",
+      "count": "{n, plural, =0 {Sin logros} one {# logro} other {# logros}}",
+      "create": "Nuevo logro",
+      "empty": "Aún no hay logros. Crea el primero."
+    },
+    "form": {
+      "createTitle": "Nuevo logro",
+      "editTitle": "Editar logro",
+      "name": "Nombre",
+      "id": "ID (identificador único)",
+      "description": "Descripción",
+      "tier": "Nivel",
+      "sortOrder": "Orden",
+      "icon": "Subir imagen",
+      "iconHint": "PNG o WebP. Si no subes nada se usa un ícono por defecto.",
+      "iconErrorMime": "Eso no parece una imagen.",
+      "iconErrorProcess": "No se pudo procesar la imagen.",
+      "iconUploadFailedButSaved": "El logro se guardó, pero no se pudo subir la imagen.",
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "tiers": {
+      "bronze": "Bronce",
+      "silver": "Plata",
+      "gold": "Oro"
+    },
+    "condition": {
+      "label": "Condición de desbloqueo",
+      "invalid": "Completa la condición de desbloqueo.",
+      "manualHint": "Este logro solo se otorga a mano (función próximamente).",
+      "titleSeasonHint": "Se desbloquea al marcar como vista esa temporada. Solo series de TMDB (el anime aún no registra temporadas).",
+      "searchTitle": "Buscar serie…",
+      "season": "Temporada",
+      "seasonNumber": "T{n}",
+      "selectedFallback": "Serie #{id}",
+      "clear": "Quitar selección",
+      "target": "Meta (cantidad)",
+      "mediaKind": "Tipo",
+      "kinds": {
+        "title_season": "Temporada de una serie",
+        "manual": "Otorgar a mano",
+        "media_completed_count": "Completar N títulos",
+        "watch_entries_count": "Registrar N visualizaciones",
+        "ratings_count": "Calificar N veces",
+        "unique_genres_count": "N géneros distintos",
+        "unique_decades_count": "N décadas distintas",
+        "same_day_entries": "N visualizaciones en un día",
+        "daily_streak": "Racha de N días"
+      },
+      "mediaKinds": {
+        "movie": "Películas",
+        "tv": "Series",
+        "anime": "Anime"
+      }
+    },
+    "summary": {
+      "titleSeason": "Serie #{id} · Temporada {season}",
+      "mediaCompleted": "Completar {n} {kind}",
+      "watch_entries_count": "{n} visualizaciones",
+      "ratings_count": "Calificar {n} veces",
+      "unique_genres_count": "{n} géneros distintos",
+      "unique_decades_count": "{n} décadas distintas",
+      "same_day_entries": "{n} en un mismo día",
+      "daily_streak": "Racha de {n} días"
+    },
+    "card": {
+      "menu": "Acciones",
+      "edit": "Editar",
+      "activate": "Activar",
+      "deactivate": "Desactivar",
+      "delete": "Borrar",
+      "confirmDelete": "¿Borrar este logro? Se quitará de quienes lo tengan."
+    },
+    "toast": {
+      "created": "Logro creado",
+      "updated": "Logro actualizado",
+      "deleted": "Logro borrado",
+      "activated": "Logro activado",
+      "deactivated": "Logro desactivado"
+    }
   },
   "command": {
     "title": "Paleta de comandos",

@@ -16,7 +16,94 @@
     "settings": "Settings",
     "changelog": "What's new",
     "more": "More",
-    "primary": "Main navigation"
+    "primary": "Main navigation",
+    "admin": "Admin"
+  },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Manage the hotel's badges.",
+    "inactive": "Inactive",
+    "badges": {
+      "title": "Badges",
+      "count": "{n, plural, =0 {No badges} one {# badge} other {# badges}}",
+      "create": "New badge",
+      "empty": "No badges yet. Create the first one."
+    },
+    "form": {
+      "createTitle": "New badge",
+      "editTitle": "Edit badge",
+      "name": "Name",
+      "id": "ID (unique identifier)",
+      "description": "Description",
+      "tier": "Tier",
+      "sortOrder": "Order",
+      "icon": "Upload image",
+      "iconHint": "PNG or WebP. If you upload nothing a default icon is used.",
+      "iconErrorMime": "That doesn't look like an image.",
+      "iconErrorProcess": "Couldn't process the image.",
+      "iconUploadFailedButSaved": "The badge was saved, but the image couldn't be uploaded.",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "tiers": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold"
+    },
+    "condition": {
+      "label": "Unlock condition",
+      "invalid": "Complete the unlock condition.",
+      "manualHint": "This badge is only granted by hand (coming soon).",
+      "titleSeasonHint": "Unlocks when that season is marked watched. TMDB series only (anime doesn't track seasons yet).",
+      "searchTitle": "Search a series…",
+      "season": "Season",
+      "seasonNumber": "S{n}",
+      "selectedFallback": "Series #{id}",
+      "clear": "Clear selection",
+      "target": "Target (amount)",
+      "mediaKind": "Type",
+      "kinds": {
+        "title_season": "Season of a series",
+        "manual": "Grant by hand",
+        "media_completed_count": "Complete N titles",
+        "watch_entries_count": "Log N watches",
+        "ratings_count": "Rate N times",
+        "unique_genres_count": "N distinct genres",
+        "unique_decades_count": "N distinct decades",
+        "same_day_entries": "N watches in a day",
+        "daily_streak": "N-day streak"
+      },
+      "mediaKinds": {
+        "movie": "Movies",
+        "tv": "Series",
+        "anime": "Anime"
+      }
+    },
+    "summary": {
+      "titleSeason": "Series #{id} · Season {season}",
+      "mediaCompleted": "Complete {n} {kind}",
+      "watch_entries_count": "{n} watches",
+      "ratings_count": "Rate {n} times",
+      "unique_genres_count": "{n} distinct genres",
+      "unique_decades_count": "{n} distinct decades",
+      "same_day_entries": "{n} in a single day",
+      "daily_streak": "{n}-day streak"
+    },
+    "card": {
+      "menu": "Actions",
+      "edit": "Edit",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "delete": "Delete",
+      "confirmDelete": "Delete this badge? It will be removed from everyone who has it."
+    },
+    "toast": {
+      "created": "Badge created",
+      "updated": "Badge updated",
+      "deleted": "Badge deleted",
+      "activated": "Badge activated",
+      "deactivated": "Badge deactivated"
+    }
   },
   "command": {
     "title": "Command palette",

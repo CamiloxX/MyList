@@ -10,6 +10,7 @@ import {
   NewspaperIcon,
   SearchIcon,
   SettingsIcon,
+  ShieldIcon,
   TrophyIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -40,12 +41,16 @@ const SECONDARY = [
   { href: "/changelog" as const, labelKey: "changelog", Icon: NewspaperIcon },
 ] as const;
 
-export function BottomNav() {
+export function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
   const t = useTranslations("nav");
   const [moreOpen, setMoreOpen] = useState(false);
 
-  const isOnSecondary = SECONDARY.some(
+  const secondary = isAdmin
+    ? [...SECONDARY, { href: "/admin" as const, labelKey: "admin", Icon: ShieldIcon }]
+    : SECONDARY;
+
+  const isOnSecondary = secondary.some(
     ({ href }) => pathname === href || pathname.startsWith(`${href}/`),
   );
 
@@ -90,7 +95,7 @@ export function BottomNav() {
                 <DrawerTitle>{t("more")}</DrawerTitle>
               </DrawerHeader>
               <ul className="flex flex-col gap-1 px-1 pb-2">
-                {SECONDARY.map(({ href, labelKey, Icon }) => {
+                {secondary.map(({ href, labelKey, Icon }) => {
                   const isActive = pathname === href || pathname.startsWith(`${href}/`);
                   return (
                     <li key={href}>
