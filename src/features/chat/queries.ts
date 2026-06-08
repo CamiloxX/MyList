@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import type { ChatAuthor, ChatMessageListItem } from "./types";
+import type { ChatAuthor, ChatMessageListItem, ChatRestriction } from "./types";
 
 const RECENT_LIMIT = 50;
 
@@ -46,4 +46,29 @@ export async function listRecentMessages(): Promise<ChatMessageListItem[]> {
   return rows
     .map((r) => ({ ...r, author: r.user_id ? (authorMap.get(r.user_id) ?? null) : null }))
     .reverse();
+}
+
+/**
+ * The current viewer's chat context: their display name (used to broadcast the
+ * typing indicator) and any active moderation restriction.
+ */
+export async function getViewerChatContext(
+  userId: string,
+): Promise<{ displayName: string | null; restriction: ChatRestriction }> {
+  const supabase = await createClient();
+  const [{ data: profile }, { data: restriction }] = await Promise.all([
+    supabase.from("profiles").select("display_name").eq("id", userId).maybeSingle(),
+    supabase
+      .from("chat_restrictions")
+      .select("type, expires_at")
+      .eq("user_id", userId)
+      .maybeSingle(),
+  ]);
+
+  const active =
+    restriction && (!restriction.expires_at || new Date(restriction.expires_at) > new Date())
+      ? (restriction.type as "mute" | "ban")
+      : null;
+
+  return { displayName: profile?.display_name ?? null, restriction: active };
 }

@@ -12,3 +12,7 @@ export type ChatAuthor = {
 export type ChatMessageListItem = ChatMessage & {
   author: ChatAuthor | null;
 };
+
+// Active moderation state of the current viewer in the global room.
+// "mute" = read-only; "ban" = no chat at all.
+export type ChatRestriction = "mute" | "ban" | null;

@@ -929,7 +929,17 @@
     "deleted": "Message deleted",
     "delete": "Delete",
     "anonymous": "Anonymous",
-    "adminChip": "Admin"
+    "adminChip": "Admin",
+    "typingOne": "{name} is typing…",
+    "typingMany": "Several people are typing…",
+    "mutedNotice": "You're muted and can't send messages.",
+    "messageMenu": "Message options",
+    "mute": "Mute user",
+    "ban": "Ban user",
+    "unrestrict": "Remove restriction",
+    "mutedToast": "User muted",
+    "bannedToast": "User banned",
+    "unrestrictedToast": "Restriction removed"
   },
   "theme": {
     "toggleLabel": "Toggle theme",

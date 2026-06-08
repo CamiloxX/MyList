@@ -7,18 +7,31 @@ import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
 import { useChatRealtime } from "../hooks/use-chat-realtime";
-import type { ChatMessageListItem } from "../types";
+import type { ChatMessageListItem, ChatRestriction } from "../types";
 import { ChatPanel } from "./chat-panel";
 
 type Props = {
   initialMessages: ChatMessageListItem[];
   viewerId: string;
+  viewerName: string;
   viewerIsAdmin: boolean;
+  initialRestriction: ChatRestriction;
 };
 
-export function ChatBubble({ initialMessages, viewerId, viewerIsAdmin }: Props) {
+export function ChatBubble({
+  initialMessages,
+  viewerId,
+  viewerName,
+  viewerIsAdmin,
+  initialRestriction,
+}: Props) {
   const t = useTranslations("chat");
-  const messages = useChatRealtime(initialMessages);
+  const { messages, typingNames, restriction, sendTyping } = useChatRealtime({
+    initial: initialMessages,
+    viewerId,
+    viewerName,
+    initialRestriction,
+  });
   const [open, setOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -45,8 +58,18 @@ export function ChatBubble({ initialMessages, viewerId, viewerIsAdmin }: Props) 
     if (open) setUnread(0);
   }, [open]);
 
+  // A ban removes the chat entirely; an unban (live) brings it back.
+  if (restriction === "ban") return null;
+
   const panel = (
-    <ChatPanel messages={messages} viewerId={viewerId} viewerIsAdmin={viewerIsAdmin} />
+    <ChatPanel
+      messages={messages}
+      viewerId={viewerId}
+      viewerIsAdmin={viewerIsAdmin}
+      typingNames={typingNames}
+      muted={restriction === "mute"}
+      onTyping={sendTyping}
+    />
   );
 
   return (

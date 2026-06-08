@@ -36,6 +36,33 @@ export type Database = {
         };
         Relationships: [];
       };
+      chat_restrictions: {
+        Row: {
+          user_id: string;
+          type: string;
+          reason: string | null;
+          created_by: string | null;
+          created_at: string;
+          expires_at: string | null;
+        };
+        Insert: {
+          user_id: string;
+          type: string;
+          reason?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          expires_at?: string | null;
+        };
+        Update: {
+          user_id?: string;
+          type?: string;
+          reason?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          expires_at?: string | null;
+        };
+        Relationships: [];
+      };
       user_activity: {
         Row: {
           user_id: string;
@@ -457,6 +484,7 @@ export type Database = {
       handle_new_user: { Args: Record<string, never>; Returns: unknown };
       set_updated_at: { Args: Record<string, never>; Returns: unknown };
       is_admin: { Args: { uid: string }; Returns: boolean };
+      is_chat_restricted: { Args: { uid: string }; Returns: boolean };
       bump_thread_on_post: { Args: Record<string, never>; Returns: unknown };
     };
     Enums: {
