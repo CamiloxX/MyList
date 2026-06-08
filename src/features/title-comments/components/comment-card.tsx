@@ -71,7 +71,7 @@ export function CommentCard({ comment, viewerId, viewerIsAdmin }: Props) {
       />
 
       <div className="flex flex-1 flex-col gap-2 min-w-0">
-        <header className="flex flex-wrap items-baseline justify-between gap-2">
+        <header className="flex flex-wrap items-start justify-between gap-2 sm:items-baseline">
           <AuthorAside
             name={comment.author?.displayName ?? null}
             avatarUrl={comment.author?.avatarUrl ?? null}
