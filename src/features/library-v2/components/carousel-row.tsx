@@ -40,7 +40,7 @@ export function CarouselRow({ title, items, seeAllHref, seeAllLabel, emptyLabel 
       ) : (
         <AutoCarousel durationSeconds={Math.max(20, items.length * 4)}>
           {items.map((item) => (
-            <div key={item.key} className="w-[160px] shrink-0">
+            <div key={item.key} className="w-[200px] shrink-0">
               {/* PosterCard is async; awaited per item by the RSC renderer. */}
               <PosterCard item={item} />
             </div>
