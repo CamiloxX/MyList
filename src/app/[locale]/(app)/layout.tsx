@@ -4,6 +4,7 @@ import { InstallPwaButton } from "@/components/install-pwa-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { BadgeCelebrationProvider } from "@/features/badges/components/badge-celebration-provider";
+import { ChatLauncher } from "@/features/chat";
 import { BottomNav } from "@/features/shell/components/bottom-nav";
 import { DailyVisitTracker } from "@/features/shell/components/daily-visit-tracker";
 import { HeaderSearch } from "@/features/shell/components/header-search";
@@ -82,6 +83,7 @@ export default async function AppLayout({
         </header>
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pb-24 md:pb-6">{children}</main>
         <BottomNav isAdmin={isAdmin} />
+        {user ? <ChatLauncher viewerId={user.id} viewerIsAdmin={isAdmin} /> : null}
         <DailyVisitTracker />
       </div>
     </BadgeCelebrationProvider>

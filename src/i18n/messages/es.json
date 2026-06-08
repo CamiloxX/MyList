@@ -864,6 +864,18 @@
     "verified": "Cuenta verificada (admin)",
     "adminChip": "Admin"
   },
+  "chat": {
+    "title": "Chat global",
+    "open": "Abrir chat",
+    "close": "Cerrar chat",
+    "placeholder": "Escribe un mensaje...",
+    "send": "Enviar",
+    "empty": "Aún no hay mensajes. ¡Rompe el hielo!",
+    "deleted": "Mensaje eliminado",
+    "delete": "Eliminar",
+    "anonymous": "Anónimo",
+    "adminChip": "Admin"
+  },
   "theme": {
     "toggleLabel": "Cambiar tema",
     "title": "Tema",
@@ -904,5 +916,34 @@
       "bodyTvUnknown": "Hay un nuevo episodio disponible.",
       "bodyAnime": "Hoy se emite un nuevo episodio."
     }
+  },
+  "libraryV2": {
+    "menu": "Menú",
+    "watchlist": "Watchlist",
+    "favorites": "Favoritos",
+    "categories": "Categorías",
+    "help": "Ayuda",
+    "pro": {
+      "tag": "Pro+",
+      "title": "es ilimitado.",
+      "body": "Stats, exports y sin anuncios.",
+      "cta": "Probar 14 días"
+    },
+    "tabs": {
+      "library": "Mi Biblioteca",
+      "discover": "Descubre"
+    },
+    "allCategories": "Todas las categorías",
+    "searchPlaceholder": "Buscar...",
+    "recommendations": "Recomendaciones para ti",
+    "seeAll": "Ver todo",
+    "genres": "Géneros",
+    "genreEmpty": "Agrega títulos a tu biblioteca para descubrir géneros.",
+    "browsing": "Explorando: {genre}",
+    "clearGenre": "Quitar filtro",
+    "myLibrary": "Mi Biblioteca",
+    "seasons": "{count, plural, =1 {1 temporada} other {# temporadas}}",
+    "episodes": "{count, plural, =1 {1 episodio} other {# episodios}}",
+    "prototypeNote": "Prototipo de escritorio — no reemplaza tu biblioteca actual."
   }
 }

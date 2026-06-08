@@ -864,6 +864,18 @@
     "verified": "Verified account (admin)",
     "adminChip": "Admin"
   },
+  "chat": {
+    "title": "Global chat",
+    "open": "Open chat",
+    "close": "Close chat",
+    "placeholder": "Write a message...",
+    "send": "Send",
+    "empty": "No messages yet. Break the ice!",
+    "deleted": "Message deleted",
+    "delete": "Delete",
+    "anonymous": "Anonymous",
+    "adminChip": "Admin"
+  },
   "theme": {
     "toggleLabel": "Toggle theme",
     "title": "Theme",
@@ -904,5 +916,34 @@
       "bodyTvUnknown": "A new episode is out.",
       "bodyAnime": "A new episode airs today."
     }
+  },
+  "libraryV2": {
+    "menu": "Menu",
+    "watchlist": "Watchlist",
+    "favorites": "Favorites",
+    "categories": "Categories",
+    "help": "Help",
+    "pro": {
+      "tag": "Pro+",
+      "title": "is unlimited.",
+      "body": "Stats, exports and no ads.",
+      "cta": "Try 14 days"
+    },
+    "tabs": {
+      "library": "My Library",
+      "discover": "Discover"
+    },
+    "allCategories": "All categories",
+    "searchPlaceholder": "Search...",
+    "recommendations": "Recommended for you",
+    "seeAll": "See all",
+    "genres": "Genres",
+    "genreEmpty": "Add titles to your library to surface genres.",
+    "browsing": "Browsing: {genre}",
+    "clearGenre": "Clear filter",
+    "myLibrary": "My Library",
+    "seasons": "{count, plural, =1 {1 season} other {# seasons}}",
+    "episodes": "{count, plural, =1 {1 episode} other {# episodes}}",
+    "prototypeNote": "Desktop prototype — does not replace your current library."
   }
 }
