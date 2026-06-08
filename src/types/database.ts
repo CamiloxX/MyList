@@ -35,6 +35,7 @@ export type Database = {
           avatar_url: string | null;
           locale: string;
           is_admin: boolean;
+          featured_badge_ids: string[];
           created_at: string;
           updated_at: string;
         };
@@ -45,6 +46,7 @@ export type Database = {
           avatar_url?: string | null;
           locale?: string;
           is_admin?: boolean;
+          featured_badge_ids?: string[];
           created_at?: string;
           updated_at?: string;
         };
@@ -55,6 +57,7 @@ export type Database = {
           avatar_url?: string | null;
           locale?: string;
           is_admin?: boolean;
+          featured_badge_ids?: string[];
           created_at?: string;
           updated_at?: string;
         };

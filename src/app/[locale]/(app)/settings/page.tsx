@@ -2,7 +2,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/features/auth/actions";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
-import { getRecentEarnedBadges } from "@/features/badges/queries";
+import { FeaturedBadgesCard } from "@/features/badges/components/featured-badges-card";
+import { getEarnedBadgesForCurrentUser, getRecentEarnedBadges } from "@/features/badges/queries";
 import { ExportCard } from "@/features/export/components/export-card";
 import {
   BroadcastForm,
@@ -34,6 +35,7 @@ export default async function SettingsPage() {
   const tChangelog = await getTranslations("changelog");
   const locale = (await getLocale()) as Locale;
   const recentBadges = await getRecentEarnedBadges(3);
+  const earnedData = await getEarnedBadgesForCurrentUser();
 
   const { data: profile } = user
     ? await supabase
@@ -153,6 +155,11 @@ export default async function SettingsPage() {
           </ul>
         )}
       </section>
+
+      <FeaturedBadgesCard
+        earned={earnedData?.badges ?? []}
+        initialFeatured={earnedData?.featured ?? []}
+      />
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
         <div className="flex flex-col gap-1">

@@ -38,6 +38,9 @@ export type BadgeCriterionKind = BadgeCriterion["kind"];
 
 export type BadgeTier = "bronze" | "silver" | "gold";
 
+/** Max badges a user can showcase next to their name (comments / profile). */
+export const MAX_FEATURED_BADGES = 4;
+
 /**
  * A badge ready to display: its text is already resolved (from next-intl for
  * built-ins, or straight from the DB for admin-created ones), and its icon is

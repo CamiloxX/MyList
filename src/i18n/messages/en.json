@@ -53,7 +53,7 @@
     "condition": {
       "label": "Unlock condition",
       "invalid": "Complete the unlock condition.",
-      "manualHint": "This badge is only granted by hand (coming soon).",
+      "manualHint": "This badge doesn't unlock on its own. Assign it to a user from the «Grant by hand» section below.",
       "titleSeasonHint": "Unlocks when that season is marked watched. TMDB series only (anime doesn't track seasons yet).",
       "titleCompletedHint": "Unlocks when the user marks this title as watched. Works for movies, series and anime.",
       "searchTitle": "Search a series on TMDB…",
@@ -727,6 +727,13 @@
     "recentTitle": "Recent badges",
     "recentEmpty": "You haven't unlocked any badges yet.",
     "seeAll": "See all",
+    "featured": {
+      "title": "Featured badges",
+      "description": "Pick up to {max} badges to show next to your name in comments.",
+      "count": "{n} of {max} selected",
+      "empty": "Unlock badges to feature them.",
+      "maxReached": "Up to {max} badges."
+    },
     "filters": {
       "aria": "Filter badges",
       "all": "All",

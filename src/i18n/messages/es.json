@@ -53,7 +53,7 @@
     "condition": {
       "label": "Condición de desbloqueo",
       "invalid": "Completa la condición de desbloqueo.",
-      "manualHint": "Este logro solo se otorga a mano (función próximamente).",
+      "manualHint": "Este logro no se desbloquea solo. Asígnalo a un usuario desde la sección «Otorgar a mano», más abajo en esta página.",
       "titleSeasonHint": "Se desbloquea al marcar como vista esa temporada. Solo series de TMDB (el anime aún no registra temporadas).",
       "titleCompletedHint": "Se desbloquea cuando el usuario marca este título como visto. Sirve para pelis, series y anime.",
       "searchTitle": "Buscar serie en TMDB…",
@@ -727,6 +727,13 @@
     "recentTitle": "Logros recientes",
     "recentEmpty": "Aún no has desbloqueado ningún logro.",
     "seeAll": "Ver todos",
+    "featured": {
+      "title": "Logros destacados",
+      "description": "Elige hasta {max} logros para mostrar junto a tu nombre en los comentarios.",
+      "count": "{n} de {max} elegidos",
+      "empty": "Desbloquea logros para poder destacarlos.",
+      "maxReached": "Máximo {max} logros."
+    },
     "filters": {
       "aria": "Filtrar logros",
       "all": "Todos",

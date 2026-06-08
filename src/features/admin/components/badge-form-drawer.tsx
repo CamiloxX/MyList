@@ -40,7 +40,9 @@ const EMPTY: CreateBadgeInput = {
   description: "",
   tier: "bronze",
   sortOrder: 0,
-  criterion: { kind: "title_season", source: "tmdb", sourceId: "", mediaKind: "tv", season: 1 },
+  // Default to title_completed: it shows the TMDB/Anime source toggle, so the
+  // anime search is visible up-front (title_season is TMDB-series-only).
+  criterion: { kind: "title_completed", source: "tmdb", sourceId: "", mediaKind: "movie" },
 };
 
 function toFormValues(badge: AdminBadge): CreateBadgeInput {
