@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { PosterItem } from "../types";
+import { AutoCarousel } from "./auto-carousel";
 import { PosterCard } from "./poster-card";
 
 type Props = {
@@ -14,10 +15,10 @@ type Props = {
 };
 
 /**
- * Horizontally scrollable row of poster cards. CSS scroll-snap keeps it a pure
- * server component (no client JS); on touch/trackpad it swipes, on desktop the
- * mouse wheel + scrollbar work. Each card has a fixed width so the row reads as
- * a carousel rather than wrapping into a grid.
+ * Recommendations row rendered as a self-scrolling marquee (no scrollbar). The
+ * cards are server-rendered and handed to the client AutoCarousel as children;
+ * loop speed scales with how many there are so a short list isn't dizzyingly
+ * fast nor a long one sluggish.
  */
 export function CarouselRow({ title, items, seeAllHref, seeAllLabel, emptyLabel }: Props) {
   return (
@@ -37,14 +38,14 @@ export function CarouselRow({ title, items, seeAllHref, seeAllLabel, emptyLabel 
       {items.length === 0 ? (
         <p className="text-sm text-muted-foreground">{emptyLabel}</p>
       ) : (
-        <div className="-mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-2 [scrollbar-width:thin]">
+        <AutoCarousel durationSeconds={Math.max(20, items.length * 4)}>
           {items.map((item) => (
-            <div key={item.key} className="w-[150px] shrink-0 snap-start">
+            <div key={item.key} className="w-[160px] shrink-0">
               {/* PosterCard is async; awaited per item by the RSC renderer. */}
               <PosterCard item={item} />
             </div>
           ))}
-        </div>
+        </AutoCarousel>
       )}
     </section>
   );

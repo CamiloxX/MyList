@@ -45,17 +45,21 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r bg-card/40 px-4 py-5 lg:flex">
-      <Link href="/library-v2" className="flex items-center gap-2 px-2" aria-label={t("app.title")}>
-        <BrandMark size={26} />
-        <Wordmark size={18} />
+    <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-r bg-card/40 px-5 py-6 lg:flex">
+      <Link
+        href="/library-v2"
+        className="flex items-center gap-2.5 px-2"
+        aria-label={t("app.title")}
+      >
+        <BrandMark size={34} />
+        <Wordmark size={24} />
       </Link>
 
-      <p className="mt-7 px-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      <p className="mt-8 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         {t("libraryV2.menu")}
       </p>
 
-      <nav className="mt-2 flex flex-col gap-0.5" aria-label={t("nav.primary")}>
+      <nav className="mt-3 flex flex-col gap-1.5" aria-label={t("nav.primary")}>
         {items.map((item) => {
           const active =
             pathname === item.href.split(/[?#]/)[0] && item.href.startsWith("/library-v2");
@@ -65,13 +69,13 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
+                "flex items-center gap-3.5 rounded-xl px-3 py-2.5 text-base font-medium transition-colors",
                 active
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
-              <Icon className="size-[18px] shrink-0" />
+              <Icon className="size-6 shrink-0" />
               {item.label}
             </Link>
           );
@@ -79,23 +83,21 @@ export function Sidebar() {
       </nav>
 
       {/* Pro upsell card — visual fidelity to the mockup; not a real feature. */}
-      <div className="mt-6 rounded-xl border bg-gradient-to-br from-primary/10 to-primary/5 p-3.5">
-        <div className="flex items-center gap-1.5 text-sm font-semibold">
-          <Sparkles className="size-4 text-primary" />
+      <div className="mt-7 rounded-2xl border bg-gradient-to-br from-primary/10 to-primary/5 p-4">
+        <div className="flex items-center gap-2 text-base font-semibold">
+          <Sparkles className="size-5 text-primary" />
           {t("libraryV2.pro.tag")} {t("libraryV2.pro.title")}
         </div>
-        <p className="mt-1 text-xs text-muted-foreground">{t("libraryV2.pro.body")}</p>
-        <Button size="sm" className="mt-3 w-full">
-          {t("libraryV2.pro.cta")}
-        </Button>
+        <p className="mt-1.5 text-sm text-muted-foreground">{t("libraryV2.pro.body")}</p>
+        <Button className="mt-3.5 w-full">{t("libraryV2.pro.cta")}</Button>
       </div>
 
-      <form action={signOut} className="mt-auto pt-4">
+      <form action={signOut} className="mt-auto pt-5">
         <button
           type="submit"
-          className="flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="flex w-full items-center gap-3.5 rounded-xl px-3 py-2.5 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
-          <LogOut className="size-[18px] shrink-0" />
+          <LogOut className="size-6 shrink-0" />
           {t("app.signOut")}
         </button>
       </form>

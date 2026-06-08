@@ -194,3 +194,32 @@
     background-position: 200% 0;
   }
 }
+
+/* Auto-scrolling carousel (library-v2 recommendations). The track holds two
+   identical copies of the cards, so translating by -50% scrolls exactly one
+   copy and loops seamlessly. Pauses on hover; disabled for reduced-motion. */
+@keyframes mylist-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.mylist-marquee-track {
+  animation: mylist-marquee var(--marquee-duration, 40s) linear infinite;
+}
+
+.mylist-marquee:hover .mylist-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mylist-marquee-track {
+    animation: none;
+  }
+  .mylist-marquee {
+    overflow-x: auto;
+  }
+}
