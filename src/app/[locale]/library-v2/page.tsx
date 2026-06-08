@@ -137,7 +137,7 @@ export default async function LibraryV2Page({ searchParams }: PageProps) {
 
 function PosterGrid({ items }: { items: PosterItem[] }) {
   return (
-    <div className="grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+    <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8">
       {items.map((item) => (
         <PosterCard key={item.key} item={item} />
       ))}

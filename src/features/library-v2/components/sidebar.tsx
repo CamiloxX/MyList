@@ -45,20 +45,21 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-80 shrink-0 flex-col border-r bg-card/40 px-5 py-7 lg:flex">
-      <Link href="/library-v2" className="flex items-center gap-3 px-2" aria-label={t("app.title")}>
-        <BrandMark size={38} />
-        <Wordmark size={26} />
+    <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-r bg-card/40 px-4 py-6 lg:flex">
+      <Link
+        href="/library-v2"
+        className="flex items-center gap-2.5 px-2"
+        aria-label={t("app.title")}
+      >
+        <BrandMark size={32} />
+        <Wordmark size={22} />
       </Link>
 
-      <p className="mt-9 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+      <p className="mt-7 px-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
         {t("libraryV2.menu")}
       </p>
 
-      <nav
-        className="mt-4 flex flex-1 flex-col justify-between gap-2 py-1"
-        aria-label={t("nav.primary")}
-      >
+      <nav className="mt-2.5 flex flex-col gap-1" aria-label={t("nav.primary")}>
         {items.map((item) => {
           const active =
             pathname === item.href.split(/[?#]/)[0] && item.href.startsWith("/library-v2");
@@ -68,38 +69,40 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-4 rounded-xl px-3.5 py-3 text-lg font-medium transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors",
                 active
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
-              <Icon className="size-[26px] shrink-0" />
+              <Icon className="size-5 shrink-0" />
               {item.label}
             </Link>
           );
         })}
       </nav>
 
-      {/* Account group pinned to the bottom so there's no dead space between the
-          nav and the foot of the rail. */}
-      <div className="mt-6 flex flex-col gap-3">
+      {/* Account group sits right under the nav (everything grouped at the top);
+          the natural whitespace falls below it, not as a gap in the middle. */}
+      <div className="mt-5 flex flex-col gap-2.5">
         {/* Pro upsell card — visual fidelity to the mockup; not a real feature. */}
-        <div className="rounded-2xl border bg-gradient-to-br from-primary/10 to-primary/5 p-4">
-          <div className="flex items-center gap-2 text-base font-semibold">
-            <Sparkles className="size-5 text-primary" />
+        <div className="rounded-xl border bg-gradient-to-br from-primary/10 to-primary/5 p-3.5">
+          <div className="flex items-center gap-1.5 text-sm font-semibold">
+            <Sparkles className="size-4 text-primary" />
             {t("libraryV2.pro.tag")} {t("libraryV2.pro.title")}
           </div>
-          <p className="mt-1.5 text-sm text-muted-foreground">{t("libraryV2.pro.body")}</p>
-          <Button className="mt-3.5 w-full">{t("libraryV2.pro.cta")}</Button>
+          <p className="mt-1 text-xs text-muted-foreground">{t("libraryV2.pro.body")}</p>
+          <Button size="sm" className="mt-3 w-full">
+            {t("libraryV2.pro.cta")}
+          </Button>
         </div>
 
         <form action={signOut}>
           <button
             type="submit"
-            className="flex w-full items-center gap-4 rounded-xl px-3.5 py-3 text-lg font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            <LogOut className="size-[26px] shrink-0" />
+            <LogOut className="size-5 shrink-0" />
             {t("app.signOut")}
           </button>
         </form>
