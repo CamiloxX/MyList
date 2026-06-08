@@ -15,7 +15,6 @@ import {
   TvIcon,
   ZapIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 const ICON_BY_KEY = {
   Sparkles: SparklesIcon,
@@ -41,6 +40,11 @@ export type BadgeIconKey = keyof typeof ICON_BY_KEY;
  * Renders a badge's icon: an uploaded image when `iconUrl` is set (admin-created
  * badges), otherwise the Lucide icon named by `iconKey` (built-ins). Falls back
  * to a trophy when neither resolves.
+ *
+ * An uploaded image FILLS its (sized, rounded) parent box via `size-full
+ * object-cover` so it auto-fits the badge circle regardless of its dimensions —
+ * `className` only sizes the Lucide glyph, which is intentionally smaller than
+ * the circle. Every caller wraps BadgeIcon in a fixed-size container.
  */
 export function BadgeIcon({
   iconKey,
@@ -59,7 +63,7 @@ export function BadgeIcon({
       <img
         src={iconUrl}
         alt={name ?? ""}
-        className={cn("object-contain", className)}
+        className="size-full object-cover"
         loading="lazy"
         aria-hidden={name ? undefined : true}
       />
