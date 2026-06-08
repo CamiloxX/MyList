@@ -59,6 +59,13 @@ export const badgeCriterionSchema = z.discriminatedUnion("kind", [
     mediaKind,
     title: z.string().optional(),
   }),
+  z.object({
+    kind: z.literal("title_episodes"),
+    source: z.literal("anilist"),
+    sourceId: z.string().trim().min(1),
+    episodes: counterTarget,
+    title: z.string().optional(),
+  }),
   z.object({ kind: z.literal("manual") }),
 ]);
 export type BadgeCriterionInput = z.infer<typeof badgeCriterionSchema>;

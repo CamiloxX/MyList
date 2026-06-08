@@ -11,6 +11,8 @@ import type { Database, Json } from "@/types/database";
 import {
   type AddToLibraryInput,
   addToLibrarySchema,
+  type SetEpisodesWatchedInput,
+  setEpisodesWatchedSchema,
   type WatchEntryInput,
   watchEntrySchema,
 } from "./schemas";
@@ -356,6 +358,78 @@ export async function unmarkSeasonWatched(input: {
   revalidatePath("/library");
   revalidatePath("/month");
   return { ok: true };
+}
+
+/**
+ * Sets how many episodes of an anime the user has watched. Anime-only: TV uses
+ * per-season tracking and movies have no episodes. Clamps to [0, episode_count]
+ * when the total is known; auto-manages status (0 → pending, total → watched,
+ * otherwise watching) but never clobbers a manual "dropped". On completion it
+ * inserts exactly ONE watch_entry (if none exists) so the anime shows up once in
+ * stats/activity — they count watch_entries. Decrementing below the total leaves
+ * that completion entry in place: the user did watch it, and removing it would
+ * corrupt streak history.
+ */
+export async function setEpisodesWatched(
+  input: SetEpisodesWatchedInput,
+): Promise<LibraryActionResultWith<{ episodesWatched: number; status: MediaStatus }>> {
+  const parsed = setEpisodesWatchedSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "Datos inválidos" };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Inicia sesión primero" };
+
+  const { data: item, error: readError } = await supabase
+    .from("media_items")
+    .select("kind, episode_count, status")
+    .eq("id", parsed.data.mediaItemId)
+    .maybeSingle();
+  if (readError) return { ok: false, error: readError.message };
+  if (!item) return { ok: false, error: "No encontrado" };
+  if (item.kind !== "anime") return { ok: false, error: "Solo disponible para anime" };
+
+  const total = item.episode_count;
+  const next = total != null ? Math.min(parsed.data.count, total) : parsed.data.count;
+
+  const prevStatus = item.status as MediaStatus;
+  let nextStatus: MediaStatus = prevStatus;
+  if (prevStatus !== "dropped") {
+    if (next === 0) nextStatus = "pending";
+    else if (total != null && next === total) nextStatus = "watched";
+    else nextStatus = "watching";
+  }
+
+  const { error: updateError } = await supabase
+    .from("media_items")
+    .update({ episodes_watched: next, status: nextStatus })
+    .eq("id", parsed.data.mediaItemId);
+  if (updateError) return { ok: false, error: updateError.message };
+
+  if (nextStatus === "watched" && prevStatus !== "watched") {
+    const { data: existing } = await supabase
+      .from("watch_entries")
+      .select("id")
+      .eq("media_item_id", parsed.data.mediaItemId)
+      .limit(1)
+      .maybeSingle();
+    if (!existing) {
+      const today = new Date().toISOString().slice(0, 10);
+      await supabase.from("watch_entries").insert({
+        user_id: user.id,
+        media_item_id: parsed.data.mediaItemId,
+        watched_on: today,
+      });
+    }
+  }
+
+  const newBadges = await evaluateAndPersist(supabase, user.id);
+  revalidatePath(`/library/${parsed.data.mediaItemId}`);
+  revalidatePath("/library");
+  revalidatePath("/month");
+  return { ok: true, data: { episodesWatched: next, status: nextStatus }, newBadges };
 }
 
 type MediaItemRow = Database["public"]["Tables"]["media_items"]["Row"];

@@ -56,13 +56,16 @@
       "manualHint": "Este logro no se desbloquea solo. Asígnalo a un usuario desde la sección «Otorgar a mano», más abajo en esta página.",
       "titleSeasonHint": "Se desbloquea al marcar como vista esa temporada. Solo series de TMDB (el anime aún no registra temporadas).",
       "titleCompletedHint": "Se desbloquea cuando el usuario marca este título como visto. Sirve para pelis, series y anime.",
+      "titleEpisodesHint": "Se desbloquea cuando el usuario llega a esa cantidad de episodios vistos de este anime.",
       "searchTitle": "Buscar serie en TMDB…",
       "searchAnyTitle": "Buscar título…",
+      "searchAnime": "Buscar anime…",
       "tmdbTab": "TMDB (pelis y series)",
       "animeTab": "Anime (MyAnimeList)",
       "titleFallback": "Título #{id}",
       "season": "Temporada",
       "seasonNumber": "T{n}",
+      "episodes": "Episodios (meta)",
       "selectedFallback": "Serie #{id}",
       "clear": "Quitar selección",
       "target": "Meta (cantidad)",
@@ -70,6 +73,7 @@
       "kinds": {
         "title_completed": "Título completo (peli/serie/anime)",
         "title_season": "Temporada de una serie",
+        "title_episodes": "Episodios de un anime",
         "manual": "Otorgar a mano",
         "media_completed_count": "Completar N títulos",
         "watch_entries_count": "Registrar N visualizaciones",
@@ -88,6 +92,7 @@
     "summary": {
       "titleSeason": "Serie #{id} · Temporada {season}",
       "titleCompleted": "Completar «{title}»",
+      "titleEpisodes": "{n} episodios de «{title}»",
       "mediaCompleted": "Completar {n} {kind}",
       "watch_entries_count": "{n} visualizaciones",
       "ratings_count": "Calificar {n} veces",
@@ -304,6 +309,18 @@
       "episodeCount": "{count, plural, =0 {Sin episodios} =1 {1 episodio} other {# episodios}}",
       "noSeasons": "Esta serie no tiene temporadas en TMDB",
       "seasonBadge": "T{number}"
+    },
+    "episodes": {
+      "title": "Episodios",
+      "progress": "{watched} / {total}",
+      "increment": "Sumar episodio",
+      "decrement": "Restar episodio",
+      "markComplete": "Marcar completo",
+      "completed": "Completado",
+      "save": "Guardar",
+      "episodesUnit": "episodios vistos",
+      "episodesWatchedLabel": "Episodios vistos",
+      "invalid": "Número inválido"
     },
     "addToLibrary": {
       "add": "Agregar",

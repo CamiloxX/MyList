@@ -56,13 +56,16 @@
       "manualHint": "This badge doesn't unlock on its own. Assign it to a user from the «Grant by hand» section below.",
       "titleSeasonHint": "Unlocks when that season is marked watched. TMDB series only (anime doesn't track seasons yet).",
       "titleCompletedHint": "Unlocks when the user marks this title as watched. Works for movies, series and anime.",
+      "titleEpisodesHint": "Unlocks when the user reaches that many watched episodes of this anime.",
       "searchTitle": "Search a series on TMDB…",
       "searchAnyTitle": "Search a title…",
+      "searchAnime": "Search anime…",
       "tmdbTab": "TMDB (movies & series)",
       "animeTab": "Anime (MyAnimeList)",
       "titleFallback": "Title #{id}",
       "season": "Season",
       "seasonNumber": "S{n}",
+      "episodes": "Episodes (target)",
       "selectedFallback": "Series #{id}",
       "clear": "Clear selection",
       "target": "Target (amount)",
@@ -70,6 +73,7 @@
       "kinds": {
         "title_completed": "Whole title (movie/series/anime)",
         "title_season": "Season of a series",
+        "title_episodes": "Episodes of an anime",
         "manual": "Grant by hand",
         "media_completed_count": "Complete N titles",
         "watch_entries_count": "Log N watches",
@@ -88,6 +92,7 @@
     "summary": {
       "titleSeason": "Series #{id} · Season {season}",
       "titleCompleted": "Complete \"{title}\"",
+      "titleEpisodes": "{n} episodes of \"{title}\"",
       "mediaCompleted": "Complete {n} {kind}",
       "watch_entries_count": "{n} watches",
       "ratings_count": "Rate {n} times",
@@ -304,6 +309,18 @@
       "episodeCount": "{count, plural, =0 {No episodes} =1 {1 episode} other {# episodes}}",
       "noSeasons": "This show has no seasons on TMDB",
       "seasonBadge": "S{number}"
+    },
+    "episodes": {
+      "title": "Episodes",
+      "progress": "{watched} / {total}",
+      "increment": "Add episode",
+      "decrement": "Remove episode",
+      "markComplete": "Mark complete",
+      "completed": "Completed",
+      "save": "Save",
+      "episodesUnit": "episodes watched",
+      "episodesWatchedLabel": "Episodes watched",
+      "invalid": "Invalid number"
     },
     "addToLibrary": {
       "add": "Add",

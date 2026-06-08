@@ -25,6 +25,7 @@ const EMPTY_STATS: BadgeStats = {
   longestDailyStreak: 0,
   watchedTitleSeasons: new Set(),
   watchedTitles: new Set(),
+  episodesByTitle: new Map(),
 };
 
 /** Stable key for a watched (title, season) pair — see title_season criterion. */
@@ -38,7 +39,7 @@ function titleKey(source: string, sourceId: string): string {
 }
 
 async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeStats> {
-  const [entriesRes, completedRes, seasonsRes] = await Promise.all([
+  const [entriesRes, completedRes, seasonsRes, episodesRes] = await Promise.all([
     supabase.from("watch_entries").select("watched_on, rating").eq("user_id", userId),
     supabase
       .from("media_items")
@@ -50,6 +51,11 @@ async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeS
       .select("season_number, media_items!inner(source, source_id)")
       .eq("user_id", userId)
       .not("season_number", "is", null),
+    supabase
+      .from("media_items")
+      .select("source, source_id, episodes_watched")
+      .eq("user_id", userId)
+      .eq("kind", "anime"),
   ]);
 
   if (entriesRes.error || completedRes.error) {
@@ -117,6 +123,14 @@ async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeS
     }
   }
 
+  // Episodes watched per anime title, for title_episodes badges.
+  const episodesByTitle = new Map<string, number>();
+  for (const row of episodesRes.data ?? []) {
+    if (row.source && row.source_id != null) {
+      episodesByTitle.set(titleKey(row.source, row.source_id), row.episodes_watched ?? 0);
+    }
+  }
+
   return {
     totalEntries,
     ratedEntries,
@@ -127,6 +141,7 @@ async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeS
     longestDailyStreak,
     watchedTitleSeasons,
     watchedTitles,
+    episodesByTitle,
   };
 }
 
@@ -162,6 +177,11 @@ function progressFor(criterion: BadgeCriterion, stats: BadgeStats): BadgeProgres
     case "title_completed": {
       const key = titleKey(criterion.source, criterion.sourceId);
       return { current: stats.watchedTitles.has(key) ? 1 : 0, target: 1 };
+    }
+    case "title_episodes": {
+      const key = titleKey(criterion.source, criterion.sourceId);
+      const current = stats.episodesByTitle.get(key) ?? 0;
+      return { current: Math.min(current, criterion.episodes), target: criterion.episodes };
     }
     case "manual":
       // Never auto-granted; only an admin awards it. Shown as 0/1 until earned.

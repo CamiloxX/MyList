@@ -47,3 +47,9 @@ export const addToLibrarySchema = z.object({
   rawMetadata: z.unknown().optional(),
 });
 export type AddToLibraryInput = z.infer<typeof addToLibrarySchema>;
+
+export const setEpisodesWatchedSchema = z.object({
+  mediaItemId: z.string().uuid(),
+  count: z.number().int().min(0).max(100_000),
+});
+export type SetEpisodesWatchedInput = z.infer<typeof setEpisodesWatchedSchema>;

@@ -30,6 +30,8 @@ function useCriterionSummary(): (c: BadgeCriterion) => string {
         return t("summary.titleSeason", { season: c.season, id: c.sourceId });
       case "title_completed":
         return t("summary.titleCompleted", { title: c.title ?? `#${c.sourceId}` });
+      case "title_episodes":
+        return t("summary.titleEpisodes", { title: c.title ?? `#${c.sourceId}`, n: c.episodes });
       case "media_completed_count":
         return t("summary.mediaCompleted", {
           n: c.target,
@@ -93,7 +95,12 @@ export function BadgeAdminCard({
           TIER_STYLES[badge.tier],
         )}
       >
-        <BadgeIcon iconKey={badge.iconKey} iconUrl={badge.iconUrl} name={badge.name} className="size-6" />
+        <BadgeIcon
+          iconKey={badge.iconKey}
+          iconUrl={badge.iconUrl}
+          name={badge.name}
+          className="size-6"
+        />
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -106,7 +113,9 @@ export function BadgeAdminCard({
           ) : null}
         </div>
         <p className="mt-0.5 truncate text-xs text-muted-foreground">{badge.description}</p>
-        <p className="mt-1 truncate text-[11px] text-muted-foreground/80">{summarize(badge.criterion)}</p>
+        <p className="mt-1 truncate text-[11px] text-muted-foreground/80">
+          {summarize(badge.criterion)}
+        </p>
       </div>
 
       <Popover

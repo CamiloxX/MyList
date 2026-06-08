@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { BadgeCriterion, BadgeCriterionKind } from "@/features/badges/types";
+import { AnimeEpisodesPicker } from "./anime-episodes-picker";
 import { SeriesPicker } from "./series-picker";
 import { TitlePicker } from "./title-picker";
 
@@ -19,6 +20,7 @@ import { TitlePicker } from "./title-picker";
 const KIND_OPTIONS: BadgeCriterionKind[] = [
   "title_completed",
   "title_season",
+  "title_episodes",
   "manual",
   "media_completed_count",
   "watch_entries_count",
@@ -37,6 +39,8 @@ function defaultCriterion(kind: BadgeCriterionKind): BadgeCriterion {
       return { kind, source: "tmdb", sourceId: "", mediaKind: "tv", season: 1 };
     case "title_completed":
       return { kind, source: "tmdb", sourceId: "", mediaKind: "movie" };
+    case "title_episodes":
+      return { kind, source: "anilist", sourceId: "", episodes: 12 };
     case "manual":
       return { kind };
     case "media_completed_count":
@@ -47,10 +51,13 @@ function defaultCriterion(kind: BadgeCriterionKind): BadgeCriterion {
 }
 
 /** Does this criterion kind carry a numeric `target`? */
-function hasTarget(
-  c: BadgeCriterion,
-): c is Extract<BadgeCriterion, { target: number }> {
-  return c.kind !== "manual" && c.kind !== "title_season" && c.kind !== "title_completed";
+function hasTarget(c: BadgeCriterion): c is Extract<BadgeCriterion, { target: number }> {
+  return (
+    c.kind !== "manual" &&
+    c.kind !== "title_season" &&
+    c.kind !== "title_completed" &&
+    c.kind !== "title_episodes"
+  );
 }
 
 export function ConditionFields({
@@ -90,13 +97,23 @@ export function ConditionFields({
       ) : null}
 
       {value.kind === "title_season" ? (
-        <SeriesPicker value={value} onChange={(next) => onChange({ kind: "title_season", ...next })} />
+        <SeriesPicker
+          value={value}
+          onChange={(next) => onChange({ kind: "title_season", ...next })}
+        />
       ) : null}
 
       {value.kind === "title_completed" ? (
         <TitlePicker
           value={value}
           onChange={(next) => onChange({ kind: "title_completed", ...next })}
+        />
+      ) : null}
+
+      {value.kind === "title_episodes" ? (
+        <AnimeEpisodesPicker
+          value={value}
+          onChange={(next) => onChange({ kind: "title_episodes", ...next })}
         />
       ) : null}
 

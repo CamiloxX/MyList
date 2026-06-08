@@ -109,6 +109,7 @@ export type Database = {
           year: number | null;
           runtime_minutes: number | null;
           episode_count: number | null;
+          episodes_watched: number;
           genres: Json;
           raw_metadata: Json | null;
           status: Database["public"]["Enums"]["media_status"];
@@ -129,6 +130,7 @@ export type Database = {
           year?: number | null;
           runtime_minutes?: number | null;
           episode_count?: number | null;
+          episodes_watched?: number;
           genres?: Json;
           raw_metadata?: Json | null;
           status?: Database["public"]["Enums"]["media_status"];
@@ -149,6 +151,7 @@ export type Database = {
           year?: number | null;
           runtime_minutes?: number | null;
           episode_count?: number | null;
+          episodes_watched?: number;
           genres?: Json;
           raw_metadata?: Json | null;
           status?: Database["public"]["Enums"]["media_status"];

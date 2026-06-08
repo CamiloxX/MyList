@@ -32,6 +32,14 @@ export type BadgeCriterion =
       /** Display-only label captured when the admin picks the title. */
       title?: string;
     }
+  | {
+      kind: "title_episodes";
+      source: "anilist";
+      sourceId: string;
+      episodes: number;
+      /** Display-only label captured when the admin picks the title. */
+      title?: string;
+    }
   | { kind: "manual" };
 
 export type BadgeCriterionKind = BadgeCriterion["kind"];
@@ -87,4 +95,6 @@ export interface BadgeStats {
   watchedTitleSeasons: Set<string>;
   /** Set of `${source}:${sourceId}` of titles the user marked as watched (status). */
   watchedTitles: Set<string>;
+  /** Map of `${source}:${sourceId}` → episodes_watched, anime only (title_episodes). */
+  episodesByTitle: Map<string, number>;
 }
