@@ -24,6 +24,7 @@ const EMPTY_STATS: BadgeStats = {
   maxSameDayEntries: 0,
   longestDailyStreak: 0,
   watchedTitleSeasons: new Set(),
+  watchedTitles: new Set(),
 };
 
 /** Stable key for a watched (title, season) pair — see title_season criterion. */
@@ -31,12 +32,17 @@ function titleSeasonKey(source: string, sourceId: string, season: number): strin
   return `${source}:${sourceId}:${season}`;
 }
 
+/** Stable key for a watched title — see title_completed criterion. */
+function titleKey(source: string, sourceId: string): string {
+  return `${source}:${sourceId}`;
+}
+
 async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeStats> {
   const [entriesRes, completedRes, seasonsRes] = await Promise.all([
     supabase.from("watch_entries").select("watched_on, rating").eq("user_id", userId),
     supabase
       .from("media_items")
-      .select("kind, genres, year")
+      .select("kind, genres, year, source, source_id")
       .eq("user_id", userId)
       .eq("status", "watched"),
     supabase
@@ -83,6 +89,7 @@ async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeS
   const completedByKind: Record<MediaKind, number> = { movie: 0, tv: 0, anime: 0 };
   const genreSet = new Set<string>();
   const decadeSet = new Set<number>();
+  const watchedTitles = new Set<string>();
   for (const m of completed) {
     completedByKind[m.kind] = (completedByKind[m.kind] ?? 0) + 1;
     if (Array.isArray(m.genres)) {
@@ -92,6 +99,9 @@ async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeS
     }
     if (m.year != null) {
       decadeSet.add(Math.floor(m.year / 10) * 10);
+    }
+    if (m.source && m.source_id != null) {
+      watchedTitles.add(titleKey(m.source, m.source_id));
     }
   }
 
@@ -116,6 +126,7 @@ async function loadStats(supabase: ServerClient, userId: string): Promise<BadgeS
     maxSameDayEntries,
     longestDailyStreak,
     watchedTitleSeasons,
+    watchedTitles,
   };
 }
 
@@ -147,6 +158,10 @@ function progressFor(criterion: BadgeCriterion, stats: BadgeStats): BadgeProgres
     case "title_season": {
       const key = titleSeasonKey(criterion.source, criterion.sourceId, criterion.season);
       return { current: stats.watchedTitleSeasons.has(key) ? 1 : 0, target: 1 };
+    }
+    case "title_completed": {
+      const key = titleKey(criterion.source, criterion.sourceId);
+      return { current: stats.watchedTitles.has(key) ? 1 : 0, target: 1 };
     }
     case "manual":
       // Never auto-granted; only an admin awards it. Shown as 0/1 until earned.

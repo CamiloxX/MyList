@@ -55,7 +55,12 @@
       "invalid": "Completa la condición de desbloqueo.",
       "manualHint": "Este logro solo se otorga a mano (función próximamente).",
       "titleSeasonHint": "Se desbloquea al marcar como vista esa temporada. Solo series de TMDB (el anime aún no registra temporadas).",
+      "titleCompletedHint": "Se desbloquea cuando el usuario marca este título como visto. Sirve para pelis, series y anime.",
       "searchTitle": "Buscar serie…",
+      "searchAnyTitle": "Buscar título…",
+      "tmdbTab": "Pelis y series",
+      "animeTab": "Anime",
+      "titleFallback": "Título #{id}",
       "season": "Temporada",
       "seasonNumber": "T{n}",
       "selectedFallback": "Serie #{id}",
@@ -63,6 +68,7 @@
       "target": "Meta (cantidad)",
       "mediaKind": "Tipo",
       "kinds": {
+        "title_completed": "Título completo (peli/serie/anime)",
         "title_season": "Temporada de una serie",
         "manual": "Otorgar a mano",
         "media_completed_count": "Completar N títulos",
@@ -81,6 +87,7 @@
     },
     "summary": {
       "titleSeason": "Serie #{id} · Temporada {season}",
+      "titleCompleted": "Completar «{title}»",
       "mediaCompleted": "Completar {n} {kind}",
       "watch_entries_count": "{n} visualizaciones",
       "ratings_count": "Calificar {n} veces",

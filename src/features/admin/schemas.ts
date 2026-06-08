@@ -33,9 +33,9 @@ const counterTarget = z.number().int().min(1).max(100_000);
 
 /**
  * Mirrors the BadgeCriterion union in src/features/badges/types.ts. Stored as
- * the `criterion` jsonb column. The admin form authors `manual` and
- * `title_season`; the counter variants exist so the built-in badges remain
- * fully editable.
+ * the `criterion` jsonb column. The admin form authors `title_completed`,
+ * `title_season` and `manual`; the counter variants exist so the built-in
+ * badges remain fully editable.
  */
 export const badgeCriterionSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("watch_entries_count"), target: counterTarget }),
@@ -51,6 +51,13 @@ export const badgeCriterionSchema = z.discriminatedUnion("kind", [
     sourceId: z.string().trim().min(1),
     mediaKind,
     season: z.number().int().min(1).max(BADGE_SEASON_MAX),
+  }),
+  z.object({
+    kind: z.literal("title_completed"),
+    source: mediaSource,
+    sourceId: z.string().trim().min(1),
+    mediaKind,
+    title: z.string().optional(),
   }),
   z.object({ kind: z.literal("manual") }),
 ]);

@@ -55,7 +55,12 @@
       "invalid": "Complete the unlock condition.",
       "manualHint": "This badge is only granted by hand (coming soon).",
       "titleSeasonHint": "Unlocks when that season is marked watched. TMDB series only (anime doesn't track seasons yet).",
+      "titleCompletedHint": "Unlocks when the user marks this title as watched. Works for movies, series and anime.",
       "searchTitle": "Search a series…",
+      "searchAnyTitle": "Search a title…",
+      "tmdbTab": "Movies & series",
+      "animeTab": "Anime",
+      "titleFallback": "Title #{id}",
       "season": "Season",
       "seasonNumber": "S{n}",
       "selectedFallback": "Series #{id}",
@@ -63,6 +68,7 @@
       "target": "Target (amount)",
       "mediaKind": "Type",
       "kinds": {
+        "title_completed": "Whole title (movie/series/anime)",
         "title_season": "Season of a series",
         "manual": "Grant by hand",
         "media_completed_count": "Complete N titles",
@@ -81,6 +87,7 @@
     },
     "summary": {
       "titleSeason": "Series #{id} · Season {season}",
+      "titleCompleted": "Complete \"{title}\"",
       "mediaCompleted": "Complete {n} {kind}",
       "watch_entries_count": "{n} watches",
       "ratings_count": "Rate {n} times",

@@ -28,6 +28,8 @@ function useCriterionSummary(): (c: BadgeCriterion) => string {
         return t("condition.kinds.manual");
       case "title_season":
         return t("summary.titleSeason", { season: c.season, id: c.sourceId });
+      case "title_completed":
+        return t("summary.titleCompleted", { title: c.title ?? `#${c.sourceId}` });
       case "media_completed_count":
         return t("summary.mediaCompleted", {
           n: c.target,

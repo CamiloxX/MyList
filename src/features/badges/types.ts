@@ -24,6 +24,14 @@ export type BadgeCriterion =
       mediaKind: MediaKind;
       season: number;
     }
+  | {
+      kind: "title_completed";
+      source: MediaSource;
+      sourceId: string;
+      mediaKind: MediaKind;
+      /** Display-only label captured when the admin picks the title. */
+      title?: string;
+    }
   | { kind: "manual" };
 
 export type BadgeCriterionKind = BadgeCriterion["kind"];
@@ -74,4 +82,6 @@ export interface BadgeStats {
   longestDailyStreak: number;
   /** Set of `${source}:${sourceId}:${season}` the user has marked watched. */
   watchedTitleSeasons: Set<string>;
+  /** Set of `${source}:${sourceId}` of titles the user marked as watched (status). */
+  watchedTitles: Set<string>;
 }

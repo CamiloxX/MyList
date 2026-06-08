@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { loadBadgeMap } from "@/features/badges/catalog";
 import { pushNewBadges } from "@/features/badges/push-notify";
+import { jikanPoster, jikanTitle, searchJikan } from "@/lib/jikan/search";
 import { searchTmdb, tmdbTitle, tmdbYear } from "@/lib/tmdb/search";
 import { tmdbImage } from "@/lib/tmdb/client";
 import { getTmdbTvSummary } from "@/lib/tmdb/tv";
@@ -258,6 +259,55 @@ export async function searchSeriesForBadge(query: string): Promise<BadgeSeriesRe
         year: tmdbYear(item),
         posterUrl: tmdbImage(item.poster_path, "w92"),
       }));
+  } catch {
+    return [];
+  }
+}
+
+export type BadgeTitleResult = {
+  source: "tmdb" | "anilist";
+  sourceId: string;
+  mediaKind: "movie" | "tv" | "anime";
+  title: string;
+  year: number | null;
+  posterUrl: string | null;
+};
+
+/**
+ * Title search for the `title_completed` condition. Unlike title_season this
+ * spans movies, series AND anime — the badge unlocks when the user marks that
+ * title as watched (status), which every kind supports. Captures the same
+ * source/sourceId/mediaKind the library stores so the match lines up.
+ */
+export async function searchTitlesForBadge(
+  query: string,
+  type: "tmdb" | "anime",
+): Promise<BadgeTitleResult[]> {
+  const admin = await requireAdmin();
+  if (!admin.ok) return [];
+  const q = query.trim();
+  if (q.length < 2) return [];
+  try {
+    if (type === "anime") {
+      const results = await searchJikan(q);
+      return results.slice(0, 8).map((item) => ({
+        source: "anilist" as const,
+        sourceId: String(item.mal_id),
+        mediaKind: "anime" as const,
+        title: jikanTitle(item),
+        year: item.year ?? null,
+        posterUrl: jikanPoster(item),
+      }));
+    }
+    const results = await searchTmdb(q);
+    return results.slice(0, 8).map((item) => ({
+      source: "tmdb" as const,
+      sourceId: String(item.id),
+      mediaKind: item.media_type,
+      title: tmdbTitle(item),
+      year: tmdbYear(item),
+      posterUrl: tmdbImage(item.poster_path, "w92"),
+    }));
   } catch {
     return [];
   }

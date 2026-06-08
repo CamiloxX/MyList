@@ -12,10 +12,12 @@ import {
 } from "@/components/ui/select";
 import type { BadgeCriterion, BadgeCriterionKind } from "@/features/badges/types";
 import { SeriesPicker } from "./series-picker";
+import { TitlePicker } from "./title-picker";
 
-// Order shown in the kind dropdown: the two the admin authors first, then the
+// Order shown in the kind dropdown: the ones the admin authors first, then the
 // progress counters (used by the built-in badges).
 const KIND_OPTIONS: BadgeCriterionKind[] = [
+  "title_completed",
   "title_season",
   "manual",
   "media_completed_count",
@@ -33,6 +35,8 @@ function defaultCriterion(kind: BadgeCriterionKind): BadgeCriterion {
   switch (kind) {
     case "title_season":
       return { kind, source: "tmdb", sourceId: "", mediaKind: "tv", season: 1 };
+    case "title_completed":
+      return { kind, source: "tmdb", sourceId: "", mediaKind: "movie" };
     case "manual":
       return { kind };
     case "media_completed_count":
@@ -46,7 +50,7 @@ function defaultCriterion(kind: BadgeCriterionKind): BadgeCriterion {
 function hasTarget(
   c: BadgeCriterion,
 ): c is Extract<BadgeCriterion, { target: number }> {
-  return c.kind !== "manual" && c.kind !== "title_season";
+  return c.kind !== "manual" && c.kind !== "title_season" && c.kind !== "title_completed";
 }
 
 export function ConditionFields({
@@ -87,6 +91,13 @@ export function ConditionFields({
 
       {value.kind === "title_season" ? (
         <SeriesPicker value={value} onChange={(next) => onChange({ kind: "title_season", ...next })} />
+      ) : null}
+
+      {value.kind === "title_completed" ? (
+        <TitlePicker
+          value={value}
+          onChange={(next) => onChange({ kind: "title_completed", ...next })}
+        />
       ) : null}
 
       {value.kind === "media_completed_count" ? (
