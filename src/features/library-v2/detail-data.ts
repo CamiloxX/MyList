@@ -84,6 +84,15 @@ export async function loadSeriesDetail(id: string): Promise<SeriesDetailData | n
   };
 }
 
+/** Wide 16:9 key-art for the hero. TMDB titles store a `backdrop_path` in
+ *  raw_metadata at add-time; anime (Jikan) has none, so this returns null and
+ *  the hero falls back to the blurred poster. No extra network call. */
+export function getBackdropUrl(item: MediaItem): string | null {
+  const raw = item.raw_metadata as Record<string, unknown> | null;
+  const path = raw && typeof raw.backdrop_path === "string" ? raw.backdrop_path : null;
+  return path ? `https://image.tmdb.org/t/p/w1280${path}` : null;
+}
+
 /** Synopsis text stored in raw_metadata at add-time (TMDB `overview` / Jikan
  *  `synopsis`). No extra network call. */
 export function getSynopsis(item: MediaItem): string | null {

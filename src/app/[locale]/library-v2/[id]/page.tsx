@@ -16,6 +16,7 @@ import { WatchEntryList } from "@/features/library/components/watch-entry-list";
 import { WatchEntryTrigger } from "@/features/library/components/watch-entry-trigger";
 import type { MediaStatus } from "@/features/library/status";
 import {
+  getBackdropUrl,
   getSourceScore,
   getSynopsis,
   loadSeriesDetail,
@@ -47,6 +48,7 @@ export default async function LibraryV2DetailPage({ params, searchParams }: Deta
   const synopsis = getSynopsis(item);
   const score = getSourceScore(item);
   const genreNames = await resolveGenreNames(item);
+  const backdropUrl = getBackdropUrl(item);
 
   const isSeries = item.kind === "tv" || item.kind === "anime";
   const watchedEpisodes = item.episodes_watched ?? 0;
@@ -109,7 +111,23 @@ export default async function LibraryV2DetailPage({ params, searchParams }: Deta
     <div className="flex flex-col">
       {/* Cinematic backdrop hero */}
       <header className="relative isolate overflow-hidden">
-        {item.poster_url ? (
+        {backdropUrl ? (
+          // Real 16:9 key-art (TMDB): shown sharp, anchored to the top, fading
+          // into the page background so the poster + title sit on solid color.
+          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
+            <Image
+              src={backdropUrl}
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover object-top"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/75 to-background/10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-transparent to-background/40" />
+          </div>
+        ) : item.poster_url ? (
+          // Fallback for titles without a backdrop (e.g. anime): blurred poster.
           <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
             <Image
               src={item.poster_url}
@@ -121,18 +139,14 @@ export default async function LibraryV2DetailPage({ params, searchParams }: Deta
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
             <div className="absolute inset-0 [background:radial-gradient(circle_at_78%_12%,color-mix(in_oklab,var(--primary)_28%,transparent),transparent_55%)]" />
+            {/* Giant first-letter watermark, like the design's faint "S". */}
+            <span className="pointer-events-none absolute -top-10 right-6 select-none text-[260px] font-extrabold leading-none tracking-tighter text-foreground/[0.05]">
+              {item.title.charAt(0).toUpperCase()}
+            </span>
           </div>
         ) : (
           <div className="absolute inset-0 -z-10 bg-card" aria-hidden />
         )}
-
-        {/* Giant first-letter watermark, like the design's faint "S". */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -top-10 right-6 select-none text-[260px] font-extrabold leading-none tracking-tighter text-foreground/[0.05]"
-        >
-          {item.title.charAt(0).toUpperCase()}
-        </span>
 
         <div className="relative px-6 pt-6 lg:px-10">
           <Link
@@ -146,7 +160,7 @@ export default async function LibraryV2DetailPage({ params, searchParams }: Deta
           </Link>
         </div>
 
-        <div className="relative flex flex-col gap-6 px-6 pb-10 pt-16 sm:flex-row sm:items-end lg:px-10">
+        <div className="relative flex flex-col gap-6 px-6 pb-10 pt-28 sm:flex-row sm:items-end sm:pt-44 lg:px-10">
           <div className="relative aspect-[2/3] w-40 shrink-0 overflow-hidden rounded-xl border bg-muted shadow-2xl sm:w-48">
             {item.poster_url ? (
               <Image
