@@ -103,6 +103,20 @@
       "deleted": "Logro borrado",
       "activated": "Logro activado",
       "deactivated": "Logro desactivado"
+    },
+    "grant": {
+      "title": "Otorgar a mano",
+      "subtitle": "Asigna o quita logros a un usuario directamente.",
+      "searchPlaceholder": "Buscar usuario por nombre…",
+      "selectUserHint": "Escribe al menos 2 letras para buscar un usuario.",
+      "noResults": "No se encontraron usuarios.",
+      "noBadges": "Aún no hay logros que otorgar.",
+      "anonymous": "Sin nombre",
+      "changeUser": "Cambiar",
+      "grant": "Otorgar",
+      "revoke": "Quitar",
+      "grantedToast": "Logro otorgado",
+      "revokedToast": "Logro quitado"
     }
   },
   "command": {

@@ -1,6 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { loadBadgeMap } from "@/features/badges/catalog";
+import { pushNewBadges } from "@/features/badges/push-notify";
 import { searchTmdb, tmdbTitle, tmdbYear } from "@/lib/tmdb/search";
 import { tmdbImage } from "@/lib/tmdb/client";
 import { getTmdbTvSummary } from "@/lib/tmdb/tv";
@@ -277,4 +280,112 @@ export async function getSeriesSeasonsForBadge(sourceId: string): Promise<BadgeS
     title: detail.name,
     seasons: detail.seasons.map((s) => ({ season: s.season_number, name: s.name })),
   };
+}
+
+// ============================================================================
+// Grant badges by hand (Fase 3)
+// ============================================================================
+
+const userIdSchema = z.string().uuid();
+
+export type GrantUser = {
+  id: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+};
+
+/** Searches users by display name for the manual-grant tool. */
+export async function searchUsersForGrant(query: string): Promise<GrantUser[]> {
+  const admin = await requireAdmin();
+  if (!admin.ok) return [];
+  const q = query.trim();
+  if (q.length < 2) return [];
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, display_name, avatar_url")
+    .ilike("display_name", `%${q}%`)
+    .order("display_name", { ascending: true })
+    .limit(8);
+  if (error || !data) return [];
+  return data.map((row) => ({
+    id: row.id,
+    displayName: row.display_name,
+    avatarUrl: row.avatar_url,
+  }));
+}
+
+/** Badge ids a given user has already unlocked (for the grant checklist). */
+export async function getGrantedBadgeIds(userId: string): Promise<string[]> {
+  const admin = await requireAdmin();
+  if (!admin.ok) return [];
+  if (!userIdSchema.safeParse(userId).success) return [];
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("user_badges")
+    .select("badge_id")
+    .eq("user_id", userId);
+  if (error || !data) return [];
+  return data.map((row) => row.badge_id);
+}
+
+/**
+ * Grants a badge to a user by hand. Idempotent (a duplicate is treated as
+ * success). Fires the same push notification the user would get on an automatic
+ * unlock, but only when the badge was actually newly granted.
+ */
+export async function grantBadge(userId: string, badgeId: string): Promise<AdminActionResult> {
+  if (!userIdSchema.safeParse(userId).success || !badgeIdSchema.safeParse(badgeId).success) {
+    return { ok: false, error: INVALID_DATA };
+  }
+  const admin = await requireAdmin();
+  if (!admin.ok) return admin;
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("user_badges")
+    .insert({ user_id: userId, badge_id: badgeId });
+  if (error) {
+    // 23505 = already has it → idempotent success, no push.
+    if (error.code === "23505") {
+      revalidatePath("/admin");
+      return { ok: true };
+    }
+    return { ok: false, error: error.message };
+  }
+
+  // Best-effort push using the same format as an automatic unlock.
+  try {
+    const def = (await loadBadgeMap(supabase)).get(badgeId);
+    if (def) await pushNewBadges(userId, [def]);
+  } catch (err) {
+    console.warn("[admin] grant push failed", err);
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/badges");
+  return { ok: true };
+}
+
+/** Revokes a badge from a user by hand. */
+export async function revokeBadge(userId: string, badgeId: string): Promise<AdminActionResult> {
+  if (!userIdSchema.safeParse(userId).success || !badgeIdSchema.safeParse(badgeId).success) {
+    return { ok: false, error: INVALID_DATA };
+  }
+  const admin = await requireAdmin();
+  if (!admin.ok) return admin;
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("user_badges")
+    .delete()
+    .eq("user_id", userId)
+    .eq("badge_id", badgeId);
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/admin");
+  revalidatePath("/badges");
+  return { ok: true };
 }

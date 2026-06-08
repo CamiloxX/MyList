@@ -103,6 +103,20 @@
       "deleted": "Badge deleted",
       "activated": "Badge activated",
       "deactivated": "Badge deactivated"
+    },
+    "grant": {
+      "title": "Grant by hand",
+      "subtitle": "Assign or remove badges from a user directly.",
+      "searchPlaceholder": "Search a user by name…",
+      "selectUserHint": "Type at least 2 letters to search for a user.",
+      "noResults": "No users found.",
+      "noBadges": "No badges to grant yet.",
+      "anonymous": "No name",
+      "changeUser": "Change",
+      "grant": "Grant",
+      "revoke": "Remove",
+      "grantedToast": "Badge granted",
+      "revokedToast": "Badge removed"
     }
   },
   "command": {
