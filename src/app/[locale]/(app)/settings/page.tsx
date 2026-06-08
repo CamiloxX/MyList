@@ -14,6 +14,7 @@ import {
 } from "@/features/notifications";
 import { AvatarUploadCard } from "@/features/profile/components/avatar-upload-card";
 import { DisplayNameCard } from "@/features/profile/components/display-name-card";
+import { PublicProfileCard } from "@/features/profile/components/public-profile-card";
 import { ChangePasswordForm } from "@/features/settings/components/change-password-form";
 import { LanguageSwitcher } from "@/features/settings/components/language-switcher";
 import { Link } from "@/i18n/navigation";
@@ -40,7 +41,7 @@ export default async function SettingsPage() {
   const { data: profile } = user
     ? await supabase
         .from("profiles")
-        .select("avatar_url, display_name, display_name_updated_at, is_admin")
+        .select("avatar_url, display_name, display_name_updated_at, is_admin, username, is_public")
         .eq("id", user.id)
         .maybeSingle()
     : { data: null };
@@ -104,6 +105,17 @@ export default async function SettingsPage() {
             <p className="text-xs text-muted-foreground">{t("profileName.description")}</p>
           </div>
           <DisplayNameCard currentName={displayName} nextChangeAt={nextNameChangeAt} />
+        </div>
+
+        <div className="flex flex-col gap-3 p-4">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-sm font-medium">{t("publicProfile.title")}</h3>
+            <p className="text-xs text-muted-foreground">{t("publicProfile.description")}</p>
+          </div>
+          <PublicProfileCard
+            currentUsername={profile?.username ?? null}
+            currentIsPublic={profile?.is_public ?? false}
+          />
         </div>
 
         <div className="flex flex-col gap-3 p-4">

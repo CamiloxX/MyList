@@ -578,6 +578,10 @@
         "failed": "We couldn't update your name."
       }
     },
+    "publicProfile": {
+      "title": "Public profile",
+      "description": "Pick a username and share your profile with a link."
+    },
     "language": "Language",
     "languageDescription": "Choose the interface language.",
     "languages": {
@@ -716,6 +720,40 @@
       "cancel": "Cancel",
       "save": "Save",
       "saving": "Saving..."
+    },
+    "handle": {
+      "label": "Public username",
+      "placeholder": "your_handle",
+      "save": "Save",
+      "saving": "Saving...",
+      "hint": "3-20 characters: lowercase, digits and underscore. It's your link: /u/your_handle",
+      "successToast": "Username saved",
+      "publicToggle": "Public profile",
+      "publicHint": "When on, anyone with the link can see your profile (badges and stats).",
+      "copyLink": "Copy link",
+      "copied": "Copied!",
+      "errors": {
+        "tooShort": "Too short (minimum 3 characters).",
+        "tooLong": "Maximum 20 characters.",
+        "invalidChars": "Only lowercase, digits and underscore.",
+        "taken": "That username is already taken.",
+        "needHandleFirst": "Pick a username first.",
+        "notSignedIn": "Sign in first.",
+        "failed": "We couldn't save your changes."
+      }
+    },
+    "public": {
+      "metaStats": "{titles} titles · {hours} h watched",
+      "labelTitles": "Titles",
+      "labelHours": "Hours",
+      "currentStreak": "Current streak",
+      "longestStreak": "Best streak",
+      "byKindTitle": "Hours by type",
+      "topRatedTitle": "Top rated",
+      "genresTitle": "Favorite genres",
+      "recentTitle": "Recent activity",
+      "empty": "This profile has no activity yet.",
+      "poweredBy": "Made with MyList"
     }
   },
   "badges": {

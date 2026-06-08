@@ -7,7 +7,9 @@ import {
   type AllowedAvatarMime,
   MAX_AVATAR_BYTES,
   type UpdateDisplayNameInput,
+  type UpdateUsernameInput,
   updateDisplayNameSchema,
+  updateUsernameSchema,
 } from "./schemas";
 
 export type ProfileActionResult =
@@ -189,4 +191,93 @@ export async function updateDisplayName(
     ? addDays(updated.display_name_updated_at, DISPLAY_NAME_COOLDOWN_DAYS)
     : addDays(new Date().toISOString(), DISPLAY_NAME_COOLDOWN_DAYS);
   return { ok: true, displayName, nextChangeAt };
+}
+
+export type UsernameErrorKey =
+  | "notSignedIn"
+  | "tooShort"
+  | "tooLong"
+  | "invalidChars"
+  | "taken"
+  | "failed";
+
+export type UpdateUsernameResult =
+  | { ok: true; username: string }
+  | { ok: false; errorKey: UsernameErrorKey };
+
+/**
+ * Claims (or changes) the user's public @handle. Validation happens with
+ * `updateUsernameSchema` (trim + lowercase + format); the DB partial-unique
+ * index on `profiles.username` is the real collision guard — a 23505 unique
+ * violation maps to the localized "taken" key. No cooldown here: a handle is
+ * lower-stakes than the display name, so re-claims are unrestricted for now.
+ */
+export async function updateUsername(input: UpdateUsernameInput): Promise<UpdateUsernameResult> {
+  const parsed = updateUsernameSchema.safeParse(input);
+  if (!parsed.success) {
+    const first = parsed.error.flatten().fieldErrors.username?.[0];
+    const errorKey: UsernameErrorKey =
+      first === "tooLong" ? "tooLong" : first === "invalidChars" ? "invalidChars" : "tooShort";
+    return { ok: false, errorKey };
+  }
+  const username = parsed.data.username;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, errorKey: "notSignedIn" };
+
+  const { error } = await supabase.from("profiles").update({ username }).eq("id", user.id);
+
+  if (error) {
+    // 23505 = unique_violation → another account already owns this handle.
+    if (error.code === "23505") return { ok: false, errorKey: "taken" };
+    console.warn("[updateUsername] error:", error.message);
+    return { ok: false, errorKey: "failed" };
+  }
+
+  revalidatePath("/settings");
+  return { ok: true, username };
+}
+
+export type SetProfilePublicErrorKey = "notSignedIn" | "needHandleFirst" | "failed";
+
+export type SetProfilePublicResult =
+  | { ok: true; isPublic: boolean }
+  | { ok: false; errorKey: SetProfilePublicErrorKey };
+
+/**
+ * Toggles the opt-in `is_public` flag that gates the /u/<handle> page. Going
+ * public requires a handle first (the public URL is keyed by username), so we
+ * refuse with "needHandleFirst" when none is set. Turning it off never blocks.
+ */
+export async function setProfilePublic(isPublic: boolean): Promise<SetProfilePublicResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, errorKey: "notSignedIn" };
+
+  if (isPublic) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (!profile?.username) return { ok: false, errorKey: "needHandleFirst" };
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ is_public: isPublic })
+    .eq("id", user.id);
+
+  if (error) {
+    console.warn("[setProfilePublic] error:", error.message);
+    return { ok: false, errorKey: "failed" };
+  }
+
+  revalidatePath("/settings");
+  return { ok: true, isPublic };
 }

@@ -63,6 +63,8 @@ export type Database = {
           locale: string;
           is_admin: boolean;
           featured_badge_ids: string[];
+          username: string | null;
+          is_public: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -74,6 +76,8 @@ export type Database = {
           locale?: string;
           is_admin?: boolean;
           featured_badge_ids?: string[];
+          username?: string | null;
+          is_public?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -85,6 +89,8 @@ export type Database = {
           locale?: string;
           is_admin?: boolean;
           featured_badge_ids?: string[];
+          username?: string | null;
+          is_public?: boolean;
           created_at?: string;
           updated_at?: string;
         };

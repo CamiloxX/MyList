@@ -578,6 +578,10 @@
         "failed": "No pudimos actualizar tu nombre."
       }
     },
+    "publicProfile": {
+      "title": "Perfil público",
+      "description": "Elige un nombre de usuario y comparte tu perfil con un enlace."
+    },
     "language": "Idioma",
     "languageDescription": "Elige el idioma de la interfaz.",
     "languages": {
@@ -716,6 +720,40 @@
       "cancel": "Cancelar",
       "save": "Guardar",
       "saving": "Guardando..."
+    },
+    "handle": {
+      "label": "Nombre de usuario público",
+      "placeholder": "tu_usuario",
+      "save": "Guardar",
+      "saving": "Guardando...",
+      "hint": "3-20 caracteres: minúsculas, números y guion bajo. Será tu enlace: /u/tu_usuario",
+      "successToast": "Nombre de usuario guardado",
+      "publicToggle": "Perfil público",
+      "publicHint": "Si lo activas, cualquiera con el enlace podrá ver tu perfil (logros y estadísticas).",
+      "copyLink": "Copiar enlace",
+      "copied": "¡Copiado!",
+      "errors": {
+        "tooShort": "Muy corto (mínimo 3 caracteres).",
+        "tooLong": "Máximo 20 caracteres.",
+        "invalidChars": "Solo minúsculas, números y guion bajo.",
+        "taken": "Ese nombre de usuario ya está en uso.",
+        "needHandleFirst": "Primero elige un nombre de usuario.",
+        "notSignedIn": "Inicia sesión primero.",
+        "failed": "No pudimos guardar los cambios."
+      }
+    },
+    "public": {
+      "metaStats": "{titles} títulos · {hours} h vistas",
+      "labelTitles": "Títulos",
+      "labelHours": "Horas",
+      "currentStreak": "Racha actual",
+      "longestStreak": "Mejor racha",
+      "byKindTitle": "Horas por tipo",
+      "topRatedTitle": "Mejor valorados",
+      "genresTitle": "Géneros favoritos",
+      "recentTitle": "Actividad reciente",
+      "empty": "Este perfil aún no tiene actividad.",
+      "poweredBy": "Hecho con MyList"
     }
   },
   "badges": {

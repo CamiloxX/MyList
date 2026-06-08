@@ -5,6 +5,8 @@ import { loadBadgeMap } from "./catalog";
 import { getAllBadgesWithStatus } from "./evaluator";
 import type { BadgeDefinition, BadgeWithStatus, EarnedBadge } from "./types";
 
+type ServerClient = Awaited<ReturnType<typeof createClient>>;
+
 /**
  * Server entry-point for the /badges page.
  * Returns null when the user is not signed in (caller redirects).
@@ -92,9 +94,21 @@ export async function getEarnedBadgesForCurrentUser(): Promise<{
 export async function fetchBadgesByUserIds(
   userIds: string[],
 ): Promise<Map<string, BadgeDefinition[]>> {
+  const supabase = await createClient();
+  return fetchBadgesByUserIdsWith(supabase, userIds);
+}
+
+/**
+ * Same as fetchBadgesByUserIds but with an injected client, so the public
+ * profile page can resolve a user's featured badges for logged-out visitors via
+ * the service-role client — the cookie client would see nothing under RLS.
+ */
+export async function fetchBadgesByUserIdsWith(
+  supabase: ServerClient,
+  userIds: string[],
+): Promise<Map<string, BadgeDefinition[]>> {
   const map = new Map<string, BadgeDefinition[]>();
   if (userIds.length === 0) return map;
-  const supabase = await createClient();
   const [badgesRes, profilesRes, catalog] = await Promise.all([
     supabase
       .from("user_badges")

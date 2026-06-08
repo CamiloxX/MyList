@@ -4,6 +4,21 @@ import { yearMonthRange, yearRange } from "@/lib/dates";
 import { genreLabel } from "@/lib/genres";
 import { createClient } from "@/lib/supabase/server";
 
+/**
+ * Injected Supabase client — the authed cookie client OR the service-role
+ * client (structurally identical). The `*ForUser` cores accept one so the
+ * public profile page can run the same aggregates for an arbitrary user via
+ * service-role; that path MUST pass an explicit userId (RLS is bypassed there).
+ */
+type StatsClient = Awaited<ReturnType<typeof createClient>>;
+
+/**
+ * Stand-in user id for the no-session case (unreachable in practice — stats
+ * pages are auth-gated). A syntactically valid uuid that matches no row, so the
+ * authed wrappers degrade to empty results instead of querying without a filter.
+ */
+const NIL_UUID = "00000000-0000-0000-0000-000000000000";
+
 export type MonthEntry = {
   id: string;
   watched_on: string;
@@ -201,11 +216,14 @@ export type TopRatedItem = {
  * hours, and hours by media kind. Computes from watch_entries joined with
  * media_items (one DB roundtrip).
  */
-export async function getUserOverview(): Promise<UserOverview> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
+export async function getUserOverviewForUser(
+  client: StatsClient,
+  userId: string,
+): Promise<UserOverview> {
+  const { data, error } = await client
     .from("watch_entries")
-    .select(`watched_on, media_items!inner ( kind, runtime_minutes )`);
+    .select(`watched_on, media_items!inner ( kind, runtime_minutes )`)
+    .eq("user_id", userId);
 
   if (error) {
     throw new Error(`Error cargando overview: ${error.message}`);
@@ -236,6 +254,15 @@ export async function getUserOverview(): Promise<UserOverview> {
       anime: Math.round((hoursByKind.anime / 60) * 10) / 10,
     },
   };
+}
+
+/** Authed wrapper: overall stats for the current user. */
+export async function getUserOverview(): Promise<UserOverview> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return getUserOverviewForUser(supabase, user?.id ?? NIL_UUID);
 }
 
 // ===========================================================================
@@ -330,11 +357,13 @@ function computeStreaks(dates: Set<string>, today: string): { current: number; l
  * view OR opened the app (user_activity). Heatmap stays view-based (it shows
  * what was watched); the streak counts showing up.
  */
-export async function getActivityStats(): Promise<ActivityStats> {
-  const supabase = await createClient();
+export async function getActivityStatsForUser(
+  client: StatsClient,
+  userId: string,
+): Promise<ActivityStats> {
   const [entriesRes, visitsRes] = await Promise.all([
-    supabase.from("watch_entries").select("watched_on"),
-    supabase.from("user_activity").select("active_on"),
+    client.from("watch_entries").select("watched_on").eq("user_id", userId),
+    client.from("user_activity").select("active_on").eq("user_id", userId),
   ]);
   if (entriesRes.error) {
     throw new Error(`Error cargando actividad: ${entriesRes.error.message}`);
@@ -362,6 +391,15 @@ export async function getActivityStats(): Promise<ActivityStats> {
   };
 }
 
+/** Authed wrapper: activity heatmap + streaks for the current user. */
+export async function getActivityStats(): Promise<ActivityStats> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return getActivityStatsForUser(supabase, user?.id ?? NIL_UUID);
+}
+
 // ===========================================================================
 // Top genres + decade distribution (across watched titles)
 // ===========================================================================
@@ -375,14 +413,16 @@ export type LibraryBreakdown = { topGenres: GenreCount[]; decades: DecadeCount[]
  * watch_entry) into top genres and a release-decade distribution. Genres are
  * localized via the shared genre map; unknown values are skipped/fall back.
  */
-export async function getLibraryBreakdown(
+export async function getLibraryBreakdownForUser(
+  client: StatsClient,
+  userId: string,
   locale: "es" | "en",
   genresLimit = 8,
 ): Promise<LibraryBreakdown> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("media_items")
-    .select("genres, year, watch_entries!inner ( id )");
+    .select("genres, year, watch_entries!inner ( id )")
+    .eq("user_id", userId);
   if (error) {
     throw new Error(`Error cargando desglose: ${error.message}`);
   }
@@ -417,15 +457,31 @@ export async function getLibraryBreakdown(
   return { topGenres, decades };
 }
 
+/** Authed wrapper: genre + decade breakdown for the current user. */
+export async function getLibraryBreakdown(
+  locale: "es" | "en",
+  genresLimit = 8,
+): Promise<LibraryBreakdown> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return getLibraryBreakdownForUser(supabase, user?.id ?? NIL_UUID, locale, genresLimit);
+}
+
 /**
  * Returns the user's top-N media_items by their best watch_entry rating.
  * Items without any rating are excluded.
  */
-export async function getTopRatedMedia(limit = 5): Promise<TopRatedItem[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
+export async function getTopRatedMediaForUser(
+  client: StatsClient,
+  userId: string,
+  limit = 5,
+): Promise<TopRatedItem[]> {
+  const { data, error } = await client
     .from("watch_entries")
     .select(`rating, media_items!inner ( id, title, poster_url, kind, year )`)
+    .eq("user_id", userId)
     .not("rating", "is", null);
 
   if (error) {
@@ -456,6 +512,15 @@ export async function getTopRatedMedia(limit = 5): Promise<TopRatedItem[]> {
   }
 
   return [...byMediaId.values()].sort((a, b) => b.bestRating - a.bestRating).slice(0, limit);
+}
+
+/** Authed wrapper: top-rated titles for the current user. */
+export async function getTopRatedMedia(limit = 5): Promise<TopRatedItem[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return getTopRatedMediaForUser(supabase, user?.id ?? NIL_UUID, limit);
 }
 
 /**
