@@ -101,7 +101,9 @@ async function getMovieWatchOrder(movieId: string): Promise<WatchOrderResult | n
 
 // --- Anime ---------------------------------------------------------------
 
-const ANIME_DETAIL_DELAY_MS = 300;
+// ~1 call/s keeps us under Jikan's 60/min limit (the traversal already spent its
+// budget on relations calls; details run right after, sequentially).
+const ANIME_DETAIL_DELAY_MS = 1100;
 // Recaps / alt-versions slot right after their parent rather than by their own year.
 const ADJACENT_RELATIONS = new Set(["Summary", "Full story", "Alternative version"]);
 

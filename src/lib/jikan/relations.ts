@@ -43,11 +43,13 @@ export type FranchiseNode = {
   parentMalId: number | null;
 };
 
-// Bounded so a giant franchise (Fate, Gundam) can't fan out forever or hammer
-// Jikan's ~3 req/s soft limit.
-const MAX_NODES = 25;
-const MAX_HOPS = 12;
-const REL_DELAY_MS = 350;
+// Bounded so a giant franchise (Fate, Gundam) can't fan out forever. Jikan
+// rate-limits at ~3 req/s AND 60 req/min, and the traversal does one relations
+// call + one detail call per node, so we keep the cap low and pace ~1 call/s to
+// stay under the per-minute ceiling (otherwise cold loads hit 429s).
+const MAX_NODES = 14;
+const MAX_HOPS = 10;
+const REL_DELAY_MS = 1100;
 
 // Relation types that stay inside one franchise's watchable graph. Excludes
 // Character/Other/Adaptation which jump to unrelated works or other media.
