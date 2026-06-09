@@ -9,7 +9,14 @@ import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
 
 const QUERY_PARAM = "q";
 
-export function LibrarySearchInput({ defaultValue = "" }: { defaultValue?: string }) {
+export function LibrarySearchInput({
+  defaultValue = "",
+  placeholder,
+}: {
+  defaultValue?: string;
+  /** Overrides the default "search your library" placeholder/aria text. */
+  placeholder?: string;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -45,9 +52,9 @@ export function LibrarySearchInput({ defaultValue = "" }: { defaultValue?: strin
         type="search"
         value={value}
         onChange={(event) => setValue(event.target.value)}
-        placeholder={t("searchPlaceholder")}
+        placeholder={placeholder ?? t("searchPlaceholder")}
         className="h-10 pl-9 pr-9"
-        aria-label={t("searchAria")}
+        aria-label={placeholder ?? t("searchAria")}
       />
       {value ? (
         <button

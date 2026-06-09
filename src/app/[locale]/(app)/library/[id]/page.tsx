@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
@@ -18,6 +19,7 @@ import { WatchEntryList } from "@/features/library/components/watch-entry-list";
 import { WatchEntryTrigger } from "@/features/library/components/watch-entry-trigger";
 import type { MediaStatus } from "@/features/library/status";
 import { DesktopSeriesDetail } from "@/features/library-v2/components/desktop-series-detail";
+import { WatchOrderSection } from "@/features/library-v2/components/watch-order-section";
 import { AddToListButton } from "@/features/lists/components/add-to-list-button";
 import { getListsForItem } from "@/features/lists/queries";
 import { TitleComments } from "@/features/title-comments/components/title-comments";
@@ -277,6 +279,10 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
           <WatchEntryTrigger mediaItemId={item.id} defaultOpen={defaultOpenLog} />
         </div>
       </section>
+
+      <Suspense fallback={null}>
+        <WatchOrderSection source={item.source} kind={item.kind} sourceId={item.source_id} />
+      </Suspense>
 
       <TitleComments source={item.source} sourceId={item.source_id} kind={item.kind} />
     </div>

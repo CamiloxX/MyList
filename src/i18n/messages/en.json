@@ -15,6 +15,7 @@
     "badges": "Badges",
     "settings": "Settings",
     "changelog": "What's new",
+    "watchOrder": "Watch order",
     "more": "More",
     "primary": "Main navigation",
     "admin": "Admin"
@@ -1028,6 +1029,30 @@
       "labelStatus": "Status",
       "labelScore": "Rating",
       "notInLibrary": "Not in your library yet"
+    },
+    "watchOrder": {
+      "title": "Watch order",
+      "current": "You are here",
+      "owned": "In your library",
+      "orderChronological": "Chronological",
+      "orderRelease": "Release",
+      "orderStory": "Story",
+      "pageTitle": "Watch order",
+      "pageSubtitle": "Find out what order to watch each movie and anime franchise in.",
+      "searchPlaceholder": "Search a franchise or title…",
+      "franchisesHeading": "Popular franchises",
+      "empty": "This title isn't part of a franchise we can order.",
+      "truncated": "Showing the first {count} entries.",
+      "relations": {
+        "prequel": "Prequel",
+        "sequel": "Sequel",
+        "sideStory": "Side story",
+        "parentStory": "Parent story",
+        "summary": "Summary",
+        "alternativeVersion": "Alternative version",
+        "fullStory": "Full story",
+        "spinOff": "Spin-off"
+      }
     }
   }
 }

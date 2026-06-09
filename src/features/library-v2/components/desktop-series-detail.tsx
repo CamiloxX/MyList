@@ -2,6 +2,7 @@ import { PlayIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
@@ -27,6 +28,7 @@ import {
   loadSeriesDetail,
   resolveGenreNames,
 } from "../detail-data";
+import { WatchOrderSection } from "./watch-order-section";
 
 /**
  * The desktop series-detail experience: cinematic backdrop hero + two-column
@@ -297,6 +299,10 @@ export async function DesktopSeriesDetail({
             </div>
             <WatchEntryList entries={entries} mediaItemId={item.id} />
           </section>
+
+          <Suspense fallback={null}>
+            <WatchOrderSection source={item.source} kind={item.kind} sourceId={item.source_id} />
+          </Suspense>
         </div>
 
         {/* Right: progress, details, providers */}

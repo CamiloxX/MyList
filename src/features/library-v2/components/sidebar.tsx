@@ -6,6 +6,7 @@ import {
   Compass,
   Library,
   List,
+  ListOrdered,
   LogOut,
   Newspaper,
   Search,
@@ -57,6 +58,7 @@ export function Sidebar({
     { href: "/search", label: t("nav.search"), icon: Search },
     { href: "/month", label: t("nav.month"), icon: CalendarDays },
     { href: "/stats", label: t("nav.stats"), icon: BarChart3 },
+    { href: "/watch-order", label: t("nav.watchOrder"), icon: ListOrdered },
     ...(isAdmin ? [{ href: "/admin", label: t("nav.admin"), icon: Shield }] : []),
   ];
 

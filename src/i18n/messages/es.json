@@ -15,6 +15,7 @@
     "badges": "Logros",
     "settings": "Ajustes",
     "changelog": "Novedades",
+    "watchOrder": "Orden de visionado",
     "more": "Más",
     "primary": "Navegación principal",
     "admin": "Admin"
@@ -1028,6 +1029,30 @@
       "labelStatus": "Estado",
       "labelScore": "Puntuación",
       "notInLibrary": "Aún no está en tu biblioteca"
+    },
+    "watchOrder": {
+      "title": "Orden de visionado",
+      "current": "Estás aquí",
+      "owned": "En tu biblioteca",
+      "orderChronological": "Cronológico",
+      "orderRelease": "Estreno",
+      "orderStory": "Historia",
+      "pageTitle": "Orden de visionado",
+      "pageSubtitle": "Descubre en qué orden ver cada saga de pelis y anime.",
+      "searchPlaceholder": "Buscar una saga o título…",
+      "franchisesHeading": "Sagas populares",
+      "empty": "Este título no es parte de una saga que podamos ordenar.",
+      "truncated": "Mostrando las primeras {count} entradas.",
+      "relations": {
+        "prequel": "Precuela",
+        "sequel": "Secuela",
+        "sideStory": "Historia paralela",
+        "parentStory": "Historia principal",
+        "summary": "Resumen",
+        "alternativeVersion": "Versión alternativa",
+        "fullStory": "Historia completa",
+        "spinOff": "Spin-off"
+      }
     }
   }
 }

@@ -3,6 +3,7 @@
 import {
   ChevronDownIcon,
   ListIcon,
+  ListOrderedIcon,
   LogOutIcon,
   NewspaperIcon,
   SettingsIcon,
@@ -17,6 +18,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const ITEMS = [
+  { href: "/watch-order", labelKey: "watchOrder", Icon: ListOrderedIcon },
   { href: "/lists", labelKey: "lists", Icon: ListIcon },
   { href: "/badges", labelKey: "badges", Icon: TrophyIcon },
   { href: "/changelog", labelKey: "changelog", Icon: NewspaperIcon },
