@@ -1,5 +1,6 @@
 import "server-only";
 
+import { z } from "zod";
 import { getMediaWatchUrl } from "@/features/library/actions";
 import { getListsForItem } from "@/features/lists/queries";
 import type { AiringStatus } from "@/lib/airing-status";
@@ -8,6 +9,7 @@ import { getJikanAiringStatus } from "@/lib/jikan/airing";
 import { getJikanTrailer } from "@/lib/jikan/videos";
 import type { OmdbRatings } from "@/lib/omdb/schemas";
 import { createClient } from "@/lib/supabase/server";
+import { tmdbFetch } from "@/lib/tmdb/client";
 import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
 import { getTmdbTvAiringStatus, getTmdbTvNextEpisode } from "@/lib/tmdb/tv";
 import { getTmdbTrailer } from "@/lib/tmdb/videos";
@@ -92,10 +94,35 @@ export async function loadSeriesDetail(id: string): Promise<SeriesDetailData | n
 /** Wide 16:9 key-art for the hero. TMDB titles store a `backdrop_path` in
  *  raw_metadata at add-time; anime (Jikan) has none, so this returns null and
  *  the hero falls back to the blurred poster. No extra network call. */
-export function getBackdropUrl(item: MediaItem): string | null {
+const tmdbBackdropSchema = z.object({ backdrop_path: z.string().nullable().optional() });
+
+async function fetchTmdbBackdropPath(kind: "movie" | "tv", id: string): Promise<string | null> {
+  try {
+    const raw = await tmdbFetch<unknown>(`/${kind}/${id}`, { revalidate: 86400 });
+    return tmdbBackdropSchema.parse(raw).backdrop_path ?? null;
+  } catch (error) {
+    console.warn("[library-v2] backdrop fetch failed:", error);
+    return null;
+  }
+}
+
+/**
+ * Wide 16:9 key-art for the hero. Prefers the backdrop_path stored in
+ * raw_metadata at add-time, but titles added before we stored it (or whose
+ * stored payload lacked it) fall back to a cached TMDB lookup. Anime (Jikan) has
+ * no backdrop → null (the hero then uses the blurred poster).
+ */
+export async function getBackdropUrl(item: MediaItem): Promise<string | null> {
   const raw = item.raw_metadata as Record<string, unknown> | null;
-  const path = raw && typeof raw.backdrop_path === "string" ? raw.backdrop_path : null;
-  return path ? `https://image.tmdb.org/t/p/w1280${path}` : null;
+  const stored =
+    raw && typeof raw.backdrop_path === "string" && raw.backdrop_path ? raw.backdrop_path : null;
+  if (stored) return `https://image.tmdb.org/t/p/w1280${stored}`;
+
+  if (item.source === "tmdb" && (item.kind === "movie" || item.kind === "tv")) {
+    const path = await fetchTmdbBackdropPath(item.kind, item.source_id);
+    return path ? `https://image.tmdb.org/t/p/w1280${path}` : null;
+  }
+  return null;
 }
 
 /** Synopsis text stored in raw_metadata at add-time (TMDB `overview` / Jikan

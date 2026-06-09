@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
 import { RatingsBadge } from "@/features/discover/components/ratings-badge";
-import { EpisodeTracker } from "@/features/library/components/episode-tracker";
 import { NextEpisodeCard } from "@/features/library/components/next-episode-card";
 import { NotifyEpisodesToggle } from "@/features/library/components/notify-episodes-toggle";
 import { RemoveButton } from "@/features/library/components/remove-button";
@@ -52,7 +51,7 @@ export async function DesktopSeriesDetail({
   const synopsis = getSynopsis(item);
   const score = getSourceScore(item);
   const genreNames = await resolveGenreNames(item);
-  const backdropUrl = getBackdropUrl(item);
+  const backdropUrl = await getBackdropUrl(item);
 
   const isSeries = item.kind === "tv" || item.kind === "anime";
   const watchedEpisodes = item.episodes_watched ?? 0;
@@ -280,14 +279,6 @@ export async function DesktopSeriesDetail({
             <section className="flex flex-col gap-3">
               <SeasonsList mediaItemId={item.id} tmdbId={item.source_id} />
             </section>
-          ) : null}
-
-          {item.kind === "anime" ? (
-            <EpisodeTracker
-              mediaItemId={item.id}
-              total={item.episode_count}
-              initialWatched={item.episodes_watched}
-            />
           ) : null}
 
           <section className="flex flex-col gap-3">
