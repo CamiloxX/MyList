@@ -31,7 +31,7 @@ function fmtScore(value: number | null | undefined): string | undefined {
  * the library, the preview route redirects them to the full detail view).
  */
 function titleHref(source: string, kind: string, sourceId: string | number): string {
-  return `/library-v2/title/${source}/${kind}/${sourceId}`;
+  return `/library/title/${source}/${kind}/${sourceId}`;
 }
 
 export function movieToPoster(m: TmdbMovie): PosterItem {

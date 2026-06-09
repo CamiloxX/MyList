@@ -7,29 +7,32 @@ import { buttonVariants } from "@/components/ui/button";
 import { RatingsBadge } from "@/features/discover/components/ratings-badge";
 import { AddToLibraryButton } from "@/features/library/components/add-to-library-button";
 import { TrailerButton } from "@/features/library/components/trailer-button";
-import { loadTitlePreview } from "@/features/library-v2/preview-data";
 import { Link, redirect } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
-
-export const dynamic = "force-dynamic";
+import { loadTitlePreview } from "../preview-data";
 
 const SOURCES = new Set(["tmdb", "anilist"]);
 const KINDS = new Set(["movie", "tv", "anime"]);
 
-type PreviewPageProps = {
-  params: Promise<{ locale: string; source: string; kind: string; sourceId: string }>;
-};
-
 /**
  * Title preview for a not-yet-added recommendation/discover result. If the user
  * already has the title, redirects to the full library detail; otherwise shows
- * its info with a one-click "add to library" action.
+ * its info (synopsis, trailer, airing, RT/IMDb) with a one-click add action.
+ * Desktop-only; rendered for `/library/title/...`.
  */
-export default async function TitlePreviewPage({ params }: PreviewPageProps) {
-  const { locale, source, kind, sourceId } = await params;
+export async function DesktopTitlePreview({
+  locale,
+  source,
+  kind,
+  sourceId,
+}: {
+  locale: string;
+  source: string;
+  kind: string;
+  sourceId: string;
+}) {
   if (!SOURCES.has(source) || !KINDS.has(kind)) notFound();
-  // Narrow the validated path params to the DB enum types.
   const src = source as "tmdb" | "anilist";
   const knd = kind as "movie" | "tv" | "anime";
 
@@ -49,7 +52,7 @@ export default async function TitlePreviewPage({ params }: PreviewPageProps) {
       .eq("kind", knd)
       .maybeSingle();
     if (existing) {
-      redirect({ href: `/library-v2/${existing.id}`, locale });
+      redirect({ href: `/library/${existing.id}`, locale });
     }
   }
 
@@ -60,7 +63,6 @@ export default async function TitlePreviewPage({ params }: PreviewPageProps) {
 
   return (
     <div className="flex flex-col">
-      {/* Hero — same language as the library detail view */}
       <header className="relative isolate overflow-hidden">
         {preview.backdropUrl ? (
           <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
@@ -94,7 +96,7 @@ export default async function TitlePreviewPage({ params }: PreviewPageProps) {
 
         <div className="relative px-6 pt-6 lg:px-10">
           <Link
-            href="/library-v2"
+            href="/library"
             className={cn(
               buttonVariants({ variant: "secondary", size: "sm" }),
               "gap-2 bg-background/50 backdrop-blur",
@@ -173,7 +175,6 @@ export default async function TitlePreviewPage({ params }: PreviewPageProps) {
         </div>
       </header>
 
-      {/* Body */}
       <div className="grid grid-cols-1 gap-8 px-6 py-8 lg:grid-cols-[minmax(0,1fr)_330px] lg:px-10">
         <div className="flex min-w-0 flex-col gap-8">
           <div className="flex flex-wrap items-center gap-2">

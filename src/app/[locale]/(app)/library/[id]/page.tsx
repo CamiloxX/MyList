@@ -1,4 +1,5 @@
 import { PlayIcon } from "lucide-react";
+import { headers } from "next/headers";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -16,12 +17,14 @@ import { TrailerButton } from "@/features/library/components/trailer-button";
 import { WatchEntryList } from "@/features/library/components/watch-entry-list";
 import { WatchEntryTrigger } from "@/features/library/components/watch-entry-trigger";
 import type { MediaStatus } from "@/features/library/status";
+import { DesktopSeriesDetail } from "@/features/library-v2/components/desktop-series-detail";
 import { AddToListButton } from "@/features/lists/components/add-to-list-button";
 import { getListsForItem } from "@/features/lists/queries";
 import { TitleComments } from "@/features/title-comments/components/title-comments";
 import { Link } from "@/i18n/navigation";
 import type { AiringStatus } from "@/lib/airing-status";
 import { getAnilistNextEpisode } from "@/lib/anilist/next-episode";
+import { isMobileUserAgent } from "@/lib/device";
 import { getJikanAiringStatus } from "@/lib/jikan/airing";
 import { getJikanTrailer } from "@/lib/jikan/videos";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -39,10 +42,16 @@ type DetailPageProps = {
 };
 
 export default async function MediaDetailPage({ params, searchParams }: DetailPageProps) {
-  await loadingDemoDelay();
   const { id } = await params;
   const { log } = (await searchParams) ?? {};
   const defaultOpenLog = log === "true";
+
+  // Desktop devices get the new v2 detail; mobile keeps the layout below.
+  if (!isMobileUserAgent((await headers()).get("user-agent"))) {
+    return <DesktopSeriesDetail id={id} defaultOpenLog={defaultOpenLog} />;
+  }
+
+  await loadingDemoDelay();
   const supabase = await createClient();
 
   const { data: item } = await supabase.from("media_items").select("*").eq("id", id).maybeSingle();

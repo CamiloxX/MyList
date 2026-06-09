@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
 import { LibraryCard } from "@/features/library/components/library-card";
@@ -10,7 +11,9 @@ import { LibrarySortSelect } from "@/features/library/components/library-sort-se
 import { RandomPickButton } from "@/features/library/components/random-pick-button";
 import { parseLibrarySort } from "@/features/library/sort";
 import type { MediaKind, MediaStatus } from "@/features/library/status";
+import { DesktopLibrary } from "@/features/library-v2/components/desktop-library";
 import { Link } from "@/i18n/navigation";
+import { isMobileUserAgent } from "@/lib/device";
 import { loadingDemoDelay } from "@/lib/loading-demo";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
@@ -21,12 +24,25 @@ const VALID_STATUSES: ReadonlyArray<MediaStatus> = ["watching", "watched", "pend
 const VALID_KINDS: ReadonlyArray<MediaKind> = ["movie", "tv", "anime"];
 
 type LibraryPageProps = {
-  searchParams: Promise<{ status?: string; kind?: string; q?: string; sort?: string }>;
+  searchParams: Promise<{
+    status?: string;
+    kind?: string;
+    q?: string;
+    sort?: string;
+    genre?: string;
+  }>;
 };
 
 export default async function LibraryPage({ searchParams }: LibraryPageProps) {
+  const params = await searchParams;
+
+  // Desktop devices get the new v2 library; mobile keeps the list below.
+  if (!isMobileUserAgent((await headers()).get("user-agent"))) {
+    return <DesktopLibrary searchParams={{ q: params.q, genre: params.genre }} />;
+  }
+
   await loadingDemoDelay();
-  const { status: rawStatus, kind: rawKind, q: rawQuery, sort: rawSort } = await searchParams;
+  const { status: rawStatus, kind: rawKind, q: rawQuery, sort: rawSort } = params;
   const status = VALID_STATUSES.includes(rawStatus as MediaStatus)
     ? (rawStatus as MediaStatus)
     : null;
@@ -80,10 +96,7 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
     ? supabase.from("media_items").select("status, kind").eq("user_id", user.id)
     : Promise.resolve({ data: [] as Array<{ status: MediaStatus; kind: MediaKind }>, error: null });
 
-  const [{ data: items, error }, { data: countsRows }] = await Promise.all([
-    query,
-    countsPromise,
-  ]);
+  const [{ data: items, error }, { data: countsRows }] = await Promise.all([query, countsPromise]);
 
   const counts = aggregateCounts(countsRows ?? []);
 

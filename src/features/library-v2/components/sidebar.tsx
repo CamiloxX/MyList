@@ -34,13 +34,25 @@ type NavItem = {
  * items + admin), so nothing from the header is lost. Uses the app's own theme
  * tokens, not a bespoke palette.
  */
-export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
+/**
+ * @param isAdmin   show the admin destination.
+ * @param responsive when true (the standalone sandbox), the rail hides below
+ *   `lg`; when false (the main app shell, which is only rendered for desktop
+ *   devices), it's always shown.
+ */
+export function Sidebar({
+  isAdmin = false,
+  responsive = true,
+}: {
+  isAdmin?: boolean;
+  responsive?: boolean;
+}) {
   const t = useTranslations();
   const pathname = usePathname();
 
   // Primary destinations — the inline header links.
   const primary: NavItem[] = [
-    { href: "/library-v2", label: t("nav.library"), icon: Library },
+    { href: "/library", label: t("nav.library"), icon: Library },
     { href: "/discover", label: t("nav.discover"), icon: Compass },
     { href: "/search", label: t("nav.search"), icon: Search },
     { href: "/month", label: t("nav.month"), icon: CalendarDays },
@@ -58,7 +70,9 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
 
   const isActive = (href: string) => {
     const base = href.split(/[?#]/)[0] ?? href;
-    return pathname === base || (base === "/library-v2" && pathname.startsWith("/library-v2"));
+    // Highlight "Mi Biblioteca" across /library, /library/[id] and the sandbox.
+    if (base === "/library") return pathname === "/library" || pathname.startsWith("/library");
+    return pathname === base;
   };
 
   const renderItem = (item: NavItem, big: boolean) => {
@@ -83,8 +97,13 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   };
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-80 shrink-0 flex-col overflow-y-auto border-r bg-card/40 px-5 py-7 lg:flex">
-      <Link href="/library-v2" className="flex items-center gap-3 px-2" aria-label={t("app.title")}>
+    <aside
+      className={cn(
+        "sticky top-0 h-screen w-80 shrink-0 flex-col overflow-y-auto border-r bg-card/40 px-5 py-7",
+        responsive ? "hidden lg:flex" : "flex",
+      )}
+    >
+      <Link href="/library" className="flex items-center gap-3 px-2" aria-label={t("app.title")}>
         <BrandMark size={40} />
         <Wordmark size={27} />
       </Link>

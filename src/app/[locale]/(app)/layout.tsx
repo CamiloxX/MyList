@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { BrandMark, Wordmark } from "@/components/brand/brand-mark";
 import { InstallPwaButton } from "@/components/install-pwa-button";
@@ -5,11 +6,13 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { BadgeCelebrationProvider } from "@/features/badges/components/badge-celebration-provider";
 import { ChatLauncher } from "@/features/chat";
+import { Sidebar } from "@/features/library-v2/components/sidebar";
 import { BottomNav } from "@/features/shell/components/bottom-nav";
 import { DailyVisitTracker } from "@/features/shell/components/daily-visit-tracker";
 import { HeaderSearch } from "@/features/shell/components/header-search";
 import { NavMore } from "@/features/shell/components/nav-more";
 import { Link, redirect } from "@/i18n/navigation";
+import { isMobileUserAgent } from "@/lib/device";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +39,25 @@ export default async function AppLayout({
   const isAdmin = profile?.is_admin ?? false;
 
   const t = await getTranslations();
+
+  // Device-based shell: desktops get the new sidebar "v2" experience; phones
+  // keep the existing top-header + bottom-nav design exactly as it was. We
+  // branch on the User-Agent (the device), not the viewport, because the
+  // requirement is "v2 only on desktop, leave mobile untouched".
+  const isMobile = isMobileUserAgent((await headers()).get("user-agent"));
+
+  if (!isMobile) {
+    return (
+      <BadgeCelebrationProvider>
+        <div className="flex min-h-screen bg-background">
+          <Sidebar isAdmin={isAdmin} responsive={false} />
+          <main className="min-w-0 flex-1">{children}</main>
+          {user ? <ChatLauncher viewerId={user.id} viewerIsAdmin={isAdmin} /> : null}
+          <DailyVisitTracker />
+        </div>
+      </BadgeCelebrationProvider>
+    );
+  }
 
   // Header nav links (desktop only). "Buscar" is replaced by the HeaderSearch
   // bar in the middle of the header, so it's no longer in this list.
