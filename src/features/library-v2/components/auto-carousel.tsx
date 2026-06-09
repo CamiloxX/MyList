@@ -18,7 +18,7 @@ type Props = {
 export function AutoCarousel({ children, durationSeconds = 40 }: Props) {
   return (
     <div
-      className="mylist-marquee group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]"
+      className="mylist-marquee group relative overflow-hidden"
       style={{ ["--marquee-duration" as string]: `${durationSeconds}s` }}
     >
       <div className="mylist-marquee-track flex w-max gap-4">
