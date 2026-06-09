@@ -117,7 +117,7 @@ export async function DesktopSeriesDetail({
         {backdropUrl ? (
           // Real 16:9 key-art (TMDB): shown sharp, anchored to the top, fading
           // into the page background so the poster + title sit on solid color.
-          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
+          <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
             <Image
               src={backdropUrl}
               alt=""
@@ -131,7 +131,7 @@ export async function DesktopSeriesDetail({
           </div>
         ) : item.poster_url ? (
           // Fallback for titles without a backdrop (e.g. anime): blurred poster.
-          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
+          <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
             <Image
               src={item.poster_url}
               alt=""
@@ -148,10 +148,10 @@ export async function DesktopSeriesDetail({
             </span>
           </div>
         ) : (
-          <div className="absolute inset-0 -z-10 bg-card" aria-hidden />
+          <div className="absolute inset-0 z-0 bg-card" aria-hidden />
         )}
 
-        <div className="relative px-6 pt-6 lg:px-10">
+        <div className="relative z-10 px-6 pt-6 lg:px-10">
           <Link
             href="/library"
             className={cn(
@@ -163,7 +163,7 @@ export async function DesktopSeriesDetail({
           </Link>
         </div>
 
-        <div className="relative flex flex-col gap-6 px-6 pb-10 pt-28 sm:flex-row sm:items-end sm:pt-44 lg:px-10">
+        <div className="relative z-10 flex flex-col gap-6 px-6 pb-10 pt-28 sm:flex-row sm:items-end sm:pt-44 lg:px-10">
           <div className="relative aspect-[2/3] w-40 shrink-0 overflow-hidden rounded-xl border bg-muted shadow-2xl sm:w-48">
             {item.poster_url ? (
               <Image

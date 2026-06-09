@@ -65,7 +65,7 @@ export async function DesktopTitlePreview({
     <div className="flex flex-col">
       <header className="relative isolate overflow-hidden">
         {preview.backdropUrl ? (
-          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
+          <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
             <Image
               src={preview.backdropUrl}
               alt=""
@@ -78,7 +78,7 @@ export async function DesktopTitlePreview({
             <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-transparent to-background/40" />
           </div>
         ) : preview.posterUrl ? (
-          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
+          <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
             <Image
               src={preview.posterUrl}
               alt=""
@@ -91,10 +91,10 @@ export async function DesktopTitlePreview({
             <div className="absolute inset-0 [background:radial-gradient(circle_at_78%_12%,color-mix(in_oklab,var(--primary)_28%,transparent),transparent_55%)]" />
           </div>
         ) : (
-          <div className="absolute inset-0 -z-10 bg-card" aria-hidden />
+          <div className="absolute inset-0 z-0 bg-card" aria-hidden />
         )}
 
-        <div className="relative px-6 pt-6 lg:px-10">
+        <div className="relative z-10 px-6 pt-6 lg:px-10">
           <Link
             href="/library"
             className={cn(
@@ -106,7 +106,7 @@ export async function DesktopTitlePreview({
           </Link>
         </div>
 
-        <div className="relative flex flex-col gap-6 px-6 pb-10 pt-28 sm:flex-row sm:items-end sm:pt-44 lg:px-10">
+        <div className="relative z-10 flex flex-col gap-6 px-6 pb-10 pt-28 sm:flex-row sm:items-end sm:pt-44 lg:px-10">
           <div className="relative aspect-[2/3] w-40 shrink-0 overflow-hidden rounded-xl border bg-muted shadow-2xl sm:w-48">
             {preview.posterUrl ? (
               <Image
