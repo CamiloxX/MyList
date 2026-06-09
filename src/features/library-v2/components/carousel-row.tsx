@@ -5,7 +5,8 @@ import { AutoCarousel } from "./auto-carousel";
 import { PosterCard } from "./poster-card";
 
 type Props = {
-  title: string;
+  /** Optional heading; omit it for a bare carousel under an existing title. */
+  title?: string;
   items: PosterItem[];
   /** Optional "see all" target rendered next to the heading. */
   seeAllHref?: string;
@@ -23,18 +24,20 @@ type Props = {
 export function CarouselRow({ title, items, seeAllHref, seeAllLabel, emptyLabel }: Props) {
   return (
     <section className="flex flex-col gap-3">
-      <div className="flex items-baseline justify-between gap-4">
-        <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-        {seeAllHref ? (
-          <Link
-            href={seeAllHref}
-            className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {seeAllLabel}
-            <ArrowRight className="size-3.5" />
-          </Link>
-        ) : null}
-      </div>
+      {title || seeAllHref ? (
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
+          {seeAllHref ? (
+            <Link
+              href={seeAllHref}
+              className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {seeAllLabel}
+              <ArrowRight className="size-3.5" />
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
       {items.length === 0 ? (
         <p className="text-sm text-muted-foreground">{emptyLabel}</p>
       ) : (

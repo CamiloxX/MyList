@@ -56,8 +56,16 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
   const t = await getTranslations("discover");
   const showStreamingFilters = filters.type !== "anime" && filters.tab !== "for-you";
 
+  // "Para ti" uses the full width for its carousel; the other tabs (lists) stay
+  // contained so they don't stretch. On mobile `lg:px-6` is a no-op and the
+  // shell already provides width/padding, so this only affects desktop.
+  const rootClass =
+    filters.tab === "for-you"
+      ? "flex flex-col gap-6 lg:px-6"
+      : "mx-auto flex w-full max-w-5xl flex-col gap-6 lg:px-6";
+
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
+    <div className={rootClass}>
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
