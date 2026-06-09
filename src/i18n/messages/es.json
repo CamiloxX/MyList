@@ -399,11 +399,14 @@
       "anime": "Anime"
     },
     "filters": {
+      "title": "Filtros",
       "genre": "Género",
       "anyGenre": "Todos los géneros",
       "region": "Región",
       "provider": "Plataforma",
       "anyProvider": "Cualquier plataforma",
+      "clear": "Limpiar",
+      "done": "Listo",
       "regions": {
         "CO": "Colombia",
         "MX": "México",
