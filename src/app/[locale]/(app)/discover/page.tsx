@@ -6,22 +6,22 @@ import { DiscoverGrid } from "@/features/discover/components/discover-grid";
 import { DiscoverTabs } from "@/features/discover/components/discover-tabs";
 import { MediaTypeTabs } from "@/features/discover/components/media-type-tabs";
 import { PaginationControls } from "@/features/discover/components/pagination-controls";
+import { fetchProvidersForTmdbItems } from "@/features/discover/providers";
 import {
   getByGenreFor,
   getGenresFor,
   getProvidersFor,
   getTrendingFor,
 } from "@/features/discover/queries";
-import { fetchProvidersForTmdbItems } from "@/features/discover/providers";
 import { fetchRatingsForTmdbItems } from "@/features/discover/ratings";
 import { getForYou } from "@/features/discover/recommend";
-import { getLibraryItemKeys, libraryItemKey } from "@/features/library/queries";
 import {
   type DiscoverRegion,
   type DiscoverTab,
   type DiscoverType,
   discoverFiltersSchema,
 } from "@/features/discover/schemas";
+import { getLibraryItemKeys, libraryItemKey } from "@/features/library/queries";
 import { AnimeCard } from "@/features/search/components/anime-card";
 import { MediaCard } from "@/features/search/components/media-card";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -54,7 +54,7 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
   const showStreamingFilters = filters.type !== "anime" && filters.tab !== "for-you";
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
@@ -68,21 +68,25 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
         </Suspense>
       ) : (
         <>
-          <MediaTypeTabs current={filters.type} />
+          {/* On desktop, type tabs and the filters trigger share one toolbar
+              row; on mobile they stay stacked exactly as before. */}
+          <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
+            <MediaTypeTabs current={filters.type} />
 
-          <Suspense
-            key={`filters:${filters.type}:${filters.region}:${filters.tab}`}
-            fallback={<FilterSkeleton />}
-          >
-            <FiltersBar
-              showGenre={filters.tab === "genre"}
-              showStreaming={showStreamingFilters}
-              type={filters.type}
-              region={filters.region}
-              currentGenre={filters.genre}
-              currentProvider={filters.provider}
-            />
-          </Suspense>
+            <Suspense
+              key={`filters:${filters.type}:${filters.region}:${filters.tab}`}
+              fallback={<FilterSkeleton />}
+            >
+              <FiltersBar
+                showGenre={filters.tab === "genre"}
+                showStreaming={showStreamingFilters}
+                type={filters.type}
+                region={filters.region}
+                currentGenre={filters.genre}
+                currentProvider={filters.provider}
+              />
+            </Suspense>
+          </div>
 
           <Suspense
             key={`${filters.tab}:${filters.type}:${filters.genre ?? ""}:${filters.provider ?? ""}:${filters.region}:${filters.page}`}

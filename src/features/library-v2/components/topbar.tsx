@@ -1,4 +1,3 @@
-import { ChevronDown } from "lucide-react";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { LibrarySearchInput } from "@/features/library/components/library-search-input";
@@ -24,8 +23,8 @@ export async function Topbar({ userName, defaultQuery = "" }: Props) {
   const ratingsOn = ratingsEnabledFromCookie((await cookies()).get(RATINGS_COOKIE)?.value);
 
   return (
-    <div className="flex flex-wrap items-center gap-3 border-b bg-background/80 px-4 py-3 backdrop-blur lg:px-6">
-      <nav className="flex items-center gap-1">
+    <div className="flex items-center gap-4 border-b bg-background/80 px-4 py-3 backdrop-blur lg:px-6">
+      <nav className="flex shrink-0 items-center gap-1">
         <span
           className={cn(
             "rounded-full px-3.5 py-1.5 text-sm font-semibold",
@@ -42,27 +41,21 @@ export async function Topbar({ userName, defaultQuery = "" }: Props) {
         </Link>
       </nav>
 
-      <div className="ml-auto flex flex-1 items-center justify-end gap-3">
-        <RatingsToggle initialOn={ratingsOn} />
-
-        <button
-          type="button"
-          className="hidden items-center gap-1.5 rounded-lg border px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
-        >
-          {t("libraryV2.allCategories")}
-          <ChevronDown className="size-4" />
-        </button>
-
-        <div className="w-full max-w-xs">
+      {/* Centered search */}
+      <div className="flex flex-1 justify-center">
+        <div className="w-full max-w-md">
           <LibrarySearchInput defaultValue={defaultQuery} />
         </div>
+      </div>
 
+      <div className="flex shrink-0 items-center gap-3">
+        <RatingsToggle initialOn={ratingsOn} />
         <div className="flex items-center gap-2">
           <span className="flex size-9 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
             {initial}
           </span>
           {userName ? (
-            <span className="hidden text-sm font-medium sm:inline">{userName}</span>
+            <span className="hidden text-sm font-medium lg:inline">{userName}</span>
           ) : null}
         </div>
       </div>
