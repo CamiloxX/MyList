@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
 import { getMediaWatchUrl } from "@/features/library/actions";
-import { EpisodeTracker } from "@/features/library/components/episode-tracker";
 import { NextEpisodeCard } from "@/features/library/components/next-episode-card";
 import { NotifyEpisodesToggle } from "@/features/library/components/notify-episodes-toggle";
 import { RemoveButton } from "@/features/library/components/remove-button";
@@ -257,14 +256,6 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
 
       {item.kind === "tv" && item.source === "tmdb" ? (
         <SeasonsList mediaItemId={item.id} tmdbId={item.source_id} />
-      ) : null}
-
-      {item.kind === "anime" ? (
-        <EpisodeTracker
-          mediaItemId={item.id}
-          total={item.episode_count}
-          initialWatched={item.episodes_watched}
-        />
       ) : null}
 
       <section className="flex flex-col gap-3">

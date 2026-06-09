@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getMediaWatchUrl } from "@/features/library/actions";
 import { getListsForItem } from "@/features/lists/queries";
 import type { AiringStatus } from "@/lib/airing-status";
+import { getAnilistBanner } from "@/lib/anilist/banner";
 import { getAnilistNextEpisode } from "@/lib/anilist/next-episode";
 import { getJikanAiringStatus } from "@/lib/jikan/airing";
 import { getJikanTrailer } from "@/lib/jikan/videos";
@@ -107,10 +108,9 @@ async function fetchTmdbBackdropPath(kind: "movie" | "tv", id: string): Promise<
 }
 
 /**
- * Wide 16:9 key-art for the hero. Prefers the backdrop_path stored in
- * raw_metadata at add-time, but titles added before we stored it (or whose
- * stored payload lacked it) fall back to a cached TMDB lookup. Anime (Jikan) has
- * no backdrop → null (the hero then uses the blurred poster).
+ * Wide key-art for the hero. TMDB titles use `backdrop_path` (from raw_metadata,
+ * or a cached lookup for older rows that lacked it); anime uses AniList's wide
+ * `bannerImage`. Null → the hero falls back to the blurred poster.
  */
 export async function getBackdropUrl(item: MediaItem): Promise<string | null> {
   const raw = item.raw_metadata as Record<string, unknown> | null;
@@ -121,6 +121,9 @@ export async function getBackdropUrl(item: MediaItem): Promise<string | null> {
   if (item.source === "tmdb" && (item.kind === "movie" || item.kind === "tv")) {
     const path = await fetchTmdbBackdropPath(item.kind, item.source_id);
     return path ? `https://image.tmdb.org/t/p/w1280${path}` : null;
+  }
+  if (item.source === "anilist" && item.kind === "anime") {
+    return getAnilistBanner(item.source_id);
   }
   return null;
 }

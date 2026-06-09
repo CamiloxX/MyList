@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
         pathname: "/images/**",
       },
       {
+        // AniList banner/cover CDN (anime hero images). Served from s1–s4.
+        protocol: "https",
+        hostname: "**.anilist.co",
+      },
+      {
         protocol: "https",
         hostname: "kefozbpfdbcdtsykbhws.supabase.co",
         pathname: "/storage/v1/object/public/**",
