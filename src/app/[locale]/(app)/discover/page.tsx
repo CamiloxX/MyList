@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,8 +23,10 @@ import {
   discoverFiltersSchema,
 } from "@/features/discover/schemas";
 import { getLibraryItemKeys, libraryItemKey } from "@/features/library/queries";
+import { ForYouCarousels } from "@/features/library-v2/components/for-you-carousels";
 import { AnimeCard } from "@/features/search/components/anime-card";
 import { MediaCard } from "@/features/search/components/media-card";
+import { isMobileUserAgent } from "@/lib/device";
 import { loadingDemoDelay } from "@/lib/loading-demo";
 
 export const dynamic = "force-dynamic";
@@ -182,14 +185,6 @@ async function ForYouSection({ region }: { region: DiscoverRegion }) {
   const result = await getForYou();
   const isEmpty = result.movies.length === 0 && result.tv.length === 0 && result.anime.length === 0;
 
-  // Enrich TMDB items with OMDb ratings and watch providers in a parallel pass.
-  const tmdbItems = [...result.movies, ...result.tv];
-  const [ratings, providers, libraryKeys] = await Promise.all([
-    fetchRatingsForTmdbItems(tmdbItems),
-    fetchProvidersForTmdbItems(tmdbItems, region),
-    getLibraryItemKeys(),
-  ]);
-
   if (isEmpty) {
     return (
       <div className="rounded-xl border border-dashed p-12 text-center">
@@ -198,13 +193,34 @@ async function ForYouSection({ region }: { region: DiscoverRegion }) {
     );
   }
 
+  const fallbackNotice = result.fallback ? (
+    <div className="rounded-lg border border-dashed bg-muted/30 p-3 text-xs text-muted-foreground">
+      {t("fallbackNotice")}
+    </div>
+  ) : null;
+
+  // Desktop renders the v2 auto-scrolling carousels (same look the library had);
+  // mobile keeps the existing enriched card lists exactly as before.
+  if (!isMobileUserAgent((await headers()).get("user-agent"))) {
+    return (
+      <div className="flex flex-col gap-6">
+        {fallbackNotice}
+        <ForYouCarousels result={result} />
+      </div>
+    );
+  }
+
+  // Enrich TMDB items with OMDb ratings and watch providers in a parallel pass.
+  const tmdbItems = [...result.movies, ...result.tv];
+  const [ratings, providers, libraryKeys] = await Promise.all([
+    fetchRatingsForTmdbItems(tmdbItems),
+    fetchProvidersForTmdbItems(tmdbItems, region),
+    getLibraryItemKeys(),
+  ]);
+
   return (
     <div className="flex flex-col gap-6">
-      {result.fallback ? (
-        <div className="rounded-lg border border-dashed bg-muted/30 p-3 text-xs text-muted-foreground">
-          {t("fallbackNotice")}
-        </div>
-      ) : null}
+      {fallbackNotice}
 
       {result.movies.length > 0 ? (
         <Section heading={t("sectionMovies")}>
