@@ -42,7 +42,7 @@ export default async function DiscoverListsPage() {
             <OfficialBadge label={t("official.verified")} className="size-4" />
             {t("official.discoverTitle")}
           </h2>
-          <ul className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {official.map((list) => (
               <li key={list.id}>
                 <OfficialListCard list={list} />
@@ -61,7 +61,7 @@ export default async function DiscoverListsPage() {
             <p className="text-sm text-muted-foreground">{t("discover.empty")}</p>
           </div>
         ) : (
-          <ul className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {lists.map((list) => (
               <li key={list.id}>
                 <Link
