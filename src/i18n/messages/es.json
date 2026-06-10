@@ -514,6 +514,7 @@
   "lists": {
     "title": "Listas",
     "subtitle": "Organiza tus títulos en colecciones propias.",
+    "mine": "Tus listas",
     "empty": "Aún no tienes listas. Crea la primera.",
     "create": "Crear lista",
     "createTitle": "Nueva lista",

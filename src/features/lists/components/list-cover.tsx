@@ -21,7 +21,7 @@ export function ListCover({
   seed,
   posterUrls = [],
   className,
-  sizes = "(min-width: 640px) 50vw, 100vw",
+  sizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw",
 }: {
   coverUrl: string | null;
   seed: string;

@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
 import { ListCover } from "@/features/lists/components/list-cover";
 import { OfficialBadge } from "@/features/lists/components/official-badge";
+import { OfficialListCard } from "@/features/lists/components/official-list-card";
 import { getOfficialLists, getPublicLists } from "@/features/lists/queries";
 import { Link } from "@/i18n/navigation";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -41,34 +42,10 @@ export default async function DiscoverListsPage() {
             <OfficialBadge label={t("official.verified")} className="size-4" />
             {t("official.discoverTitle")}
           </h2>
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <ul className="grid grid-cols-2 gap-3 lg:grid-cols-3">
             {official.map((list) => (
               <li key={list.id}>
-                <Link
-                  href={`/share/${list.id}`}
-                  className="flex flex-col overflow-hidden rounded-xl border bg-card transition-colors hover:bg-muted/30"
-                >
-                  <ListCover
-                    coverUrl={list.coverUrl}
-                    seed={list.id}
-                    posterUrls={list.posterUrls}
-                    className="aspect-[2/1] w-full"
-                  />
-                  <div className="flex flex-col gap-1 p-4">
-                    <span className="flex min-w-0 items-center gap-1.5">
-                      <span className="truncate font-medium">{list.name}</span>
-                      <OfficialBadge label={t("official.verified")} className="size-3.5" />
-                    </span>
-                    {list.description ? (
-                      <p className="line-clamp-2 text-sm text-muted-foreground">
-                        {list.description}
-                      </p>
-                    ) : null}
-                    <span className="text-xs text-muted-foreground">
-                      {t("itemCount", { count: list.itemCount })}
-                    </span>
-                  </div>
-                </Link>
+                <OfficialListCard list={list} />
               </li>
             ))}
           </ul>
@@ -84,7 +61,7 @@ export default async function DiscoverListsPage() {
             <p className="text-sm text-muted-foreground">{t("discover.empty")}</p>
           </div>
         ) : (
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <ul className="grid grid-cols-2 gap-3 lg:grid-cols-3">
             {lists.map((list) => (
               <li key={list.id}>
                 <Link
@@ -97,22 +74,17 @@ export default async function DiscoverListsPage() {
                     posterUrls={list.posterUrls}
                     className="aspect-[2/1] w-full"
                   />
-                  <div className="flex flex-col gap-1.5 p-4">
-                    <span className="truncate font-medium">{list.name}</span>
-                    {list.description ? (
-                      <p className="line-clamp-2 text-sm text-muted-foreground">
-                        {list.description}
-                      </p>
-                    ) : null}
-                    <div className="mt-0.5 flex items-center justify-between gap-2">
+                  <div className="flex flex-col gap-1 p-3">
+                    <span className="truncate text-sm font-medium">{list.name}</span>
+                    <div className="flex items-center justify-between gap-2">
                       <span className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
                         {list.author.avatarUrl ? (
                           <Image
                             src={list.author.avatarUrl}
                             alt=""
-                            width={20}
-                            height={20}
-                            className="size-5 shrink-0 rounded-full object-cover"
+                            width={18}
+                            height={18}
+                            className="size-4 shrink-0 rounded-full object-cover"
                           />
                         ) : null}
                         <span className="truncate">

@@ -514,6 +514,7 @@
   "lists": {
     "title": "Lists",
     "subtitle": "Organize your titles into your own collections.",
+    "mine": "Your lists",
     "empty": "You don't have any lists yet. Create your first one.",
     "create": "Create list",
     "createTitle": "New list",

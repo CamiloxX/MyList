@@ -1,16 +1,16 @@
 "use client";
 
-import { BadgeCheckIcon, Loader2Icon } from "lucide-react";
+import { BadgeCheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { setListOfficial } from "@/features/admin/actions";
+import { cn } from "@/lib/utils";
 
 /**
- * Admin-only control on a list's detail page to publish it as an official list
- * (or unpublish it). Optimistic; the real authority is the setListOfficial
- * action's requireAdmin() gate plus the is_official DB trigger.
+ * Admin-only "Verified list" switch on a list's detail page: publishes the list
+ * as official (or unpublishes it). Optimistic; the real authority is the
+ * setListOfficial action's requireAdmin() gate plus the is_official DB trigger.
  */
 export function OfficialListToggle({
   listId,
@@ -38,20 +38,33 @@ export function OfficialListToggle({
   };
 
   return (
-    <Button
-      type="button"
-      variant={official ? "default" : "outline"}
-      size="sm"
-      onClick={toggle}
-      disabled={pending}
-      className="gap-1.5"
-    >
-      {pending ? (
-        <Loader2Icon className="size-4 animate-spin" aria-hidden />
-      ) : (
-        <BadgeCheckIcon className="size-4" aria-hidden />
-      )}
-      {official ? t("unmark") : t("mark")}
-    </Button>
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-dashed bg-muted/30 px-3 py-2.5">
+      <span className="flex items-center gap-1.5 text-sm font-medium">
+        <BadgeCheckIcon
+          className={cn("size-4", official ? "text-sky-500" : "text-muted-foreground")}
+          aria-hidden
+        />
+        {t("verified")}
+      </span>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={official}
+        aria-label={t("verified")}
+        onClick={toggle}
+        disabled={pending}
+        className={cn(
+          "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors disabled:opacity-60",
+          official ? "bg-sky-500" : "bg-muted-foreground/30",
+        )}
+      >
+        <span
+          className={cn(
+            "inline-block size-5 rounded-full bg-white shadow transition-transform",
+            official ? "translate-x-[1.375rem]" : "translate-x-0.5",
+          )}
+        />
+      </button>
+    </div>
   );
 }

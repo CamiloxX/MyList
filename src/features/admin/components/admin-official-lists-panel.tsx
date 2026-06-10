@@ -1,11 +1,11 @@
 "use client";
 
-import { BadgeCheckIcon, Loader2Icon } from "lucide-react";
+import { BadgeCheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import type { ListSummary } from "@/features/lists/queries";
+import { cn } from "@/lib/utils";
 import { setListOfficial } from "../actions";
 
 /**
@@ -68,21 +68,25 @@ export function AdminOfficialListsPanel({ lists }: { lists: ListSummary[] }) {
                 <BadgeCheckIcon className="size-3.5 shrink-0 text-sky-500" aria-hidden />
               ) : null}
             </span>
-            <Button
+            <button
               type="button"
-              variant={isOfficial ? "outline" : "default"}
-              size="xs"
+              role="switch"
+              aria-checked={isOfficial}
+              aria-label={isOfficial ? t("unmark") : t("mark")}
               disabled={pending}
               onClick={() => toggle(list)}
-            >
-              {pending ? (
-                <Loader2Icon className="size-3.5 animate-spin" aria-hidden />
-              ) : isOfficial ? (
-                t("unmark")
-              ) : (
-                t("mark")
+              className={cn(
+                "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors disabled:opacity-60",
+                isOfficial ? "bg-sky-500" : "bg-muted-foreground/30",
               )}
-            </Button>
+            >
+              <span
+                className={cn(
+                  "inline-block size-5 rounded-full bg-white shadow transition-transform",
+                  isOfficial ? "translate-x-[1.375rem]" : "translate-x-0.5",
+                )}
+              />
+            </button>
           </li>
         );
       })}

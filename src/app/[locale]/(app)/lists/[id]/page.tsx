@@ -74,9 +74,11 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
       </header>
 
       {isAdmin ? (
-        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-dashed bg-muted/30 px-3 py-2">
+        <div className="flex flex-col gap-1.5">
           <OfficialListToggle listId={data.id} initialOfficial={data.isOfficial} />
-          <span className="text-xs text-muted-foreground">{t("lists.official.adminHint")}</span>
+          <span className="px-1 text-xs text-muted-foreground">
+            {t("lists.official.adminHint")}
+          </span>
         </div>
       ) : null}
 
