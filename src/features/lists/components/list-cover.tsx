@@ -21,23 +21,21 @@ export function ListCover({
   seed,
   posterUrls = [],
   className,
+  sizes = "(min-width: 640px) 50vw, 100vw",
 }: {
   coverUrl: string | null;
   seed: string;
   /** Posters used to build a collage default when there's no uploaded cover. */
   posterUrls?: string[];
   className?: string;
+  /** Rendered width hint for next/image, so it serves a sharp source. Should
+   *  match the cover's on-screen width; defaults to a 2-column grid card. */
+  sizes?: string;
 }) {
   if (coverUrl) {
     return (
       <div className={cn("relative overflow-hidden bg-muted", className)}>
-        <Image
-          src={coverUrl}
-          alt=""
-          fill
-          sizes="(min-width: 640px) 640px, 100vw"
-          className="object-cover"
-        />
+        <Image src={coverUrl} alt="" fill sizes={sizes} className="object-cover" />
       </div>
     );
   }
@@ -49,7 +47,7 @@ export function ListCover({
       <div className={cn("relative flex overflow-hidden bg-muted", className)}>
         {collage.map((url) => (
           <div key={url} className="relative flex-1">
-            <Image src={url} alt="" fill sizes="160px" className="object-cover" />
+            <Image src={url} alt="" fill sizes={sizes} className="object-cover" />
           </div>
         ))}
       </div>

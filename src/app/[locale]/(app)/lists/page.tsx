@@ -51,7 +51,7 @@ export default async function ListsPage() {
                   coverUrl={list.coverUrl}
                   seed={list.id}
                   posterUrls={list.posterUrls}
-                  className="aspect-[3/2] w-full"
+                  className="aspect-[2/1] w-full"
                 />
                 <div className="flex flex-col gap-1 p-4">
                   <span className="flex min-w-0 items-center gap-1.5">

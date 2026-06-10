@@ -55,6 +55,7 @@ export default async function SharedListPage({ params }: Props) {
         seed={id}
         posterUrls={list.items.map((i) => i.poster_url).filter((p): p is string => Boolean(p))}
         className="h-40 w-full rounded-xl sm:h-52"
+        sizes="(min-width: 768px) 768px, 100vw"
       />
 
       <header className="flex flex-col gap-1">
