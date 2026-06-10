@@ -1,13 +1,15 @@
 import { getTranslations } from "next-intl/server";
 import { AdminBadgesPanel } from "@/features/admin/components/admin-badges-panel";
+import { AdminOfficialListsPanel } from "@/features/admin/components/admin-official-lists-panel";
 import { GrantBadgesPanel } from "@/features/admin/components/grant-badges-panel";
 import { getBadgesForAdmin } from "@/features/admin/queries";
+import { getUserLists } from "@/features/lists/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const t = await getTranslations("admin");
-  const badges = await getBadgesForAdmin();
+  const [badges, myLists] = await Promise.all([getBadgesForAdmin(), getUserLists()]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -27,6 +29,14 @@ export default async function AdminPage() {
           <p className="text-sm text-muted-foreground">{t("grant.subtitle")}</p>
         </div>
         <GrantBadgesPanel badges={badges} />
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <div className="flex flex-col gap-0.5">
+          <h2 className="text-base font-medium">{t("official.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("official.subtitle")}</p>
+        </div>
+        <AdminOfficialListsPanel lists={myLists} />
       </section>
     </div>
   );

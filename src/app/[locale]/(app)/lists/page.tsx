@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
 import { CreateListButton } from "@/features/lists/components/create-list-button";
 import { ListCover } from "@/features/lists/components/list-cover";
+import { OfficialBadge } from "@/features/lists/components/official-badge";
 import { getUserLists } from "@/features/lists/queries";
 import { Link } from "@/i18n/navigation";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -50,10 +51,15 @@ export default async function ListsPage() {
                   coverUrl={list.coverUrl}
                   seed={list.id}
                   posterUrls={list.posterUrls}
-                  className="h-24 w-full"
+                  className="aspect-[3/2] w-full"
                 />
                 <div className="flex flex-col gap-1 p-4">
-                  <span className="truncate font-medium">{list.name}</span>
+                  <span className="flex min-w-0 items-center gap-1.5">
+                    <span className="truncate font-medium">{list.name}</span>
+                    {list.isOfficial ? (
+                      <OfficialBadge label={t("official.verified")} className="size-3.5" />
+                    ) : null}
+                  </span>
                   {list.description ? (
                     <p className="line-clamp-2 text-sm text-muted-foreground">{list.description}</p>
                   ) : null}

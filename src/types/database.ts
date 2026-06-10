@@ -241,6 +241,7 @@ export type Database = {
           description: string | null;
           cover_url: string | null;
           visibility: Database["public"]["Enums"]["visibility_level"];
+          is_official: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -251,6 +252,7 @@ export type Database = {
           description?: string | null;
           cover_url?: string | null;
           visibility?: Database["public"]["Enums"]["visibility_level"];
+          is_official?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -261,6 +263,7 @@ export type Database = {
           description?: string | null;
           cover_url?: string | null;
           visibility?: Database["public"]["Enums"]["visibility_level"];
+          is_official?: boolean;
           created_at?: string;
           updated_at?: string;
         };

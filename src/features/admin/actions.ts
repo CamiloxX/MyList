@@ -5,20 +5,20 @@ import { z } from "zod";
 import { loadBadgeMap } from "@/features/badges/catalog";
 import { pushNewBadges } from "@/features/badges/push-notify";
 import { jikanPoster, jikanTitle, searchJikan } from "@/lib/jikan/search";
-import { searchTmdb, tmdbTitle, tmdbYear } from "@/lib/tmdb/search";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { tmdbImage } from "@/lib/tmdb/client";
+import { searchTmdb, tmdbTitle, tmdbYear } from "@/lib/tmdb/search";
 import { getTmdbTvSummary } from "@/lib/tmdb/tv";
-import { createClient } from "@/lib/supabase/server";
 import type { Json } from "@/types/database";
 import {
   ALLOWED_BADGE_ICON_MIME,
   type AllowedBadgeIconMime,
   BADGE_ICON_EXT,
+  type BadgeFormInput,
   badgeFormSchema,
   badgeIdSchema,
   type CreateBadgeInput,
   createBadgeSchema,
-  type BadgeFormInput,
   MAX_BADGE_ICON_BYTES,
 } from "./schemas";
 
@@ -437,5 +437,43 @@ export async function revokeBadge(userId: string, badgeId: string): Promise<Admi
 
   revalidatePath("/admin");
   revalidatePath("/badges");
+  return { ok: true };
+}
+
+// ============================================================================
+// Official lists
+// ============================================================================
+
+const listIdSchema = z.string().uuid();
+
+/**
+ * Marks a list as official (curated by an admin, shown to everyone with a
+ * verified badge) or clears that status. Uses the service-role client so an
+ * admin can publish any list regardless of ownership; publishing also forces
+ * the list public so its Discover row and /share page resolve. The is_official
+ * column is also guarded at the DB level (a trigger lets only admins flip it).
+ */
+export async function setListOfficial(
+  listId: string,
+  official: boolean,
+): Promise<AdminActionResult> {
+  if (!listIdSchema.safeParse(listId).success || typeof official !== "boolean") {
+    return { ok: false, error: INVALID_DATA };
+  }
+  const admin = await requireAdmin();
+  if (!admin.ok) return admin;
+
+  const supabase = createServiceRoleClient();
+  const patch: { is_official: boolean; visibility?: "private" | "unlisted" | "public" } = {
+    is_official: official,
+  };
+  if (official) patch.visibility = "public";
+  const { error } = await supabase.from("lists").update(patch).eq("id", listId);
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/admin");
+  revalidatePath("/lists");
+  revalidatePath("/lists/discover");
+  revalidatePath(`/lists/${listId}`);
   return { ok: true };
 }

@@ -9,6 +9,7 @@ export type ListSummary = {
   coverUrl: string | null;
   posterUrls: string[];
   itemCount: number;
+  isOfficial: boolean;
 };
 
 /** All of the current user's lists, with title count + a few posters preview. */
@@ -16,7 +17,9 @@ export async function getUserLists(): Promise<ListSummary[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("lists")
-    .select("id, name, description, cover_url, list_items(position, media_items(poster_url))")
+    .select(
+      "id, name, description, cover_url, is_official, list_items(position, media_items(poster_url))",
+    )
     .order("created_at", { ascending: true });
   if (error) {
     throw new Error(`Error cargando listas: ${error.message}`);
@@ -40,6 +43,7 @@ export async function getUserLists(): Promise<ListSummary[]> {
       coverUrl: row.cover_url,
       posterUrls,
       itemCount: items.length,
+      isOfficial: row.is_official,
     };
   });
 }
@@ -60,6 +64,7 @@ export type ListWithItems = {
   description: string | null;
   coverUrl: string | null;
   visibility: ListVisibility;
+  isOfficial: boolean;
   items: ListItemMedia[];
 };
 
@@ -68,7 +73,7 @@ export async function getListWithItems(listId: string): Promise<ListWithItems | 
   const supabase = await createClient();
   const { data: list } = await supabase
     .from("lists")
-    .select("id, name, description, cover_url, visibility")
+    .select("id, name, description, cover_url, visibility, is_official")
     .eq("id", listId)
     .maybeSingle();
   if (!list) return null;
@@ -86,6 +91,7 @@ export async function getListWithItems(listId: string): Promise<ListWithItems | 
     description: list.description,
     coverUrl: list.cover_url,
     visibility: list.visibility as ListVisibility,
+    isOfficial: list.is_official,
     items,
   };
 }
@@ -101,16 +107,20 @@ export type PublicList = {
 };
 
 /**
- * Every list marked `public`, for the "Discover" feed. Uses the service-role
- * client to read across users (owner-only RLS would hide them), but only ever
- * exposes public lists and display-only author fields. Most recent first.
+ * Every list marked `public`, for the community "Discover" feed. Uses the
+ * service-role client to read across users (owner-only RLS would hide them), but
+ * only ever exposes public lists and display-only author fields. Official lists
+ * are excluded — they get their own highlighted row. Most recent first.
  */
 export async function getPublicLists(): Promise<PublicList[]> {
   const admin = createServiceRoleClient();
   const { data: lists } = await admin
     .from("lists")
-    .select("id, name, description, cover_url, user_id, list_items(position, media_items(poster_url))")
+    .select(
+      "id, name, description, cover_url, user_id, list_items(position, media_items(poster_url))",
+    )
     .eq("visibility", "public")
+    .eq("is_official", false)
     .order("created_at", { ascending: false });
   if (!lists || lists.length === 0) return [];
 
@@ -148,10 +158,57 @@ export async function getPublicLists(): Promise<PublicList[]> {
   });
 }
 
+export type OfficialList = {
+  id: string;
+  name: string;
+  description: string | null;
+  coverUrl: string | null;
+  posterUrls: string[];
+  itemCount: number;
+};
+
+/**
+ * Lists an admin has marked `is_official`, for the highlighted "Official" row in
+ * Discover. Shown to everyone (the lists_select_official RLS policy already
+ * allows it, but the service-role client keeps this consistent with the rest of
+ * the Discover queries). Most recent first.
+ */
+export async function getOfficialLists(): Promise<OfficialList[]> {
+  const admin = createServiceRoleClient();
+  const { data: lists } = await admin
+    .from("lists")
+    .select("id, name, description, cover_url, list_items(position, media_items(poster_url))")
+    .eq("is_official", true)
+    .order("created_at", { ascending: false });
+  if (!lists || lists.length === 0) return [];
+
+  return lists.map((row) => {
+    const items =
+      (row.list_items as unknown as Array<{
+        position: number;
+        media_items: { poster_url: string | null } | null;
+      }>) ?? [];
+    const posterUrls = [...items]
+      .sort((a, b) => a.position - b.position)
+      .map((it) => it.media_items?.poster_url)
+      .filter((p): p is string => Boolean(p))
+      .slice(0, 4);
+    return {
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      coverUrl: row.cover_url,
+      posterUrls,
+      itemCount: items.length,
+    };
+  });
+}
+
 export type SharedList = {
   name: string;
   description: string | null;
   coverUrl: string | null;
+  isOfficial: boolean;
   items: ListItemMedia[];
 };
 
@@ -165,10 +222,11 @@ export async function getSharedList(listId: string): Promise<SharedList | null> 
   const admin = createServiceRoleClient();
   const { data: list } = await admin
     .from("lists")
-    .select("name, description, cover_url, visibility")
+    .select("name, description, cover_url, visibility, is_official")
     .eq("id", listId)
     .maybeSingle();
-  if (!list || list.visibility === "private") return null;
+  // Private lists stay hidden — unless they've been published as official.
+  if (!list || (list.visibility === "private" && !list.is_official)) return null;
 
   const { data: rows } = await admin
     .from("list_items")
@@ -177,7 +235,13 @@ export async function getSharedList(listId: string): Promise<SharedList | null> 
     .order("position", { ascending: true });
 
   const items: ListItemMedia[] = (rows ?? []).map((r) => r.media_items as unknown as ListItemMedia);
-  return { name: list.name, description: list.description, coverUrl: list.cover_url, items };
+  return {
+    name: list.name,
+    description: list.description,
+    coverUrl: list.cover_url,
+    isOfficial: list.is_official,
+    items,
+  };
 }
 
 export type ListMembership = { id: string; name: string; contains: boolean };

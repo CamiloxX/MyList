@@ -130,6 +130,15 @@
       "revoke": "Remove",
       "grantedToast": "Badge granted",
       "revokedToast": "Badge removed"
+    },
+    "official": {
+      "title": "Official lists",
+      "subtitle": "Publish your lists as official so they show up in Discover for everyone.",
+      "empty": "You don't have any lists yet. Create one to publish it as official.",
+      "mark": "Make official",
+      "unmark": "Remove",
+      "markedToast": "List published as official",
+      "unmarkedToast": "List is no longer official"
     }
   },
   "command": {
@@ -572,7 +581,17 @@
       "subtitle": "Public lists created by the community.",
       "empty": "No public lists yet.",
       "by": "by {name}",
-      "someone": "someone"
+      "someone": "someone",
+      "communityTitle": "From the community"
+    },
+    "official": {
+      "verified": "Verified list",
+      "discoverTitle": "Official lists",
+      "mark": "Make official",
+      "unmark": "Remove official",
+      "markedToast": "List published as official",
+      "unmarkedToast": "List is no longer official",
+      "adminHint": "Official lists show up in Discover for everyone, with a verified check."
     }
   },
   "settings": {

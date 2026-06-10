@@ -40,7 +40,9 @@ export async function getBadgesForAdmin(): Promise<AdminBadge[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("badges")
-    .select("id, name, description, tier, icon_key, icon_url, i18n_key, criterion, sort_order, is_active")
+    .select(
+      "id, name, description, tier, icon_key, icon_url, i18n_key, criterion, sort_order, is_active",
+    )
     .order("sort_order", { ascending: true });
   if (error || !data) return [];
 
@@ -56,4 +58,23 @@ export async function getBadgesForAdmin(): Promise<AdminBadge[]> {
     sortOrder: row.sort_order,
     isActive: row.is_active,
   }));
+}
+
+/**
+ * Whether the signed-in user is an admin. UX-only (e.g. to show the "make
+ * official" toggle on a list) — the real authority is the server action's
+ * requireAdmin() gate plus RLS / the is_official DB trigger.
+ */
+export async function isCurrentUserAdmin(): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", user.id)
+    .maybeSingle();
+  return Boolean(profile?.is_admin);
 }

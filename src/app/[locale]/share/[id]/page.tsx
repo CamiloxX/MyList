@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ListCover } from "@/features/lists/components/list-cover";
+import { OfficialBadge } from "@/features/lists/components/official-badge";
 import { getSharedList } from "@/features/lists/queries";
 
 export const dynamic = "force-dynamic";
@@ -57,7 +58,12 @@ export default async function SharedListPage({ params }: Props) {
       />
 
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{list.name}</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+          <span className="min-w-0 break-words">{list.name}</span>
+          {list.isOfficial ? (
+            <OfficialBadge label={t("lists.official.verified")} className="size-5" />
+          ) : null}
+        </h1>
         {list.description ? (
           <p className="text-sm text-muted-foreground">{list.description}</p>
         ) : null}

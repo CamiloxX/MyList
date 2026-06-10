@@ -4,8 +4,11 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { isCurrentUserAdmin } from "@/features/admin/queries";
 import { ListCoverEditor } from "@/features/lists/components/list-cover-editor";
 import { ListSettings } from "@/features/lists/components/list-settings";
+import { OfficialBadge } from "@/features/lists/components/official-badge";
+import { OfficialListToggle } from "@/features/lists/components/official-list-toggle";
 import { RemoveFromListButton } from "@/features/lists/components/remove-from-list-button";
 import { ReorderItemButtons } from "@/features/lists/components/reorder-item-buttons";
 import { ShareListButton } from "@/features/lists/components/share-list-button";
@@ -20,7 +23,7 @@ export const dynamic = "force-dynamic";
 export default async function ListDetailPage({ params }: { params: Promise<{ id: string }> }) {
   await loadingDemoDelay();
   const { id } = await params;
-  const data = await getListWithItems(id);
+  const [data, isAdmin] = await Promise.all([getListWithItems(id), isCurrentUserAdmin()]);
   if (!data) notFound();
 
   const t = await getTranslations();
@@ -46,7 +49,12 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
 
       <header className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1">
-          <h1 className="truncate text-2xl font-semibold tracking-tight">{data.name}</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
+            <span className="truncate">{data.name}</span>
+            {data.isOfficial ? (
+              <OfficialBadge label={t("lists.official.verified")} className="size-5" />
+            ) : null}
+          </h1>
           {data.description ? (
             <p className="text-sm text-muted-foreground">{data.description}</p>
           ) : null}
@@ -64,6 +72,13 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
           <ListSettings list={{ id: data.id, name: data.name, description: data.description }} />
         </div>
       </header>
+
+      {isAdmin ? (
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-dashed bg-muted/30 px-3 py-2">
+          <OfficialListToggle listId={data.id} initialOfficial={data.isOfficial} />
+          <span className="text-xs text-muted-foreground">{t("lists.official.adminHint")}</span>
+        </div>
+      ) : null}
 
       {data.items.length === 0 ? (
         <div className="rounded-xl border border-dashed p-12 text-center">

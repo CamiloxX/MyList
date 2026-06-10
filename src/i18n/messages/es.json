@@ -130,6 +130,15 @@
       "revoke": "Quitar",
       "grantedToast": "Logro otorgado",
       "revokedToast": "Logro quitado"
+    },
+    "official": {
+      "title": "Listas oficiales",
+      "subtitle": "Publica tus listas como oficiales para que aparezcan en Descubrir para todos.",
+      "empty": "Aún no tienes listas. Crea una para poder publicarla como oficial.",
+      "mark": "Hacer oficial",
+      "unmark": "Quitar",
+      "markedToast": "Lista publicada como oficial",
+      "unmarkedToast": "La lista ya no es oficial"
     }
   },
   "command": {
@@ -572,7 +581,17 @@
       "subtitle": "Listas públicas creadas por la comunidad.",
       "empty": "Todavía no hay listas públicas.",
       "by": "por {name}",
-      "someone": "alguien"
+      "someone": "alguien",
+      "communityTitle": "De la comunidad"
+    },
+    "official": {
+      "verified": "Lista verificada",
+      "discoverTitle": "Listas oficiales",
+      "mark": "Hacer oficial",
+      "unmark": "Quitar de oficiales",
+      "markedToast": "Lista publicada como oficial",
+      "unmarkedToast": "La lista ya no es oficial",
+      "adminHint": "Las listas oficiales aparecen en Descubrir para todos, con una marca de verificación."
     }
   },
   "settings": {
