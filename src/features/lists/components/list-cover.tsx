@@ -35,7 +35,13 @@ export function ListCover({
   if (coverUrl) {
     return (
       <div className={cn("relative overflow-hidden bg-muted", className)}>
-        <Image src={coverUrl} alt="" fill sizes={sizes} className="object-cover" />
+        <Image
+          src={coverUrl}
+          alt=""
+          fill
+          sizes={sizes}
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        />
       </div>
     );
   }
@@ -47,7 +53,13 @@ export function ListCover({
       <div className={cn("relative flex overflow-hidden bg-muted", className)}>
         {collage.map((url) => (
           <div key={url} className="relative flex-1">
-            <Image src={url} alt="" fill sizes={sizes} className="object-cover" />
+            <Image
+              src={url}
+              alt=""
+              fill
+              sizes={sizes}
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            />
           </div>
         ))}
       </div>

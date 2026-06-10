@@ -14,7 +14,7 @@ export async function OfficialListCard({ list }: { list: OfficialList }) {
   return (
     <Link
       href={`/share/${list.id}`}
-      className="flex flex-col overflow-hidden rounded-xl bg-sky-500/[0.06] ring-2 ring-sky-400/50 transition-colors hover:bg-sky-500/[0.12]"
+      className="group flex flex-col overflow-hidden rounded-xl bg-sky-500/[0.06] ring-2 ring-sky-400/50 transition-all duration-300 hover:-translate-y-0.5 hover:bg-sky-500/[0.12] hover:shadow-lg hover:shadow-sky-500/20"
     >
       <ListCover
         coverUrl={list.coverUrl}
@@ -22,7 +22,7 @@ export async function OfficialListCard({ list }: { list: OfficialList }) {
         posterUrls={list.posterUrls}
         className="aspect-[2/1] w-full"
       />
-      <div className="flex flex-col gap-0.5 p-3">
+      <div className="flex flex-col gap-1 px-3 pb-3 pt-3.5">
         <span className="flex min-w-0 items-center gap-1.5">
           <span className="truncate text-sm font-medium">{list.name}</span>
           <OfficialBadge label={t("official.verified")} className="size-3.5" />

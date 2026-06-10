@@ -65,10 +65,10 @@ export default async function ListsPage() {
                 <Link
                   href={`/lists/${list.id}`}
                   className={cn(
-                    "flex flex-col overflow-hidden rounded-xl transition-colors",
+                    "group flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg",
                     list.isOfficial
-                      ? "bg-sky-500/[0.06] ring-2 ring-sky-400/50 hover:bg-sky-500/[0.12]"
-                      : "border bg-card hover:bg-muted/30",
+                      ? "bg-sky-500/[0.06] ring-2 ring-sky-400/50 hover:bg-sky-500/[0.12] hover:shadow-sky-500/20"
+                      : "border bg-card hover:border-foreground/20 hover:bg-muted/30 hover:shadow-black/5",
                   )}
                 >
                   <ListCover
@@ -77,7 +77,7 @@ export default async function ListsPage() {
                     posterUrls={list.posterUrls}
                     className="aspect-[2/1] w-full"
                   />
-                  <div className="flex flex-col gap-0.5 p-3">
+                  <div className="flex flex-col gap-1 px-3 pb-3 pt-3.5">
                     <span className="flex min-w-0 items-center gap-1.5">
                       <span className="truncate text-sm font-medium">{list.name}</span>
                       {list.isOfficial ? (

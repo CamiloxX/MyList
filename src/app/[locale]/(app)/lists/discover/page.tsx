@@ -66,7 +66,7 @@ export default async function DiscoverListsPage() {
               <li key={list.id}>
                 <Link
                   href={`/share/${list.id}`}
-                  className="flex flex-col overflow-hidden rounded-xl border bg-card transition-colors hover:bg-muted/30"
+                  className="group flex flex-col overflow-hidden rounded-xl border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-muted/30 hover:shadow-lg hover:shadow-black/5"
                 >
                   <ListCover
                     coverUrl={list.coverUrl}
@@ -74,7 +74,7 @@ export default async function DiscoverListsPage() {
                     posterUrls={list.posterUrls}
                     className="aspect-[2/1] w-full"
                   />
-                  <div className="flex flex-col gap-1 p-3">
+                  <div className="flex flex-col gap-1 px-3 pb-3 pt-3.5">
                     <span className="truncate text-sm font-medium">{list.name}</span>
                     <div className="flex items-center justify-between gap-2">
                       <span className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
