@@ -212,9 +212,7 @@ export async function getWatchProvidersForTitle(
 
   return {
     link: regionData?.link ?? null,
-    flatrate: flatrate.sort(
-      (a, b) => (a.display_priority ?? 999) - (b.display_priority ?? 999),
-    ),
+    flatrate: flatrate.sort((a, b) => (a.display_priority ?? 999) - (b.display_priority ?? 999)),
   };
 }
 

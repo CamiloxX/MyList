@@ -1,4 +1,4 @@
-import { StarIcon } from "lucide-react";
+import { ArrowLeftIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -97,12 +97,13 @@ export async function DesktopTitlePreview({
         <div className="relative z-10 px-6 pt-6 lg:px-10">
           <Link
             href="/library"
+            aria-label={t("library.detail.back")}
             className={cn(
-              buttonVariants({ variant: "secondary", size: "sm" }),
-              "gap-2 bg-background/50 backdrop-blur",
+              buttonVariants({ variant: "secondary", size: "icon-sm" }),
+              "bg-background/50 backdrop-blur",
             )}
           >
-            {t("library.detail.back")}
+            <ArrowLeftIcon className="size-4" aria-hidden />
           </Link>
         </div>
 

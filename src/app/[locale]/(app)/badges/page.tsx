@@ -6,11 +6,7 @@ import { loadingDemoDelay } from "@/lib/loading-demo";
 
 export const dynamic = "force-dynamic";
 
-export default async function BadgesPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function BadgesPage({ params }: { params: Promise<{ locale: string }> }) {
   await loadingDemoDelay();
   const { locale } = await params;
   const t = await getTranslations("badges");

@@ -330,7 +330,7 @@
       "successToast": "Added to your library"
     },
     "detail": {
-      "back": "← Back to library",
+      "back": "Back to library",
       "history": "History",
       "entriesCount": "{count, plural, =0 {No views} =1 {1 view logged} other {# views logged}}.",
       "emptyHistory": "No views logged yet.",
@@ -525,7 +525,7 @@
     "confirmDeleteTitle": "Delete this list?",
     "menuLabel": "List options",
     "itemCount": "{count, plural, =0 {No titles} =1 {1 title} other {# titles}}",
-    "back": "← Back to lists",
+    "back": "Back to lists",
     "emptyList": "This list is empty. Add titles from their page.",
     "addTo": "Add to list",
     "addToTitle": "Add to lists",

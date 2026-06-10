@@ -1,4 +1,4 @@
-import { PlayIcon } from "lucide-react";
+import { ArrowLeftIcon, PlayIcon } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -6,6 +6,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { AnimeProvidersRow } from "@/features/discover/components/anime-providers-row";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
 import { getMediaWatchUrl } from "@/features/library/actions";
 import { NextEpisodeCard } from "@/features/library/components/next-episode-card";
@@ -19,6 +20,7 @@ import { WatchEntryTrigger } from "@/features/library/components/watch-entry-tri
 import type { MediaStatus } from "@/features/library/status";
 import { DesktopSeriesDetail } from "@/features/library-v2/components/desktop-series-detail";
 import { WatchOrderSection } from "@/features/library-v2/components/watch-order-section";
+import { type AnimeStreamingItem, resolveAnimeStreaming } from "@/features/library-v2/detail-data";
 import { AddToListButton } from "@/features/lists/components/add-to-list-button";
 import { getListsForItem } from "@/features/lists/queries";
 import { TitleComments } from "@/features/title-comments/components/title-comments";
@@ -117,12 +119,13 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
     <div className="flex flex-col gap-6">
       <Link
         href="/library"
+        aria-label={t("library.detail.back")}
         className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
+          buttonVariants({ variant: "ghost", size: "icon-sm" }),
           "self-start text-muted-foreground",
         )}
       >
-        {t("library.detail.back")}
+        <ArrowLeftIcon className="size-4" aria-hidden />
       </Link>
 
       <article className="relative isolate overflow-hidden rounded-2xl ring-1 ring-foreground/10">
@@ -229,22 +232,7 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
               providers.type === "tmdb" ? (
                 <ProvidersRow data={providers.data} max={6} />
               ) : (
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                    {t("discover.providersRow.label")}
-                  </span>
-                  {providers.items.map((p) => (
-                    <a
-                      key={p.url}
-                      href={p.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-md border bg-muted/60 px-2 py-0.5 text-[11px] font-medium transition-colors hover:bg-muted"
-                    >
-                      {p.name}
-                    </a>
-                  ))}
-                </div>
+                <AnimeProvidersRow items={providers.items} />
               )
             ) : null}
             <p className="text-xs text-muted-foreground">
@@ -302,14 +290,14 @@ async function fetchTrailerFor(
 
 type DetailProviders =
   | { type: "tmdb"; data: WatchProvidersForTitle }
-  | { type: "anime"; items: { name: string; url: string }[] }
+  | { type: "anime"; items: AnimeStreamingItem[] }
   | null;
 
 /**
  * Resolves where a title can be watched, for the "available on" row. TMDB
- * movies/TV return provider logos (rendered via ProvidersRow); anime goes to
- * Jikan, which gives per-provider names + direct URLs but no logos, so those
- * render as linked chips. Region is fixed to Colombia, matching the watch URL.
+ * movies/TV return provider logos (rendered via ProvidersRow); anime resolves
+ * to AniList/Jikan streaming links (logos when AniList has them, else linked
+ * chips). Region is fixed to Colombia, matching the watch URL.
  */
 async function fetchWatchProviders(
   source: string,
@@ -324,18 +312,8 @@ async function fetchWatchProviders(
     return data ? { type: "tmdb", data } : null;
   }
   if (source === "anilist" && kind === "anime") {
-    try {
-      const res = await fetch(`https://api.jikan.moe/v4/anime/${sourceId}/streaming`);
-      if (res.ok) {
-        const json = (await res.json()) as { data?: { name?: string; url?: string }[] };
-        const items = (json.data ?? [])
-          .map((p) => ({ name: p.name ?? "", url: p.url ?? "" }))
-          .filter((p) => p.name !== "" && p.url !== "");
-        if (items.length > 0) return { type: "anime", items };
-      }
-    } catch (e) {
-      console.warn("[fetchWatchProviders] Failed to fetch Jikan streaming info:", e);
-    }
+    const items = await resolveAnimeStreaming(sourceId);
+    if (items.length > 0) return { type: "anime", items };
   }
   return null;
 }

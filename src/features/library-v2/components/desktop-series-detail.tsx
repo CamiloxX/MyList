@@ -1,10 +1,11 @@
-import { PlayIcon, StarIcon } from "lucide-react";
+import { ArrowLeftIcon, PlayIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { AnimeProvidersRow } from "@/features/discover/components/anime-providers-row";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
 import { RatingsBadge } from "@/features/discover/components/ratings-badge";
 import { NextEpisodeCard } from "@/features/library/components/next-episode-card";
@@ -154,12 +155,13 @@ export async function DesktopSeriesDetail({
         <div className="relative z-10 px-6 pt-6 lg:px-10">
           <Link
             href="/library"
+            aria-label={t("library.detail.back")}
             className={cn(
-              buttonVariants({ variant: "secondary", size: "sm" }),
-              "gap-2 bg-background/50 backdrop-blur",
+              buttonVariants({ variant: "secondary", size: "icon-sm" }),
+              "bg-background/50 backdrop-blur",
             )}
           >
-            {t("library.detail.back")}
+            <ArrowLeftIcon className="size-4" aria-hidden />
           </Link>
         </div>
 
@@ -339,21 +341,9 @@ export async function DesktopSeriesDetail({
                 {t("libraryV2.detail.availableOn")}
               </h3>
               {providers.type === "tmdb" ? (
-                <ProvidersRow data={providers.data} max={8} />
+                <ProvidersRow data={providers.data} max={8} withLabel={false} />
               ) : (
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {providers.items.map((p) => (
-                    <a
-                      key={p.url}
-                      href={p.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-md border bg-muted/60 px-2 py-0.5 text-[11px] font-medium transition-colors hover:bg-muted"
-                    >
-                      {p.name}
-                    </a>
-                  ))}
-                </div>
+                <AnimeProvidersRow items={providers.items} withLabel={false} />
               )}
             </div>
           ) : null}

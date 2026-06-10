@@ -1,3 +1,4 @@
+import { ArrowLeftIcon } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -28,12 +29,13 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
     <div className="flex flex-col gap-6">
       <Link
         href="/lists"
+        aria-label={t("lists.back")}
         className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
+          buttonVariants({ variant: "ghost", size: "icon-sm" }),
           "self-start text-muted-foreground",
         )}
       >
-        {t("lists.back")}
+        <ArrowLeftIcon className="size-4" aria-hidden />
       </Link>
 
       <ListCoverEditor

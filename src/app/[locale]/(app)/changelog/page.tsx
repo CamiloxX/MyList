@@ -1,10 +1,10 @@
 import { SparklesIcon, WrenchIcon, ZapIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { ComponentType, SVGProps } from "react";
-import { CHANGELOG, type ChangelogEntry, type ChangelogTag } from "@/lib/changelog";
-import { cn } from "@/lib/utils";
 import type { Locale } from "@/i18n/routing";
+import { CHANGELOG, type ChangelogEntry, type ChangelogTag } from "@/lib/changelog";
 import { loadingDemoDelay } from "@/lib/loading-demo";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-static";
 

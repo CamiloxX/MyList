@@ -1,3 +1,4 @@
+import { ArrowLeftIcon } from "lucide-react";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
@@ -19,12 +20,13 @@ export default async function DiscoverListsPage() {
       <header className="flex flex-col gap-2">
         <Link
           href="/lists"
+          aria-label={t("back")}
           className={cn(
-            buttonVariants({ variant: "ghost", size: "sm" }),
+            buttonVariants({ variant: "ghost", size: "icon-sm" }),
             "self-start text-muted-foreground",
           )}
         >
-          {t("back")}
+          <ArrowLeftIcon className="size-4" aria-hidden />
         </Link>
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{t("discover.title")}</h1>

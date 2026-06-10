@@ -43,4 +43,3 @@ export async function tmdbFetch<T>(path: string, options: TmdbFetchOptions = {})
 
   return (await response.json()) as T;
 }
-

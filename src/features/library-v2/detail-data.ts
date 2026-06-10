@@ -27,9 +27,11 @@ type WatchEntry = {
   season_number: number | null;
 };
 
+export type AnimeStreamingItem = { name: string; url: string; iconUrl: string | null };
+
 export type DetailProviders =
   | { type: "tmdb"; data: WatchProvidersForTitle }
-  | { type: "anime"; items: { name: string; url: string }[] }
+  | { type: "anime"; items: AnimeStreamingItem[] }
   | null;
 
 export type NextEpisodeInfo = {
@@ -193,20 +195,36 @@ async function fetchWatchProviders(
     return data ? { type: "tmdb", data } : null;
   }
   if (source === "anilist" && kind === "anime") {
-    try {
-      const res = await fetch(`https://api.jikan.moe/v4/anime/${sourceId}/streaming`);
-      if (res.ok) {
-        const json = (await res.json()) as { data?: { name?: string; url?: string }[] };
-        const items = (json.data ?? [])
-          .map((p) => ({ name: p.name ?? "", url: p.url ?? "" }))
-          .filter((p) => p.name !== "" && p.url !== "");
-        if (items.length > 0) return { type: "anime", items };
-      }
-    } catch (e) {
-      console.warn("[library-v2] Failed to fetch Jikan streaming info:", e);
-    }
+    const items = await resolveAnimeStreaming(sourceId);
+    if (items.length > 0) return { type: "anime", items };
   }
   return null;
+}
+
+/**
+ * Streaming providers for an anime, with logos when available. Prefers AniList's
+ * `externalLinks` (they carry a brand icon per provider); falls back to Jikan's
+ * streaming list (names + URLs only, no logos) when AniList has nothing.
+ */
+export async function resolveAnimeStreaming(malId: string): Promise<AnimeStreamingItem[]> {
+  const { getAnilistStreamingProviders } = await import("@/lib/anilist/streaming");
+  const anilist = await getAnilistStreamingProviders(malId);
+  if (anilist.length > 0) return anilist;
+
+  try {
+    const res = await fetch(`https://api.jikan.moe/v4/anime/${malId}/streaming`, {
+      next: { revalidate: 86400 },
+    });
+    if (res.ok) {
+      const json = (await res.json()) as { data?: { name?: string; url?: string }[] };
+      return (json.data ?? [])
+        .map((p) => ({ name: p.name ?? "", url: p.url ?? "", iconUrl: null }))
+        .filter((p) => p.name !== "" && p.url !== "");
+    }
+  } catch (e) {
+    console.warn("[library-v2] Failed to fetch Jikan streaming info:", e);
+  }
+  return [];
 }
 
 async function fetchAiringStatus(

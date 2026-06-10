@@ -1,12 +1,15 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
 import { tmdbImage } from "@/lib/tmdb/client";
+import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
 
 type Props = {
   data: WatchProvidersForTitle;
   /** Max logos to render before collapsing the rest into a "+N" pill. */
   max?: number;
+  /** When false, the "Available on" label is omitted (a surrounding heading
+   *  already provides it). Defaults to true. */
+  withLabel?: boolean;
 };
 
 const DEFAULT_MAX = 4;
@@ -16,7 +19,7 @@ const DEFAULT_MAX = 4;
  * links to TMDB's "where to watch" page when available (their deep link
  * forwards to the actual provider with affiliate-safe redirection).
  */
-export async function ProvidersRow({ data, max = DEFAULT_MAX }: Props) {
+export async function ProvidersRow({ data, max = DEFAULT_MAX, withLabel = true }: Props) {
   const t = await getTranslations("discover.providersRow");
   const visible = data.flatrate.slice(0, max);
   const hidden = Math.max(0, data.flatrate.length - visible.length);
@@ -38,9 +41,11 @@ export async function ProvidersRow({ data, max = DEFAULT_MAX }: Props) {
 
   return (
     <Wrapper>
-      <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-        {t("label")}
-      </span>
+      {withLabel ? (
+        <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          {t("label")}
+        </span>
+      ) : null}
       {visible.map((provider) => {
         const logo = tmdbImage(provider.logo_path, "w92");
         if (!logo) {
