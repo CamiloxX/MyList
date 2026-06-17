@@ -489,6 +489,16 @@ export type Database = {
       is_admin: { Args: { uid: string }; Returns: boolean };
       is_chat_restricted: { Args: { uid: string }; Returns: boolean };
       bump_thread_on_post: { Args: Record<string, never>; Returns: unknown };
+      resolve_authors: {
+        Args: { ids: string[] };
+        Returns: {
+          id: string;
+          display_name: string | null;
+          avatar_url: string | null;
+          is_admin: boolean;
+          featured_badge_ids: string[];
+        }[];
+      };
     };
     Enums: {
       media_kind: "movie" | "tv" | "anime";

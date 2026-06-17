@@ -35,7 +35,10 @@ export type WatchEntryInput = z.infer<typeof watchEntrySchema>;
 
 export const addToLibrarySchema = z.object({
   source: z.enum(["tmdb", "anilist"]),
-  sourceId: z.string().min(1),
+  // Provider ids are positive integers (TMDB id / MAL id). Constrain the shape
+  // so a crafted source_id can't be interpolated into the TMDB/Jikan request
+  // path (path traversal / query injection on calls carrying TMDB_API_KEY).
+  sourceId: z.string().regex(/^[0-9]+$/, "sourceId inválido"),
   kind: z.enum(["movie", "tv", "anime"]),
   title: z.string().min(1),
   originalTitle: z.string().optional(),

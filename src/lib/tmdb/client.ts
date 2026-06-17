@@ -8,6 +8,7 @@ import { serverEnv } from "@/lib/env/server";
 export { tmdbImage } from "./images";
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+const TMDB_ORIGIN = "https://api.themoviedb.org";
 
 export type TmdbFetchOptions = {
   query?: Record<string, string | number | undefined>;
@@ -21,6 +22,12 @@ export type TmdbFetchOptions = {
  */
 export async function tmdbFetch<T>(path: string, options: TmdbFetchOptions = {}): Promise<T> {
   const url = new URL(`${TMDB_BASE_URL}${path}`);
+  // Defense-in-depth against a user-controlled `path` (e.g. an unvalidated
+  // source_id with "../" or "?"): reject anything that escapes the TMDB v3 host
+  // or path prefix before the request carries our secret api_key.
+  if (url.origin !== TMDB_ORIGIN || !url.pathname.startsWith("/3/")) {
+    throw new Error("Invalid TMDB request path");
+  }
   url.searchParams.set("api_key", serverEnv.TMDB_API_KEY);
   url.searchParams.set("language", "es-ES");
 

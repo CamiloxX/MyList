@@ -65,18 +65,29 @@ export type ListWithItems = {
   coverUrl: string | null;
   visibility: ListVisibility;
   isOfficial: boolean;
+  isOwner: boolean;
   items: ListItemMedia[];
 };
 
-/** A single list plus its titles (ordered), or null if it isn't the user's. */
+/**
+ * A single list plus its titles (ordered), or null if not visible to the caller.
+ * The row can resolve for a non-owner when it's official (lists_select_official),
+ * so `isOwner` lets the detail page hide owner-only controls and route others to
+ * the read-only /share view.
+ */
 export async function getListWithItems(listId: string): Promise<ListWithItems | null> {
   const supabase = await createClient();
   const { data: list } = await supabase
     .from("lists")
-    .select("id, name, description, cover_url, visibility, is_official")
+    .select("id, name, description, cover_url, visibility, is_official, user_id")
     .eq("id", listId)
     .maybeSingle();
   if (!list) return null;
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const isOwner = Boolean(user) && list.user_id === user?.id;
 
   const { data: rows } = await supabase
     .from("list_items")
@@ -92,6 +103,7 @@ export async function getListWithItems(listId: string): Promise<ListWithItems | 
     coverUrl: list.cover_url,
     visibility: list.visibility as ListVisibility,
     isOfficial: list.is_official,
+    isOwner,
     items,
   };
 }

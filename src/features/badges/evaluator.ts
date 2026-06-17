@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { MediaKind } from "@/features/library/status";
+import { createServiceRoleClient } from "@/lib/supabase/server";
 import type { createClient } from "@/lib/supabase/server";
 import { loadBadgeCatalog } from "./catalog";
 import { pushNewBadges } from "./push-notify";
@@ -218,7 +219,12 @@ export async function evaluateAndPersist(
   }
   if (newlyEarned.length === 0) return [];
 
-  const insertRes = await supabase
+  // Persist via the service-role client: the self-insert RLS policy on
+  // user_badges is removed (a browser client could otherwise self-grant
+  // arbitrary badges). The criterion was already validated above, so this
+  // privileged write only records legitimately-earned badges.
+  const admin = createServiceRoleClient();
+  const insertRes = await admin
     .from("user_badges")
     .insert(newlyEarned.map((b) => ({ user_id: userId, badge_id: b.id })))
     .select("badge_id");

@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { safeActionError } from "@/lib/action-error";
 import { createClient } from "@/lib/supabase/server";
 import { sendPushToAll, sendPushToUser } from "./send";
 import type { ScheduledNotification, SubscribeResult } from "./types";
@@ -66,7 +67,7 @@ export async function subscribeToPush(input: SubscribeInput): Promise<SubscribeR
     },
     { onConflict: "endpoint" },
   );
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("notifications.subscribe", error) };
 
   return { ok: true };
 }
@@ -93,7 +94,7 @@ export async function unsubscribeFromPush(endpoint: string): Promise<SubscribeRe
     .delete()
     .eq("endpoint", parsed.data.endpoint)
     .eq("user_id", user.id);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("notifications.unsubscribe", error) };
 
   return { ok: true };
 }
@@ -177,9 +178,7 @@ export type ScheduleInput = z.infer<typeof scheduleSchema>;
  * picks it up once `scheduledFor` has passed. target "self" limits delivery to
  * the admin's own devices (for testing a schedule); "all" broadcasts.
  */
-export async function createScheduledNotification(
-  input: ScheduleInput,
-): Promise<SubscribeResult> {
+export async function createScheduledNotification(input: ScheduleInput): Promise<SubscribeResult> {
   const parsed = scheduleSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Datos inválidos" };
 
@@ -195,7 +194,7 @@ export async function createScheduledNotification(
     target_user_id: parsed.data.target === "self" ? admin.userId : null,
     created_by: admin.userId,
   });
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("notifications.schedule", error) };
 
   return { ok: true };
 }
@@ -218,7 +217,7 @@ export async function listScheduledNotifications(): Promise<ListScheduledResult>
     .select("id, title, body, url, target_user_id, scheduled_for, sent_at, result, created_at")
     .order("scheduled_for", { ascending: false })
     .limit(50);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("notifications.list", error) };
 
   const items: ScheduledNotification[] = (data ?? []).map((row) => ({
     id: row.id,
@@ -248,7 +247,7 @@ export async function cancelScheduledNotification(id: string): Promise<Subscribe
 
   const supabase = await createClient();
   const { error } = await supabase.from("scheduled_notifications").delete().eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("notifications.cancel", error) };
 
   return { ok: true };
 }

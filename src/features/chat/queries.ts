@@ -28,10 +28,9 @@ export async function listRecentMessages(): Promise<ChatMessageListItem[]> {
 
   const authorMap = new Map<string, ChatAuthor>();
   if (authorIds.length > 0) {
-    const { data: authors } = await supabase
-      .from("profiles")
-      .select("id, display_name, avatar_url, is_admin")
-      .in("id", authorIds);
+    // resolve_authors() exposes only the safe author-card fields cross-user
+    // (the blanket profiles read policy is removed for security).
+    const { data: authors } = await supabase.rpc("resolve_authors", { ids: authorIds });
     for (const row of authors ?? []) {
       authorMap.set(row.id, {
         id: row.id,

@@ -113,6 +113,12 @@ export async function signUp(input: RegisterInput): Promise<SignUpResult> {
 
   if (error) {
     console.warn("[signUp] supabase error:", error.message, error.status);
+    // Don't reveal whether the email already has an account (enumeration).
+    // Treat an "already registered" error as the same neutral outcome as a
+    // fresh signup — the confirmation email is the only side channel.
+    if (error.message.toLowerCase().includes("user already registered")) {
+      return { ok: true, status: "confirmation_sent" };
+    }
     return { ok: false, errorKey: translateAuthErrorKey(error.message) };
   }
 
@@ -156,7 +162,10 @@ export async function signInWithGoogle(): Promise<SignInResult> {
 function translateAuthErrorKey(message: string): AuthErrorKey {
   const lower = message.toLowerCase();
   if (lower.includes("invalid login credentials")) return "invalidCredentials";
-  if (lower.includes("email not confirmed")) return "emailNotConfirmed";
+  // Fold "email not confirmed" into the same generic key: distinguishing a
+  // registered-but-unconfirmed email from an unknown one lets an attacker
+  // enumerate accounts.
+  if (lower.includes("email not confirmed")) return "invalidCredentials";
   if (lower.includes("user already registered")) return "userAlreadyRegistered";
   if (lower.includes("weak password")) return "weakPassword";
   return "reviewFields";
