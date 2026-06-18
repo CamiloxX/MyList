@@ -101,7 +101,7 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "sticky top-0 h-screen w-80 shrink-0 flex-col overflow-y-auto border-r bg-card/40 px-5 py-7",
+        "scrollbar-subtle sticky top-0 h-screen w-80 shrink-0 flex-col overflow-y-auto border-r bg-card/40 px-5 py-7",
         responsive ? "hidden lg:flex" : "flex",
       )}
     >

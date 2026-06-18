@@ -247,3 +247,27 @@
     animation: none;
   }
 }
+
+/* Subtle, theme-aware scrollbar for in-app scroll containers (e.g. the desktop
+   sidebar) — replaces the heavy default/white OS scrollbar. Thin track-less
+   thumb that uses the muted-foreground token so it reads in light and dark. */
+.scrollbar-subtle {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--muted-foreground) 35%, transparent) transparent;
+}
+.scrollbar-subtle::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scrollbar-subtle::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-subtle::-webkit-scrollbar-thumb {
+  background-color: color-mix(in oklch, var(--muted-foreground) 28%, transparent);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.scrollbar-subtle:hover::-webkit-scrollbar-thumb {
+  background-color: color-mix(in oklch, var(--muted-foreground) 50%, transparent);
+}
