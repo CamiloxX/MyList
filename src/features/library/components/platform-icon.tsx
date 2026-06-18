@@ -1,8 +1,17 @@
 import {
   SiAppletv,
-  SiHbomax,
+  SiBattledotnet,
   SiCrunchyroll,
+  SiEa,
+  SiEpicgames,
+  SiGogdotcom,
+  SiHbomax,
   SiNetflix,
+  SiOrigin,
+  SiPlaystation,
+  SiRockstargames,
+  SiSteam,
+  SiUbisoft,
   SiYoutube,
 } from "@icons-pack/react-simple-icons";
 import { Film, HelpCircle } from "lucide-react";
@@ -30,7 +39,13 @@ const PLATFORM_VISUALS: Record<Platform, PlatformVisual> = {
   "Disney+": {
     bg: "bg-[#0C162C]",
     fg: "",
-    label: () => <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" alt="Disney+" className="w-full h-full object-contain p-0.5 brightness-0 invert" />,
+    label: () => (
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"
+        alt="Disney+"
+        className="w-full h-full object-contain p-0.5 brightness-0 invert"
+      />
+    ),
   },
   "HBO Max": {
     bg: "bg-[#5A0E82]",
@@ -51,6 +66,51 @@ const PLATFORM_VISUALS: Record<Platform, PlatformVisual> = {
     bg: "bg-white",
     fg: "",
     label: (s) => <SiYoutube size={s} color="#FF0000" />,
+  },
+  Steam: {
+    bg: "bg-[#1b2838]",
+    fg: "",
+    label: (s) => <SiSteam size={s} color="#fff" />,
+  },
+  "Epic Games": {
+    bg: "bg-black",
+    fg: "",
+    label: (s) => <SiEpicgames size={s} color="#fff" />,
+  },
+  Origin: {
+    bg: "bg-[#F56C2D]",
+    fg: "",
+    label: (s) => <SiOrigin size={s} color="#fff" />,
+  },
+  EA: {
+    bg: "bg-black",
+    fg: "",
+    label: (s) => <SiEa size={s} color="#fff" />,
+  },
+  GOG: {
+    bg: "bg-[#86328A]",
+    fg: "",
+    label: (s) => <SiGogdotcom size={s} color="#fff" />,
+  },
+  "Ubisoft Connect": {
+    bg: "bg-black",
+    fg: "",
+    label: (s) => <SiUbisoft size={s} color="#fff" />,
+  },
+  "Battle.net": {
+    bg: "bg-[#0099E5]",
+    fg: "",
+    label: (s) => <SiBattledotnet size={s} color="#fff" />,
+  },
+  PlayStation: {
+    bg: "bg-[#003791]",
+    fg: "",
+    label: (s) => <SiPlaystation size={s} color="#fff" />,
+  },
+  "Rockstar Games": {
+    bg: "bg-black",
+    fg: "",
+    label: (s) => <SiRockstargames size={s} color="#FCAF17" />,
   },
   Cine: {
     bg: "bg-zinc-800",
