@@ -37,7 +37,7 @@ export async function PosterCard({ item }: { item: PosterItem }) {
             {t("common.noPoster")}
           </div>
         )}
-        <span className="absolute bottom-2 left-2">
+        <span className="absolute bottom-2 left-2 z-10">
           <Badge variant="secondary" className="bg-background/75 backdrop-blur">
             {t(`kinds.${item.kind}`)}
           </Badge>
@@ -70,9 +70,11 @@ export async function PosterCard({ item }: { item: PosterItem }) {
  */
 function RatingOverlay({ ratings, score }: { ratings?: OmdbRatings | null; score?: string }) {
   // Top-right, diagonally opposite the kind badge (now bottom-left) so the two
-  // never crowd each other on the narrow cards of the dense desktop grid.
+  // never crowd each other on the narrow cards of the dense desktop grid. z-10
+  // keeps it above the poster's GPU-composited hover scale (which would
+  // otherwise paint over the overlay on hover).
   const chip =
-    "absolute top-2 right-2 flex items-center gap-1.5 rounded-lg bg-black/70 px-1.5 py-1 text-[11px] font-semibold text-white backdrop-blur tabular-nums";
+    "absolute top-2 right-2 z-10 flex items-center gap-1.5 rounded-lg bg-black/70 px-1.5 py-1 text-[11px] font-semibold text-white backdrop-blur tabular-nums";
 
   if (ratings) {
     const rt = Number.parseFloat(ratings.rottenTomatoes ?? "");
