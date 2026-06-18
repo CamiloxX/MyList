@@ -34,10 +34,9 @@ export async function listCommentsByTitle(args: {
   }
 
   const [{ data: authors }, badgesByUser] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("id, display_name, avatar_url, is_admin")
-      .in("id", authorIds),
+    // resolve_authors() exposes only the safe author-card fields cross-user
+    // (the blanket profiles read policy is removed for security).
+    supabase.rpc("resolve_authors", { ids: authorIds }),
     fetchBadgesByUserIds(authorIds),
   ]);
 

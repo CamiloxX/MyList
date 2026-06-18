@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { safeActionError } from "@/lib/action-error";
 import { createClient } from "@/lib/supabase/server";
 import {
   type CommentCreateInput,
@@ -18,6 +19,7 @@ export type CommentActionResultWith<T> =
 const idSchema = z.string().uuid();
 const NOT_SIGNED_IN = "Inicia sesión primero";
 const INVALID_DATA = "Datos inválidos";
+const THROTTLED = "Espera un momento antes de comentar de nuevo";
 
 export async function createComment(
   input: CommentCreateInput,
@@ -44,7 +46,9 @@ export async function createComment(
     .single();
 
   if (error || !row) {
-    return { ok: false, error: error?.message ?? "No pudimos publicar el comentario" };
+    // The title_comment_throttle() trigger raises this when posting too fast.
+    if (error?.message.includes("comment_throttled")) return { ok: false, error: THROTTLED };
+    return { ok: false, error: safeActionError("title-comments.create", error) };
   }
 
   // The detail page is per-user (library/:id), but every user who has the
@@ -70,7 +74,7 @@ export async function editComment(input: CommentEditInput): Promise<CommentActio
     .update({ body_md: parsed.data.body, edited_at: new Date().toISOString() })
     .eq("id", parsed.data.commentId);
 
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("title-comments.edit", error) };
   revalidatePath("/library", "layout");
   return { ok: true };
 }
@@ -86,7 +90,7 @@ export async function deleteComment(commentId: string): Promise<CommentActionRes
   if (!user) return { ok: false, error: NOT_SIGNED_IN };
 
   const { error } = await supabase.from("title_comments").delete().eq("id", parsedId.data);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("title-comments.delete", error) };
 
   revalidatePath("/library", "layout");
   return { ok: true };

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { safeActionError } from "@/lib/action-error";
 import { createClient } from "@/lib/supabase/server";
 import { MAX_FEATURED_BADGES } from "./types";
 
@@ -32,7 +33,7 @@ export async function updateFeaturedBadges(badgeIds: string[]): Promise<Featured
     .from("user_badges")
     .select("badge_id")
     .eq("user_id", user.id);
-  if (earnedError) return { ok: false, error: earnedError.message };
+  if (earnedError) return { ok: false, error: safeActionError("badges.featured", earnedError) };
   const earnedSet = new Set((earned ?? []).map((r) => r.badge_id));
   const valid = requested.filter((id) => earnedSet.has(id));
 
@@ -40,7 +41,7 @@ export async function updateFeaturedBadges(badgeIds: string[]): Promise<Featured
     .from("profiles")
     .update({ featured_badge_ids: valid })
     .eq("id", user.id);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("badges.featured", error) };
 
   revalidatePath("/settings");
   return { ok: true };

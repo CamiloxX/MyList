@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { safeActionError } from "@/lib/action-error";
 import { createClient } from "@/lib/supabase/server";
 import {
   LIST_SORT_CRITERIA,
@@ -48,7 +49,7 @@ export async function createList(
     })
     .select("id")
     .single();
-  if (error || !data) return { ok: false, error: error?.message ?? INVALID_DATA };
+  if (error || !data) return { ok: false, error: safeActionError("lists.create", error) };
 
   revalidatePath("/lists");
   return { ok: true, data: { id: data.id } };
@@ -75,7 +76,7 @@ export async function updateList(id: string, input: ListFormInput): Promise<List
     .from("lists")
     .update({ name: parsed.data.name, description: parsed.data.description ?? null })
     .eq("id", parsedId.data);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("lists.update", error) };
 
   revalidatePath("/lists");
   revalidatePath(`/lists/${parsedId.data}`);
@@ -117,13 +118,14 @@ export async function duplicateList(
     .insert({ user_id: user.id, name: parsedName.data, description: source.description })
     .select("id")
     .single();
-  if (createError || !created) return { ok: false, error: createError?.message ?? INVALID_DATA };
+  if (createError || !created)
+    return { ok: false, error: safeActionError("lists.duplicate", createError) };
 
   const { data: items, error: itemsError } = await supabase
     .from("list_items")
     .select("media_item_id, position")
     .eq("list_id", sourceId);
-  if (itemsError) return { ok: false, error: itemsError.message };
+  if (itemsError) return { ok: false, error: safeActionError("lists.duplicate", itemsError) };
 
   if (items && items.length > 0) {
     const { error: copyError } = await supabase.from("list_items").insert(
@@ -133,7 +135,7 @@ export async function duplicateList(
         position: it.position,
       })),
     );
-    if (copyError) return { ok: false, error: copyError.message };
+    if (copyError) return { ok: false, error: safeActionError("lists.duplicate", copyError) };
   }
 
   revalidatePath("/lists");
@@ -151,7 +153,7 @@ export async function deleteList(id: string): Promise<ListActionResult> {
   if (!user) return { ok: false, error: NOT_SIGNED_IN };
 
   const { error } = await supabase.from("lists").delete().eq("id", parsedId.data);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("lists.delete", error) };
 
   revalidatePath("/lists");
   return { ok: true };
@@ -172,6 +174,16 @@ export async function addItemToList(
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: NOT_SIGNED_IN };
 
+  // Confirm the media item is the caller's own. media_items is owner-only under
+  // RLS, so a foreign id reads back null — this stops a user from referencing
+  // another user's library row (by id) into a list they then share.
+  const { data: ownedItem } = await supabase
+    .from("media_items")
+    .select("id")
+    .eq("id", mediaItemId)
+    .maybeSingle();
+  if (!ownedItem) return { ok: false, error: INVALID_DATA };
+
   const { count } = await supabase
     .from("list_items")
     .select("*", { count: "exact", head: true })
@@ -183,7 +195,7 @@ export async function addItemToList(
       { list_id: listId, media_item_id: mediaItemId, position: count ?? 0 },
       { onConflict: "list_id,media_item_id", ignoreDuplicates: true },
     );
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("lists.addItem", error) };
 
   revalidatePath("/lists");
   revalidatePath(`/lists/${listId}`);
@@ -210,7 +222,7 @@ export async function removeItemFromList(
     .delete()
     .eq("list_id", listId)
     .eq("media_item_id", mediaItemId);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("lists.removeItem", error) };
 
   revalidatePath("/lists");
   revalidatePath(`/lists/${listId}`);
@@ -243,7 +255,7 @@ export async function moveListItem(
     .select("media_item_id, position")
     .eq("list_id", listId)
     .order("position", { ascending: true });
-  if (loadError) return { ok: false, error: loadError.message };
+  if (loadError) return { ok: false, error: safeActionError("lists.moveItem", loadError) };
 
   const ordered = rows ?? [];
   const index = ordered.findIndex((r) => r.media_item_id === mediaItemId);
@@ -268,7 +280,7 @@ export async function moveListItem(
       .eq("list_id", listId)
       .eq("media_item_id", neighbour.media_item_id),
   ]);
-  if (e1 || e2) return { ok: false, error: (e1 ?? e2)?.message ?? INVALID_DATA };
+  if (e1 || e2) return { ok: false, error: safeActionError("lists.moveItem", e1 ?? e2) };
 
   revalidatePath("/lists");
   revalidatePath(`/lists/${listId}`);
@@ -304,7 +316,7 @@ export async function sortListItems(
     .from("list_items")
     .select("media_item_id, media_items!inner ( title, year, kind )")
     .eq("list_id", listId);
-  if (loadError) return { ok: false, error: loadError.message };
+  if (loadError) return { ok: false, error: safeActionError("lists.sort", loadError) };
 
   type Row = {
     media_item_id: string;
@@ -347,17 +359,15 @@ export async function sortListItems(
       break;
   }
 
-  const { error } = await supabase
-    .from("list_items")
-    .upsert(
-      sorted.map((row, position) => ({
-        list_id: listId,
-        media_item_id: row.media_item_id,
-        position,
-      })),
-      { onConflict: "list_id,media_item_id" },
-    );
-  if (error) return { ok: false, error: error.message };
+  const { error } = await supabase.from("list_items").upsert(
+    sorted.map((row, position) => ({
+      list_id: listId,
+      media_item_id: row.media_item_id,
+      position,
+    })),
+    { onConflict: "list_id,media_item_id" },
+  );
+  if (error) return { ok: false, error: safeActionError("lists.sort", error) };
 
   revalidatePath("/lists");
   revalidatePath(`/lists/${listId}`);
@@ -417,7 +427,7 @@ export async function setListVisibility(
     .from("lists")
     .update({ visibility: parsedVisibility.data })
     .eq("id", parsedId.data);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("lists.setVisibility", error) };
 
   revalidatePath("/lists");
   revalidatePath("/lists/discover");
@@ -472,13 +482,13 @@ export async function uploadListCover(
   const { error: uploadError } = await supabase.storage
     .from("list-covers")
     .upload(path, file, { upsert: true, contentType: mime, cacheControl: "3600" });
-  if (uploadError) return { ok: false, error: uploadError.message };
+  if (uploadError) return { ok: false, error: safeActionError("lists.uploadCover", uploadError) };
 
   const { data: publicUrl } = supabase.storage.from("list-covers").getPublicUrl(path);
   const url = `${publicUrl.publicUrl}?v=${Date.now()}`;
 
   const { error } = await supabase.from("lists").update({ cover_url: url }).eq("id", listId);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("lists.uploadCover", error) };
 
   revalidatePath("/lists");
   revalidatePath(`/lists/${listId}`);
@@ -499,7 +509,7 @@ export async function removeListCover(listId: string): Promise<ListActionResult>
     .remove(Object.values(COVER_EXT).map((e) => `${user.id}/${listId}.${e}`));
 
   const { error } = await supabase.from("lists").update({ cover_url: null }).eq("id", listId);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("lists.removeCover", error) };
 
   revalidatePath("/lists");
   revalidatePath(`/lists/${listId}`);

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { safeActionError } from "@/lib/action-error";
 import { createClient } from "@/lib/supabase/server";
 import {
   ALLOWED_AVATAR_MIME,
@@ -67,7 +68,7 @@ export async function uploadAvatar(formData: FormData): Promise<ProfileActionRes
     .from("avatars")
     .upload(path, file, { upsert: true, contentType: mime, cacheControl: "3600" });
 
-  if (uploadError) return { ok: false, error: uploadError.message };
+  if (uploadError) return { ok: false, error: safeActionError("profile.avatar", uploadError) };
 
   const { data: publicUrl } = supabase.storage.from("avatars").getPublicUrl(path);
   // Append a cache-busting query so browsers re-fetch after re-upload.
@@ -78,7 +79,7 @@ export async function uploadAvatar(formData: FormData): Promise<ProfileActionRes
     .update({ avatar_url: url })
     .eq("id", user.id);
 
-  if (updateError) return { ok: false, error: updateError.message };
+  if (updateError) return { ok: false, error: safeActionError("profile.avatar", updateError) };
 
   revalidatePath("/settings");
   revalidatePath("/library", "layout");
@@ -98,7 +99,7 @@ export async function removeAvatar(): Promise<ProfileActionResult> {
 
   const { error } = await supabase.from("profiles").update({ avatar_url: null }).eq("id", user.id);
 
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("profile.removeAvatar", error) };
 
   revalidatePath("/settings");
   revalidatePath("/library", "layout");

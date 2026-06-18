@@ -1,6 +1,7 @@
 import "server-only";
 
 const JIKAN_BASE_URL = "https://api.jikan.moe/v4";
+const JIKAN_ORIGIN = "https://api.jikan.moe";
 
 export type JikanFetchOptions = {
   query?: Record<string, string | number | undefined>;
@@ -15,6 +16,11 @@ export type JikanFetchOptions = {
  */
 export async function jikanFetch<T>(path: string, options: JikanFetchOptions = {}): Promise<T> {
   const url = new URL(`${JIKAN_BASE_URL}${path}`);
+  // Defense-in-depth against a user-controlled `path` (unvalidated source_id):
+  // reject anything that escapes the Jikan v4 host or path prefix.
+  if (url.origin !== JIKAN_ORIGIN || !url.pathname.startsWith("/v4/")) {
+    throw new Error("Invalid Jikan request path");
+  }
 
   if (options.query) {
     for (const [key, value] of Object.entries(options.query)) {

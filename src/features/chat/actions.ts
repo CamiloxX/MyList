@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { safeActionError } from "@/lib/action-error";
 import { createClient } from "@/lib/supabase/server";
 import { type ChatSendInput, chatSendSchema } from "./schemas";
 
@@ -46,7 +47,7 @@ export async function sendChatMessage(input: ChatSendInput): Promise<ChatActionR
     if (error.message.includes("chat_throttled")) return { ok: false, error: THROTTLED };
     // The insert RLS check blocks muted/banned users (is_chat_restricted).
     if (error.message.includes("row-level security")) return { ok: false, error: RESTRICTED };
-    return { ok: false, error: error.message };
+    return { ok: false, error: safeActionError("chat.send", error) };
   }
 
   // No revalidate: connected clients receive the new row via Realtime.
@@ -65,7 +66,7 @@ export async function deleteChatMessage(messageId: string): Promise<ChatActionRe
 
   // RLS enforces owner-or-admin; this just issues the delete.
   const { error } = await supabase.from("chat_messages").delete().eq("id", parsedId.data);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("chat.delete", error) };
 
   return { ok: true };
 }
@@ -83,7 +84,7 @@ async function restrictUser(targetUserId: string, type: "mute" | "ban"): Promise
   const { error } = await supabase
     .from("chat_restrictions")
     .upsert({ user_id: parsedId.data, type, created_by: user.id }, { onConflict: "user_id" });
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("chat.restrict", error) };
 
   return { ok: true };
 }
@@ -105,7 +106,7 @@ export async function unrestrictUser(targetUserId: string): Promise<ChatActionRe
   if (!isAdmin) return { ok: false, error: NOT_ADMIN };
 
   const { error } = await supabase.from("chat_restrictions").delete().eq("user_id", parsedId.data);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("chat.unrestrict", error) };
 
   return { ok: true };
 }

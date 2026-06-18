@@ -14,17 +14,26 @@ import { ReorderItemButtons } from "@/features/lists/components/reorder-item-but
 import { ShareListButton } from "@/features/lists/components/share-list-button";
 import { SortListMenu } from "@/features/lists/components/sort-list-menu";
 import { getListWithItems } from "@/features/lists/queries";
-import { Link } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import { loadingDemoDelay } from "@/lib/loading-demo";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function ListDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ListDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string; locale: string }>;
+}) {
   await loadingDemoDelay();
-  const { id } = await params;
+  const { id, locale } = await params;
   const [data, isAdmin] = await Promise.all([getListWithItems(id), isCurrentUserAdmin()]);
   if (!data) notFound();
+  // The row can resolve for a non-owner only when the list is official. A
+  // non-owner gets no items (list_items is owner-only under RLS) and must not see
+  // owner-only controls, so send a non-admin viewer to the read-only public view.
+  // Admins stay so they can still use the official toggle below.
+  if (!data.isOwner && !isAdmin) redirect({ href: `/share/${id}`, locale });
 
   const t = await getTranslations();
 
@@ -41,11 +50,13 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
         <ArrowLeftIcon className="size-4" aria-hidden />
       </Link>
 
-      <ListCoverEditor
-        listId={data.id}
-        coverUrl={data.coverUrl}
-        posterUrls={data.items.map((i) => i.poster_url).filter((p): p is string => Boolean(p))}
-      />
+      {data.isOwner ? (
+        <ListCoverEditor
+          listId={data.id}
+          coverUrl={data.coverUrl}
+          posterUrls={data.items.map((i) => i.poster_url).filter((p): p is string => Boolean(p))}
+        />
+      ) : null}
 
       <header className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1">
@@ -62,15 +73,17 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
             {t("lists.itemCount", { count: data.items.length })}
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-1">
-          {data.items.length > 1 ? <SortListMenu listId={data.id} /> : null}
-          <ShareListButton
-            listId={data.id}
-            listName={data.name}
-            initialVisibility={data.visibility}
-          />
-          <ListSettings list={{ id: data.id, name: data.name, description: data.description }} />
-        </div>
+        {data.isOwner ? (
+          <div className="flex shrink-0 items-center gap-1">
+            {data.items.length > 1 ? <SortListMenu listId={data.id} /> : null}
+            <ShareListButton
+              listId={data.id}
+              listName={data.name}
+              initialVisibility={data.visibility}
+            />
+            <ListSettings list={{ id: data.id, name: data.name, description: data.description }} />
+          </div>
+        ) : null}
       </header>
 
       {isAdmin ? (
@@ -93,12 +106,14 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
               key={item.id}
               className="flex items-center gap-4 rounded-xl border bg-card p-3 shadow-sm"
             >
-              <ReorderItemButtons
-                listId={data.id}
-                mediaItemId={item.id}
-                isFirst={index === 0}
-                isLast={index === data.items.length - 1}
-              />
+              {data.isOwner ? (
+                <ReorderItemButtons
+                  listId={data.id}
+                  mediaItemId={item.id}
+                  isFirst={index === 0}
+                  isLast={index === data.items.length - 1}
+                />
+              ) : null}
               <Link
                 href={`/library/${item.id}`}
                 className="relative aspect-[2/3] w-16 shrink-0 overflow-hidden rounded-md bg-muted"
@@ -123,7 +138,9 @@ export default async function ListDetailPage({ params }: { params: Promise<{ id:
                   <span className="text-xs text-muted-foreground">{item.year}</span>
                 ) : null}
               </Link>
-              <RemoveFromListButton listId={data.id} mediaItemId={item.id} />
+              {data.isOwner ? (
+                <RemoveFromListButton listId={data.id} mediaItemId={item.id} />
+              ) : null}
             </li>
           ))}
         </ul>

@@ -56,11 +56,10 @@ export function useChatRealtime(args: {
       const cache = authorCacheRef.current;
       if (cache.has(userId)) return cache.get(userId) ?? null;
 
-      const { data } = await supabase
-        .from("profiles")
-        .select("id, display_name, avatar_url, is_admin")
-        .eq("id", userId)
-        .maybeSingle();
+      // resolve_authors() exposes only the safe author-card fields cross-user
+      // (the blanket profiles read policy is removed for security).
+      const { data: rows } = await supabase.rpc("resolve_authors", { ids: [userId] });
+      const data = rows?.[0] ?? null;
 
       const author: ChatAuthor | null = data
         ? {

@@ -115,7 +115,10 @@ export async function fetchBadgesByUserIdsWith(
       .select("user_id, badge_id, earned_at")
       .in("user_id", userIds)
       .order("earned_at", { ascending: false }),
-    supabase.from("profiles").select("id, featured_badge_ids").in("id", userIds),
+    // resolve_authors() returns featured_badge_ids cross-user (the blanket
+    // profiles read policy is removed); works for both the per-user and the
+    // service-role caller (public profile page).
+    supabase.rpc("resolve_authors", { ids: userIds }),
     loadBadgeMap(supabase),
   ]);
 

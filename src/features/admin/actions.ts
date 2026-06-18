@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { loadBadgeMap } from "@/features/badges/catalog";
 import { pushNewBadges } from "@/features/badges/push-notify";
+import { safeActionError } from "@/lib/action-error";
 import { jikanPoster, jikanTitle, searchJikan } from "@/lib/jikan/search";
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { tmdbImage } from "@/lib/tmdb/client";
@@ -79,7 +80,7 @@ export async function createBadge(
   if (error || !data) {
     // 23505 = unique_violation (duplicate id)
     if (error?.code === "23505") return { ok: false, error: "Ya existe un logro con ese ID" };
-    return { ok: false, error: error?.message ?? INVALID_DATA };
+    return { ok: false, error: safeActionError("admin.createBadge", error) };
   }
 
   revalidatePath("/admin");
@@ -108,7 +109,7 @@ export async function updateBadge(id: string, input: BadgeFormInput): Promise<Ad
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("admin.updateBadge", error) };
 
   revalidatePath("/admin");
   revalidatePath("/badges");
@@ -127,7 +128,7 @@ export async function toggleBadgeActive(id: string, isActive: boolean): Promise<
     .from("badges")
     .update({ is_active: isActive, updated_at: new Date().toISOString() })
     .eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("admin.toggleBadgeActive", error) };
 
   revalidatePath("/admin");
   revalidatePath("/badges");
@@ -147,7 +148,7 @@ export async function deleteBadge(id: string): Promise<AdminActionResult> {
     .remove(Object.values(BADGE_ICON_EXT).map((ext) => `${id}.${ext}`));
 
   const { error } = await supabase.from("badges").delete().eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("admin.deleteBadge", error) };
 
   revalidatePath("/admin");
   revalidatePath("/badges");
@@ -191,7 +192,8 @@ export async function uploadBadgeIcon(
   const { error: uploadError } = await supabase.storage
     .from("badge-icons")
     .upload(path, file, { upsert: true, contentType: mime, cacheControl: "3600" });
-  if (uploadError) return { ok: false, error: uploadError.message };
+  if (uploadError)
+    return { ok: false, error: safeActionError("admin.uploadBadgeIcon", uploadError) };
 
   const { data: publicUrl } = supabase.storage.from("badge-icons").getPublicUrl(path);
   const url = `${publicUrl.publicUrl}?v=${Date.now()}`;
@@ -200,7 +202,7 @@ export async function uploadBadgeIcon(
     .from("badges")
     .update({ icon_url: url, icon_key: null, updated_at: new Date().toISOString() })
     .eq("id", badgeId);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("admin.uploadBadgeIcon", error) };
 
   revalidatePath("/admin");
   revalidatePath("/badges");
@@ -220,7 +222,7 @@ export async function removeBadgeIcon(badgeId: string): Promise<AdminActionResul
     .from("badges")
     .update({ icon_url: null, updated_at: new Date().toISOString() })
     .eq("id", badgeId);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("admin.removeBadgeIcon", error) };
 
   revalidatePath("/admin");
   revalidatePath("/badges");
@@ -351,7 +353,10 @@ export async function searchUsersForGrant(query: string): Promise<GrantUser[]> {
   const q = query.trim();
   if (q.length < 2) return [];
 
-  const supabase = await createClient();
+  // Service-role: the blanket profiles read policy is removed (security
+  // hardening), so this admin-only cross-user search runs with the service-role
+  // client. requireAdmin() above is the access gate.
+  const supabase = createServiceRoleClient();
   const { data, error } = await supabase
     .from("profiles")
     .select("id, display_name, avatar_url")
@@ -403,7 +408,7 @@ export async function grantBadge(userId: string, badgeId: string): Promise<Admin
       revalidatePath("/admin");
       return { ok: true };
     }
-    return { ok: false, error: error.message };
+    return { ok: false, error: safeActionError("admin.grantBadge", error) };
   }
 
   // Best-effort push using the same format as an automatic unlock.
@@ -433,7 +438,7 @@ export async function revokeBadge(userId: string, badgeId: string): Promise<Admi
     .delete()
     .eq("user_id", userId)
     .eq("badge_id", badgeId);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: safeActionError("admin.revokeBadge", error) };
 
   revalidatePath("/admin");
   revalidatePath("/badges");
@@ -449,9 +454,10 @@ const listIdSchema = z.string().uuid();
 /**
  * Marks a list as official (curated by an admin, shown to everyone with a
  * verified badge) or clears that status. Uses the service-role client so an
- * admin can publish any list regardless of ownership; publishing also forces
- * the list public so its Discover row and /share page resolve. The is_official
- * column is also guarded at the DB level (a trigger lets only admins flip it).
+ * admin can publish any list regardless of ownership. It only flips is_official
+ * and never touches the owner's visibility — official lists surface via the
+ * is_official flag alone. The column is also guarded at the DB level (a trigger
+ * lets only admins flip it).
  */
 export async function setListOfficial(
   listId: string,
@@ -464,12 +470,13 @@ export async function setListOfficial(
   if (!admin.ok) return admin;
 
   const supabase = createServiceRoleClient();
-  const patch: { is_official: boolean; visibility?: "private" | "unlisted" | "public" } = {
-    is_official: official,
-  };
-  if (official) patch.visibility = "public";
-  const { error } = await supabase.from("lists").update(patch).eq("id", listId);
-  if (error) return { ok: false, error: error.message };
+  // Only flip is_official; never overwrite the owner's visibility. Official lists
+  // surface via is_official (getOfficialLists + the lists_select_official policy +
+  // getSharedList), so forcing visibility='public' here is unnecessary and would
+  // leave a user's previously private list permanently public in Discover even
+  // after it is de-officialized.
+  const { error } = await supabase.from("lists").update({ is_official: official }).eq("id", listId);
+  if (error) return { ok: false, error: safeActionError("admin.setListOfficial", error) };
 
   revalidatePath("/admin");
   revalidatePath("/lists");
