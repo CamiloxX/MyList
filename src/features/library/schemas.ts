@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const PLATFORMS = [
-  // Streaming
   "Netflix",
   "Prime Video",
   "Disney+",
@@ -9,17 +8,6 @@ export const PLATFORMS = [
   "Apple TV+",
   "Crunchyroll",
   "YouTube",
-  // Juegos
-  "Steam",
-  "Epic Games",
-  "Origin",
-  "EA",
-  "GOG",
-  "Ubisoft Connect",
-  "Battle.net",
-  "PlayStation",
-  "Rockstar Games",
-  // Otros
   "Cine",
   "Otra",
 ] as const;
