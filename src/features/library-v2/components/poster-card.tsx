@@ -37,7 +37,7 @@ export async function PosterCard({ item }: { item: PosterItem }) {
             {t("common.noPoster")}
           </div>
         )}
-        <span className="absolute left-2 top-2">
+        <span className="absolute bottom-2 left-2">
           <Badge variant="secondary" className="bg-background/75 backdrop-blur">
             {t(`kinds.${item.kind}`)}
           </Badge>
@@ -64,12 +64,15 @@ export async function PosterCard({ item }: { item: PosterItem }) {
 }
 
 /**
- * Compact rating chip pinned to the poster's top-right. Prefers OMDb RT/IMDb
- * (recommendations only); falls back to the TMDB/MAL source score.
+ * Compact rating chip pinned to the poster's top-right (clearly visible over the
+ * art). Prefers OMDb RT/IMDb (recommendations only); falls back to the TMDB/MAL
+ * source score.
  */
 function RatingOverlay({ ratings, score }: { ratings?: OmdbRatings | null; score?: string }) {
+  // Top-right, diagonally opposite the kind badge (now bottom-left) so the two
+  // never crowd each other on the narrow cards of the dense desktop grid.
   const chip =
-    "absolute right-2 top-2 flex items-center gap-1.5 rounded-lg bg-black/70 px-1.5 py-1 text-[11px] font-semibold text-white backdrop-blur tabular-nums";
+    "absolute top-2 right-2 flex items-center gap-1.5 rounded-lg bg-black/70 px-1.5 py-1 text-[11px] font-semibold text-white backdrop-blur tabular-nums";
 
   if (ratings) {
     const rt = Number.parseFloat(ratings.rottenTomatoes ?? "");
