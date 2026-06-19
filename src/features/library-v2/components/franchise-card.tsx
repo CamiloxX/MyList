@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
  * app's PosterCard look (2:3 cover, rounded border, hover zoom) but links to the
  * franchise's first entry and shows the title count instead of a kind badge —
  * the cards already live under a "Movies" / "Anime" heading. The cover is
- * pre-resolved (see curated-franchise-covers.ts); when missing we fall back to
+ * pre-resolved (see curated-franchise-data.ts); when missing we fall back to
  * the title centered on the muted tile rather than a generic icon.
  */
 export async function FranchiseCard({

@@ -7,7 +7,8 @@ import { jikanPoster, jikanTitle } from "@/lib/jikan/search";
 import { createClient } from "@/lib/supabase/server";
 import { getMovieCollectionId, getTmdbCollection, getTmdbMovieBrief } from "@/lib/tmdb/collection";
 import { tmdbImage } from "@/lib/tmdb/images";
-import { findCuratedFranchise } from "./curated-franchises";
+import { type CuratedEntryData, FRANCHISE_ENTRY_DATA } from "./curated-franchise-data";
+import { type CuratedEntry, findCuratedFranchise } from "./curated-franchises";
 
 export type WatchOrderEntry = {
   source: "tmdb" | "anilist";
@@ -40,6 +41,37 @@ function sleep(ms: number): Promise<void> {
 }
 
 /**
+ * Resolves a curated franchise's entries from the pre-resolved data file
+ * (FRANCHISE_ENTRY_DATA) — zero network at request time, so the timeline renders
+ * instantly. Any entry missing from the data file (e.g. franchises edited but the
+ * file not regenerated) falls back to a live fetch, paced by `paceMs` to respect
+ * the source's rate limit.
+ */
+async function resolveCuratedEntries(
+  list: readonly CuratedEntry[],
+  currentId: string,
+  fetchMissing: (e: CuratedEntry) => Promise<CuratedEntryData>,
+  paceMs: number,
+): Promise<WatchOrderEntry[]> {
+  const out: WatchOrderEntry[] = [];
+  for (const e of list) {
+    const cached = FRANCHISE_ENTRY_DATA[`${e.source}:${e.kind}:${e.sourceId}`];
+    const data = cached ?? (await fetchMissing(e));
+    if (!cached && paceMs > 0) await sleep(paceMs);
+    out.push({
+      source: e.source,
+      kind: e.kind,
+      sourceId: e.sourceId,
+      title: data.title,
+      posterUrl: data.posterUrl,
+      year: data.year,
+      isCurrent: e.sourceId === currentId,
+    });
+  }
+  return out;
+}
+
+/**
  * Builds the franchise watch order(s) for a title, or null when it isn't part of
  * a franchise we can resolve. Movies use TMDB collections (release) plus a curated
  * chronological order when known; anime walks the Jikan relations graph.
@@ -59,21 +91,19 @@ export async function getWatchOrder(
 async function getMovieWatchOrder(movieId: string): Promise<WatchOrderResult | null> {
   const curated = findCuratedFranchise("tmdb", "movie", movieId);
   if (curated) {
-    const briefs = await Promise.all(
-      curated.chronological.map((e) => getTmdbMovieBrief(e.sourceId)),
+    const chronological = await resolveCuratedEntries(
+      curated.chronological,
+      movieId,
+      async (e) => {
+        const b = await getTmdbMovieBrief(e.sourceId);
+        return {
+          title: b?.title ?? `#${e.sourceId}`,
+          posterUrl: tmdbImage(b?.posterPath, "w342"),
+          year: yearFromDate(b?.releaseDate),
+        };
+      },
+      0,
     );
-    const chronological: WatchOrderEntry[] = curated.chronological.map((e, i) => {
-      const b = briefs[i];
-      return {
-        source: "tmdb",
-        kind: "movie",
-        sourceId: e.sourceId,
-        title: b?.title ?? `#${e.sourceId}`,
-        posterUrl: tmdbImage(b?.posterPath, "w185"),
-        year: yearFromDate(b?.releaseDate),
-        isCurrent: e.sourceId === movieId,
-      };
-    });
     if (chronological.length < 2) return null;
     const release = [...chronological].sort((a, b) => (a.year ?? 9999) - (b.year ?? 9999));
     return { franchiseName: curated.name, orders: { chronological, release } };
@@ -113,24 +143,24 @@ async function getAnimeWatchOrder(originId: string): Promise<WatchOrderResult | 
 
   // Prefer a hand-curated order (verified MAL ids in the recommended sequence)
   // over the Jikan relations graph, which is noisy for movie/recap-heavy
-  // franchises. The curated list is already in watch order — just resolve each
-  // entry's details (sequentially, to respect Jikan's rate limit).
+  // franchises. The curated list is already in watch order — entry details come
+  // from the pre-resolved data file (instant), with a paced live Jikan fallback
+  // for any id not yet generated into it.
   const curated = findCuratedFranchise("anilist", "anime", originId);
   if (curated) {
-    const entries: WatchOrderEntry[] = [];
-    for (const e of curated.chronological) {
-      const detail = await getJikanAnimeById(Number(e.sourceId));
-      await sleep(ANIME_DETAIL_DELAY_MS);
-      entries.push({
-        source: "anilist",
-        kind: "anime",
-        sourceId: e.sourceId,
-        title: detail ? jikanTitle(detail) : `MAL #${e.sourceId}`,
-        posterUrl: detail ? jikanPoster(detail) : null,
-        year: detail?.year ?? null,
-        isCurrent: e.sourceId === originId,
-      });
-    }
+    const entries = await resolveCuratedEntries(
+      curated.chronological,
+      originId,
+      async (e) => {
+        const detail = await getJikanAnimeById(Number(e.sourceId));
+        return {
+          title: detail ? jikanTitle(detail) : `MAL #${e.sourceId}`,
+          posterUrl: detail ? jikanPoster(detail) : null,
+          year: detail?.year ?? null,
+        };
+      },
+      ANIME_DETAIL_DELAY_MS,
+    );
     if (entries.length < 2) return null;
     return { franchiseName: curated.name, orders: { story: entries } };
   }

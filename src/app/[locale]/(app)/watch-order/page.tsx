@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { LibrarySearchInput } from "@/features/library/components/library-search-input";
 import { FranchiseCard } from "@/features/library-v2/components/franchise-card";
 import { PosterCard } from "@/features/library-v2/components/poster-card";
-import { FRANCHISE_COVERS } from "@/features/library-v2/curated-franchise-covers";
+import { FRANCHISE_ENTRY_DATA } from "@/features/library-v2/curated-franchise-data";
 import { CURATED_FRANCHISES } from "@/features/library-v2/curated-franchises";
 import type { PosterItem } from "@/features/library-v2/types";
 import { jikanPoster, jikanTitle, searchJikan } from "@/lib/jikan/search";
@@ -91,7 +91,10 @@ export default async function WatchOrderIndexPage({ searchParams }: PageProps) {
                         key={franchise.id}
                         href={`/watch-order/${first.source}/${first.kind}/${first.sourceId}`}
                         name={franchise.name}
-                        posterUrl={FRANCHISE_COVERS[franchise.id] ?? null}
+                        posterUrl={
+                          FRANCHISE_ENTRY_DATA[`${first.source}:${first.kind}:${first.sourceId}`]
+                            ?.posterUrl ?? null
+                        }
                         count={franchise.chronological.length}
                       />
                     );
