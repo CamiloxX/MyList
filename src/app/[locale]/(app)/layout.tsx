@@ -51,7 +51,10 @@ export default async function AppLayout({
       <BadgeCelebrationProvider>
         <div className="flex min-h-screen bg-background">
           <Sidebar isAdmin={isAdmin} responsive={false} />
-          <main className="min-w-0 flex-1">{children}</main>
+          {/* Content gutter so pages don't stick to the sidebar. The library page
+              breaks out of this padding (it ships its own full-width Topbar) via a
+              `-m-6` wrapper — keep that wrapper in sync if this padding changes. */}
+          <main className="min-w-0 flex-1 px-6 py-6">{children}</main>
           {user ? <ChatLauncher viewerId={user.id} viewerIsAdmin={isAdmin} /> : null}
           <DailyVisitTracker />
         </div>

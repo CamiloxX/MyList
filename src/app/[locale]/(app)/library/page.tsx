@@ -37,8 +37,14 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
   const params = await searchParams;
 
   // Desktop devices get the new v2 library; mobile keeps the list below.
+  // DesktopLibrary ships its own full-width Topbar + padding, so break it out of
+  // the app shell's content gutter (px-6 py-6 in (app)/layout.tsx) with -m-6.
   if (!isMobileUserAgent((await headers()).get("user-agent"))) {
-    return <DesktopLibrary searchParams={{ q: params.q, genre: params.genre }} />;
+    return (
+      <div className="-m-6">
+        <DesktopLibrary searchParams={{ q: params.q, genre: params.genre }} />
+      </div>
+    );
   }
 
   await loadingDemoDelay();
