@@ -1062,6 +1062,7 @@
       "searchPlaceholder": "Buscar una saga o título…",
       "franchisesHeading": "Sagas populares",
       "categories": {
+        "all": "Todas",
         "movie": "Películas",
         "tv": "Series",
         "anime": "Anime"

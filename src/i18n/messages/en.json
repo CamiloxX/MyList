@@ -1062,6 +1062,7 @@
       "searchPlaceholder": "Search a franchise or title…",
       "franchisesHeading": "Popular franchises",
       "categories": {
+        "all": "All",
         "movie": "Movies",
         "tv": "Series",
         "anime": "Anime"

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { LibrarySearchInput } from "@/features/library/components/library-search-input";
 import { FranchiseCard } from "@/features/library-v2/components/franchise-card";
+import { FranchiseCategoryFilter } from "@/features/library-v2/components/franchise-category-filter";
 import { PosterCard } from "@/features/library-v2/components/poster-card";
 import { FRANCHISE_ENTRY_DATA } from "@/features/library-v2/curated-franchise-data";
 import { CURATED_FRANCHISES } from "@/features/library-v2/curated-franchises";
@@ -74,35 +75,45 @@ export default async function WatchOrderIndexPage({ searchParams }: PageProps) {
       ) : (
         <section className="flex flex-col gap-6">
           <h2 className="text-lg font-semibold tracking-tight">{t("franchisesHeading")}</h2>
-          {CATEGORY_ORDER.map((category) => {
-            const list = CURATED_FRANCHISES.filter((f) => f.category === category);
-            if (list.length === 0) return null;
-            return (
-              <div key={category} className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  {t(`categories.${category}`)}
-                </h3>
-                <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
-                  {list.map((franchise) => {
-                    const first = franchise.chronological[0];
-                    if (!first) return null;
-                    return (
-                      <FranchiseCard
-                        key={franchise.id}
-                        href={`/watch-order/${first.source}/${first.kind}/${first.sourceId}`}
-                        name={franchise.name}
-                        posterUrl={
-                          FRANCHISE_ENTRY_DATA[`${first.source}:${first.kind}:${first.sourceId}`]
-                            ?.posterUrl ?? null
-                        }
-                        count={franchise.chronological.length}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+          <FranchiseCategoryFilter
+            allLabel={`${t("categories.all")} (${CURATED_FRANCHISES.length})`}
+            sections={CATEGORY_ORDER.flatMap((category) => {
+              const list = CURATED_FRANCHISES.filter((f) => f.category === category);
+              if (list.length === 0) return [];
+              return [
+                {
+                  key: category,
+                  label: `${t(`categories.${category}`)} (${list.length})`,
+                  node: (
+                    <div className="flex flex-col gap-3">
+                      <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                        {t(`categories.${category}`)}
+                      </h3>
+                      <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
+                        {list.map((franchise) => {
+                          const first = franchise.chronological[0];
+                          if (!first) return null;
+                          return (
+                            <FranchiseCard
+                              key={franchise.id}
+                              href={`/watch-order/${first.source}/${first.kind}/${first.sourceId}`}
+                              name={franchise.name}
+                              posterUrl={
+                                FRANCHISE_ENTRY_DATA[
+                                  `${first.source}:${first.kind}:${first.sourceId}`
+                                ]?.posterUrl ?? null
+                              }
+                              count={franchise.chronological.length}
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ),
+                },
+              ];
+            })}
+          />
         </section>
       )}
     </div>
