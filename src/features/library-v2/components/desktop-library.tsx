@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { isCurrentUserAdmin } from "@/features/admin/queries";
 import type { MediaKind } from "@/features/library/status";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database";
@@ -58,7 +59,11 @@ export async function DesktopLibrary({
     ? supabase.from("media_items").select("kind, genres").eq("user_id", user.id)
     : Promise.resolve({ data: [] as Array<{ kind: string; genres: unknown }>, error: null });
 
-  const [{ data: items }, { data: genreRows }] = await Promise.all([itemsQuery, genreRowsQuery]);
+  const [{ data: items }, { data: genreRows }, isAdmin] = await Promise.all([
+    itemsQuery,
+    genreRowsQuery,
+    isCurrentUserAdmin(),
+  ]);
 
   const chips = await getGenreChips(genreRows ?? []);
   const activeGenreLabel = selection
@@ -71,7 +76,7 @@ export async function DesktopLibrary({
 
   return (
     <>
-      <Topbar userName={displayName} defaultQuery={queryText} />
+      <Topbar userName={displayName} defaultQuery={queryText} isAdmin={isAdmin} />
 
       <main className="flex flex-1 flex-col gap-10 px-4 py-6 lg:px-6">
         {selection ? (
