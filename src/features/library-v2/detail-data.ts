@@ -91,7 +91,7 @@ export async function loadSeriesDetail(id: string): Promise<SeriesDetailData | n
     fetchNextEpisode(item.source, item.kind, item.source_id),
     getListsForItem(item.id),
     fetchTitleRatings(item.source, item.kind, item.source_id),
-    getTitleBadges(item.source, item.source_id, item.kind),
+    getTitleBadges(item),
   ]);
 
   return {

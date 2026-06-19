@@ -86,7 +86,7 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
     fetchAiringStatus(item.source, item.kind, item.source_id),
     fetchNextEpisode(item.source, item.kind, item.source_id),
     getListsForItem(item.id),
-    getTitleBadges(item.source, item.source_id, item.kind),
+    getTitleBadges(item),
   ]);
 
   const entriesList = entries ?? [];

@@ -1,8 +1,8 @@
 import "server-only";
 
 import type { MediaKind } from "@/features/library/status";
-import { createServiceRoleClient } from "@/lib/supabase/server";
 import type { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/server";
 import { loadBadgeCatalog } from "./catalog";
 import { pushNewBadges } from "./push-notify";
 import type {
@@ -264,6 +264,125 @@ export async function getAllBadgesWithStatus(
   }
 
   return catalog.map((badge) => ({
+    ...badge,
+    progress: progressFor(badge.criterion, stats),
+    earnedAt: earnedMap.get(badge.id) ?? null,
+  }));
+}
+
+/** True when a title-based criterion points at this exact (source, sourceId, kind). */
+function criterionTargetsTitle(
+  criterion: BadgeCriterion,
+  source: string,
+  sourceId: string,
+  kind: string,
+): boolean {
+  switch (criterion.kind) {
+    case "title_completed":
+    case "title_season":
+      return (
+        criterion.source === source &&
+        criterion.sourceId === sourceId &&
+        criterion.mediaKind === kind
+      );
+    case "title_episodes":
+      return criterion.source === source && criterion.sourceId === sourceId;
+    default:
+      return false;
+  }
+}
+
+/**
+ * Lightweight counterpart to getAllBadgesWithStatus for the library detail page:
+ * resolves only the badges whose criterion targets THIS title, computing their
+ * progress from the item itself (no global stats pass) and persisting any the
+ * item already satisfies. One query (the cached catalog) for titles with no
+ * linked badge; a couple of scoped ones otherwise — vs. the full catalog
+ * re-evaluation + double library scan getAllBadgesWithStatus does.
+ */
+export async function getTitleBadgesWithStatus(
+  supabase: ServerClient,
+  userId: string,
+  item: {
+    id: string;
+    source: string;
+    sourceId: string;
+    kind: string;
+    status: string;
+    episodesWatched: number;
+  },
+): Promise<BadgeWithStatus[]> {
+  const catalog = await loadBadgeCatalog(supabase);
+  const matching = catalog.filter((b) =>
+    criterionTargetsTitle(b.criterion, item.source, item.sourceId, item.kind),
+  );
+  if (matching.length === 0) return [];
+
+  const earnedRes = await supabase
+    .from("user_badges")
+    .select("badge_id, earned_at")
+    .eq("user_id", userId)
+    .in(
+      "badge_id",
+      matching.map((b) => b.id),
+    );
+
+  // Seasons of THIS item the user has watched — only needed for title_season.
+  const watchedSeasons = new Set<number>();
+  if (matching.some((b) => b.criterion.kind === "title_season")) {
+    const seasonsRes = await supabase
+      .from("watch_entries")
+      .select("season_number")
+      .eq("media_item_id", item.id)
+      .not("season_number", "is", null);
+    for (const row of seasonsRes.data ?? []) {
+      if (row.season_number != null) watchedSeasons.add(row.season_number);
+    }
+  }
+
+  // A stats snapshot scoped to this single title — enough for title_* criteria,
+  // which only ever look up this title's keys.
+  const key = titleKey(item.source, item.sourceId);
+  const stats: BadgeStats = {
+    ...EMPTY_STATS,
+    watchedTitles: item.status === "watched" ? new Set([key]) : new Set(),
+    watchedTitleSeasons: new Set(
+      [...watchedSeasons].map((s) => titleSeasonKey(item.source, item.sourceId, s)),
+    ),
+    episodesByTitle: new Map([[key, item.episodesWatched]]),
+  };
+
+  const earnedMap = new Map<string, string>();
+  for (const row of earnedRes.data ?? []) earnedMap.set(row.badge_id, row.earned_at);
+
+  // Grant any matching badge the title already satisfies but isn't recorded yet
+  // (e.g. a freshly-created badge). Scoped to these few badges, no catalog pass.
+  // Mirrors evaluateAndPersist's privileged write + best-effort push.
+  const newlyEarned = matching.filter((b) => {
+    if (earnedMap.has(b.id)) return false;
+    const p = progressFor(b.criterion, stats);
+    return p.current >= p.target;
+  });
+  if (newlyEarned.length > 0) {
+    const admin = createServiceRoleClient();
+    const insertRes = await admin
+      .from("user_badges")
+      .insert(newlyEarned.map((b) => ({ user_id: userId, badge_id: b.id })))
+      .select("badge_id, earned_at");
+    if (!insertRes.error) {
+      const insertedIds = new Set<string>();
+      for (const row of insertRes.data ?? []) {
+        earnedMap.set(row.badge_id, row.earned_at);
+        insertedIds.add(row.badge_id);
+      }
+      await pushNewBadges(
+        userId,
+        newlyEarned.filter((b) => insertedIds.has(b.id)),
+      );
+    }
+  }
+
+  return matching.map((badge) => ({
     ...badge,
     progress: progressFor(badge.criterion, stats),
     earnedAt: earnedMap.get(badge.id) ?? null,
