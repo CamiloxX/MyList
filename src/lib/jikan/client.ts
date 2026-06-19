@@ -29,15 +29,34 @@ export async function jikanFetch<T>(path: string, options: JikanFetchOptions = {
     }
   }
 
-  const response = await fetch(url.toString(), {
+  const cachedInit: RequestInit = {
     next:
       options.revalidate === false ? { revalidate: 0 } : { revalidate: options.revalidate ?? 3600 },
-  });
+  };
 
-  if (!response.ok) {
+  // Jikan rate-limits hard (~3/s and ~60/min). A single 429 would otherwise drop
+  // a franchise entry (it renders as "MAL #id", no poster) and, since failed
+  // fetches aren't cached, it can keep failing on every render. Retry transient
+  // 429/5xx with backoff; retries use `no-store` so Next's per-render request
+  // memoization doesn't just hand back the memoized 429.
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await new Promise((resolve) => setTimeout(resolve, 900 * attempt));
+    let response: Response;
+    try {
+      response = await fetch(url.toString(), attempt === 0 ? cachedInit : { cache: "no-store" });
+    } catch (err) {
+      lastError = err;
+      continue;
+    }
+    if (response.ok) return (await response.json()) as T;
+    if (response.status === 429 || response.status >= 500) {
+      lastError = new Error(`Jikan ${response.status} ${response.statusText}`);
+      continue;
+    }
+    // 4xx (e.g. 404) won't fix itself — fail fast.
     const body = await response.text().catch(() => "");
     throw new Error(`Jikan request failed (${response.status} ${response.statusText}): ${body}`);
   }
-
-  return (await response.json()) as T;
+  throw lastError ?? new Error("Jikan request failed after retries");
 }
