@@ -1,5 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import { isCurrentUserAdmin } from "@/features/admin/queries";
 import type { MediaKind } from "@/features/library/status";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database";
@@ -44,8 +43,6 @@ export async function DesktopLibrary({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const displayName = (user?.user_metadata?.display_name as string | undefined) ?? "";
-
   let itemsQuery = supabase
     .from("media_items")
     .select("*")
@@ -59,11 +56,7 @@ export async function DesktopLibrary({
     ? supabase.from("media_items").select("kind, genres").eq("user_id", user.id)
     : Promise.resolve({ data: [] as Array<{ kind: string; genres: unknown }>, error: null });
 
-  const [{ data: items }, { data: genreRows }, isAdmin] = await Promise.all([
-    itemsQuery,
-    genreRowsQuery,
-    isCurrentUserAdmin(),
-  ]);
+  const [{ data: items }, { data: genreRows }] = await Promise.all([itemsQuery, genreRowsQuery]);
 
   const chips = await getGenreChips(genreRows ?? []);
   const activeGenreLabel = selection
@@ -76,7 +69,7 @@ export async function DesktopLibrary({
 
   return (
     <>
-      <Topbar userName={displayName} defaultQuery={queryText} isAdmin={isAdmin} />
+      <Topbar defaultQuery={queryText} />
 
       <main className="flex flex-1 flex-col gap-10 px-4 py-6 lg:px-6">
         {selection ? (

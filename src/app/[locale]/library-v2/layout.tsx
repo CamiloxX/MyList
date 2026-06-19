@@ -26,16 +26,11 @@ export default async function LibraryV2Layout({
     redirect({ href: "/login", locale });
   }
 
-  const { data: profile } = user
-    ? await supabase.from("profiles").select("is_admin").eq("id", user.id).maybeSingle()
-    : { data: null };
-  const isAdmin = profile?.is_admin ?? false;
-
   const t = await getTranslations("libraryV2");
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar isAdmin={isAdmin} />
+      <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="border-b bg-primary/5 px-4 py-1.5 text-center text-xs text-muted-foreground lg:px-6">
           {t("prototypeNote")}

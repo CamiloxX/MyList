@@ -7,11 +7,8 @@ import {
   Library,
   List,
   ListOrdered,
-  LogOut,
   Newspaper,
   Search,
-  Settings,
-  Shield,
   Sparkles,
   Trophy,
 } from "lucide-react";
@@ -19,7 +16,6 @@ import { useTranslations } from "next-intl";
 import type { ComponentType } from "react";
 import { BrandMark, Wordmark } from "@/components/brand/brand-mark";
 import { Button } from "@/components/ui/button";
-import { signOut } from "@/features/auth/actions";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
@@ -41,13 +37,7 @@ type NavItem = {
  *   `lg`; when false (the main app shell, which is only rendered for desktop
  *   devices), it's always shown.
  */
-export function Sidebar({
-  isAdmin = false,
-  responsive = true,
-}: {
-  isAdmin?: boolean;
-  responsive?: boolean;
-}) {
+export function Sidebar({ responsive = true }: { responsive?: boolean }) {
   const t = useTranslations();
   const pathname = usePathname();
 
@@ -59,7 +49,6 @@ export function Sidebar({
     { href: "/month", label: t("nav.month"), icon: CalendarDays },
     { href: "/stats", label: t("nav.stats"), icon: BarChart3 },
     { href: "/watch-order", label: t("nav.watchOrder"), icon: ListOrdered },
-    ...(isAdmin ? [{ href: "/admin", label: t("nav.admin"), icon: Shield }] : []),
   ];
 
   // Secondary destinations — what used to live behind the "Más" popover.
@@ -67,7 +56,6 @@ export function Sidebar({
     { href: "/lists", label: t("nav.lists"), icon: List },
     { href: "/badges", label: t("nav.badges"), icon: Trophy },
     { href: "/changelog", label: t("nav.changelog"), icon: Newspaper },
-    { href: "/settings", label: t("nav.settings"), icon: Settings },
   ];
 
   const isActive = (href: string) => {
@@ -132,16 +120,6 @@ export function Sidebar({
           <p className="mt-1.5 text-sm text-muted-foreground">{t("libraryV2.pro.body")}</p>
           <Button className="mt-3.5 w-full">{t("libraryV2.pro.cta")}</Button>
         </div>
-
-        <form action={signOut}>
-          <button
-            type="submit"
-            className="flex w-full items-center gap-4 rounded-xl px-4 py-3 text-lg font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          >
-            <LogOut className="size-6 shrink-0" />
-            {t("app.signOut")}
-          </button>
-        </form>
       </div>
     </aside>
   );

@@ -4,15 +4,10 @@ import { LibrarySearchInput } from "@/features/library/components/library-search
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { RATINGS_COOKIE, ratingsEnabledFromCookie } from "../ratings-prefs";
-import { AccountMenu } from "./account-menu";
 import { RatingsToggle } from "./ratings-toggle";
 
 type Props = {
-  /** Display name shown next to the avatar; falls back to an empty avatar. */
-  userName: string;
   defaultQuery?: string;
-  /** When true, show the Admin shortcut next to the account chip. */
-  isAdmin?: boolean;
 };
 
 /**
@@ -20,7 +15,7 @@ type Props = {
  * (reuses the real library search) and a user chip. Server-rendered; the only
  * interactive piece is the search input.
  */
-export async function Topbar({ userName, defaultQuery = "", isAdmin = false }: Props) {
+export async function Topbar({ defaultQuery = "" }: Props) {
   const t = await getTranslations();
   const ratingsOn = ratingsEnabledFromCookie((await cookies()).get(RATINGS_COOKIE)?.value);
 
@@ -52,7 +47,6 @@ export async function Topbar({ userName, defaultQuery = "", isAdmin = false }: P
 
       <div className="flex shrink-0 items-center gap-3">
         <RatingsToggle initialOn={ratingsOn} />
-        <AccountMenu userName={userName} isAdmin={isAdmin} />
       </div>
     </div>
   );

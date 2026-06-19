@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { BadgeCelebrationProvider } from "@/features/badges/components/badge-celebration-provider";
 import { ChatLauncher } from "@/features/chat";
+import { AccountMenu } from "@/features/library-v2/components/account-menu";
 import { Sidebar } from "@/features/library-v2/components/sidebar";
 import { BottomNav } from "@/features/shell/components/bottom-nav";
 import { DailyVisitTracker } from "@/features/shell/components/daily-visit-tracker";
@@ -47,14 +48,24 @@ export default async function AppLayout({
   const isMobile = isMobileUserAgent((await headers()).get("user-agent"));
 
   if (!isMobile) {
+    const displayName = (user?.user_metadata?.display_name as string | undefined) ?? "";
     return (
       <BadgeCelebrationProvider>
         <div className="flex min-h-screen bg-background">
-          <Sidebar isAdmin={isAdmin} responsive={false} />
-          {/* Content gutter so pages don't stick to the sidebar. The library page
-              breaks out of this padding (it ships its own full-width Topbar) via a
-              `-m-6` wrapper — keep that wrapper in sync if this padding changes. */}
-          <main className="min-w-0 flex-1 px-6 py-6">{children}</main>
+          <Sidebar responsive={false} />
+          <div className="flex min-w-0 flex-1 flex-col">
+            {/* Global account header — present on every desktop page. Account
+                settings, admin (admins only) and sign-out live in this menu, so
+                they are no longer duplicated in the sidebar. */}
+            <header className="flex items-center justify-end gap-2 border-b bg-background/80 px-6 py-2.5 backdrop-blur">
+              <ThemeToggle />
+              <AccountMenu userName={displayName} isAdmin={isAdmin} />
+            </header>
+            {/* Content gutter so pages don't stick to the sidebar. The library
+                page breaks out of this padding (it ships its own full-width
+                Topbar) via a `-m-6` wrapper — keep in sync if this changes. */}
+            <main className="min-w-0 flex-1 px-6 py-6">{children}</main>
+          </div>
           {user ? <ChatLauncher viewerId={user.id} viewerIsAdmin={isAdmin} /> : null}
           <DailyVisitTracker />
         </div>
