@@ -5,7 +5,12 @@ import { getJikanAnimeById } from "@/lib/jikan/anime";
 import { type FranchiseNode, traverseAnimeFranchise } from "@/lib/jikan/relations";
 import { jikanPoster, jikanTitle } from "@/lib/jikan/search";
 import { createClient } from "@/lib/supabase/server";
-import { getMovieCollectionId, getTmdbCollection, getTmdbMovieBrief } from "@/lib/tmdb/collection";
+import {
+  getMovieCollectionId,
+  getTmdbCollection,
+  getTmdbMovieBrief,
+  getTmdbTvBrief,
+} from "@/lib/tmdb/collection";
 import { tmdbImage } from "@/lib/tmdb/images";
 import { type CuratedEntryData, FRANCHISE_ENTRY_DATA } from "./curated-franchise-data";
 import { type CuratedEntry, findCuratedFranchise } from "./curated-franchises";
@@ -83,6 +88,7 @@ export async function getWatchOrder(
 ): Promise<WatchOrderResult | null> {
   if (source === "anilist" && kind === "anime") return getAnimeWatchOrder(sourceId);
   if (source === "tmdb" && kind === "movie") return getMovieWatchOrder(sourceId);
+  if (source === "tmdb" && kind === "tv") return getTvWatchOrder(sourceId);
   return null;
 }
 
@@ -127,6 +133,31 @@ async function getMovieWatchOrder(movieId: string): Promise<WatchOrderResult | n
     .sort((a, b) => (a.year ?? 9999) - (b.year ?? 9999));
 
   return { franchiseName: collection.name, orders: { release } };
+}
+
+// --- TV ------------------------------------------------------------------
+
+// TV franchises are curated-only (TMDB has no cross-series "collection"), so a
+// title not in the curated list returns null. Entry data is pre-resolved like
+// the others, with a live /tv fallback for ids not yet generated.
+async function getTvWatchOrder(tvId: string): Promise<WatchOrderResult | null> {
+  const curated = findCuratedFranchise("tmdb", "tv", tvId);
+  if (!curated) return null;
+  const chronological = await resolveCuratedEntries(
+    curated.chronological,
+    tvId,
+    async (e) => {
+      const b = await getTmdbTvBrief(e.sourceId);
+      return {
+        title: b?.title ?? `#${e.sourceId}`,
+        posterUrl: tmdbImage(b?.posterPath, "w342"),
+        year: b?.year ?? null,
+      };
+    },
+    0,
+  );
+  if (chronological.length < 2) return null;
+  return { franchiseName: curated.name, orders: { chronological } };
 }
 
 // --- Anime ---------------------------------------------------------------

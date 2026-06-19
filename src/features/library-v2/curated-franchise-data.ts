@@ -1307,4 +1307,1654 @@ export const FRANCHISE_ENTRY_DATA: Record<string, CuratedEntryData> = {
     posterUrl: "https://cdn.myanimelist.net/images/anime/1037/122516l.webp",
     year: 2022,
   },
+  "tmdb:movie:49521": {
+    title: "El hombre de acero",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5JW44QGgpEWx4aWXM0uVSi2xtrI.jpg",
+    year: 2013,
+  },
+  "tmdb:movie:209112": {
+    title: "Batman vs Superman: El amanecer de la justicia",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mS3t9puIjLKgoex82cu9d6G0835.jpg",
+    year: 2016,
+  },
+  "tmdb:movie:297761": {
+    title: "Escuadrón suicida",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9ymhU7NclJr29MpZnBQbJurYbuc.jpg",
+    year: 2016,
+  },
+  "tmdb:movie:297762": {
+    title: "Wonder Woman",
+    posterUrl: "https://image.tmdb.org/t/p/w342/skVHFykCQrEwQJdrpUHgJbvqo1u.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:141052": {
+    title: "Liga de la Justicia",
+    posterUrl: "https://image.tmdb.org/t/p/w342/wUWqnavD8iGZ5F4xXhWlrtEzKjV.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:297802": {
+    title: "Aquaman",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yTzr6Nc4RcTXVw9SsWQNJdcjTz5.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:287947": {
+    title: "¡Shazam!",
+    posterUrl: "https://image.tmdb.org/t/p/w342/kIFthNFctw1ZYEIMer0dVnOln78.jpg",
+    year: 2019,
+  },
+  "tmdb:movie:495764": {
+    title: "Aves de presa (y la fantabulosa emancipación de Harley Quinn)",
+    posterUrl: "https://image.tmdb.org/t/p/w342/1wLqXiiiaTSK8Y0n7N85O0jaNJm.jpg",
+    year: 2020,
+  },
+  "tmdb:movie:464052": {
+    title: "Wonder Woman 1984",
+    posterUrl: "https://image.tmdb.org/t/p/w342/jIIjsExCEv6lsfQGHTXDPk3Q0M5.jpg",
+    year: 2020,
+  },
+  "tmdb:movie:436969": {
+    title: "El escuadrón suicida",
+    posterUrl: "https://image.tmdb.org/t/p/w342/fPJWlhXA2VXf4MlQ3JenVsz1iba.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:436270": {
+    title: "Black Adam",
+    posterUrl: "https://image.tmdb.org/t/p/w342/moDLTCdLx38kMhN53KOTw0LdWMh.jpg",
+    year: 2022,
+  },
+  "tmdb:movie:594767": {
+    title: "¡Shazam! La furia de los dioses",
+    posterUrl: "https://image.tmdb.org/t/p/w342/xCxwaQeoIr4FcjlPgHfzog0x4B8.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:298618": {
+    title: "Flash",
+    posterUrl: "https://image.tmdb.org/t/p/w342/gNbZNuZ2fBferjJspfmvnskODGc.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:565770": {
+    title: "Blue Beetle",
+    posterUrl: "https://image.tmdb.org/t/p/w342/tf5Mqgoj1fFIeP7Ktfn8KGrYhup.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:572802": {
+    title: "Aquaman y el reino perdido",
+    posterUrl: "https://image.tmdb.org/t/p/w342/a0QwtpUNIKjOlNoOVmk7d2LFnQW.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:272": {
+    title: "Batman Begins",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6yMWU1vWkOBbNRIwOxhetd2aHhO.jpg",
+    year: 2005,
+  },
+  "tmdb:movie:155": {
+    title: "El caballero oscuro",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8QDQExnfNFOtabLDKqfDQuHDsIg.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:49026": {
+    title: "El caballero oscuro: La leyenda renace",
+    posterUrl: "https://image.tmdb.org/t/p/w342/rrS7K8tXVFUBliIKWaRuSq65nWr.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:36657": {
+    title: "X-Men",
+    posterUrl: "https://image.tmdb.org/t/p/w342/aF170xLGytZcC0xeSlSamImgIi4.jpg",
+    year: 2000,
+  },
+  "tmdb:movie:36658": {
+    title: "X-Men 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/bnZUa8bCq2uz56Jv6Clpcjtvw0V.jpg",
+    year: 2003,
+  },
+  "tmdb:movie:36668": {
+    title: "X-Men: La decisión final",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6FnWDI3mKZhfWv7NznKUFlvSdo0.jpg",
+    year: 2006,
+  },
+  "tmdb:movie:2080": {
+    title: "X-Men orígenes: Lobezno",
+    posterUrl: "https://image.tmdb.org/t/p/w342/k2wFS6LAYDjOdSAtRc1Ey7roB4G.jpg",
+    year: 2009,
+  },
+  "tmdb:movie:49538": {
+    title: "X-Men: Primera Generación",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6ED3G0lpBXRZtEDJD2xVYsqIwxI.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:76170": {
+    title: "Lobezno inmortal",
+    posterUrl: "https://image.tmdb.org/t/p/w342/xsdBlh5Rg673dRmIblDZchuicWi.jpg",
+    year: 2013,
+  },
+  "tmdb:movie:127585": {
+    title: "X-Men: Días del futuro pasado",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ggb9nmS5alJuA0ll0iU5YHiGbb0.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:246655": {
+    title: "X-Men: Apocalipsis",
+    posterUrl: "https://image.tmdb.org/t/p/w342/iKqONIk0oX8rLvxkBCpnkZMTKE3.jpg",
+    year: 2016,
+  },
+  "tmdb:movie:263115": {
+    title: "Logan",
+    posterUrl: "https://image.tmdb.org/t/p/w342/d0ktjN9eKww26HhM8or8iUB1I68.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:320288": {
+    title: "X-Men: Fénix oscura",
+    posterUrl: "https://image.tmdb.org/t/p/w342/rdByKDkfyVuVSrkllzxKYXiZmTd.jpg",
+    year: 2019,
+  },
+  "tmdb:movie:340102": {
+    title: "Los nuevos mutantes",
+    posterUrl: "https://image.tmdb.org/t/p/w342/cNEIc6SbgsNWkzwfw4EuYLqE9Gt.jpg",
+    year: 2020,
+  },
+  "tmdb:movie:293660": {
+    title: "Deadpool",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3TUYy0XvhPQBhrXJwRIaOoYFOBO.jpg",
+    year: 2016,
+  },
+  "tmdb:movie:383498": {
+    title: "Deadpool 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/84NUrv5kuMUDDlOPqi97KGJMdLm.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:533535": {
+    title: "Deadpool y Lobezno",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9TFSqghEHrlBMRR63yTx80Orxva.jpg",
+    year: 2024,
+  },
+  "tmdb:movie:557": {
+    title: "Spider-Man",
+    posterUrl: "https://image.tmdb.org/t/p/w342/bCDaKZLRkrVVtPNyHxUfKvepW1N.jpg",
+    year: 2002,
+  },
+  "tmdb:movie:558": {
+    title: "Spider-Man 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/tGYrkVuskQKyRZ9WRS6wPTPBJpm.jpg",
+    year: 2004,
+  },
+  "tmdb:movie:559": {
+    title: "Spider-Man 3",
+    posterUrl: "https://image.tmdb.org/t/p/w342/lkuQzlShE2uzJcsZYU4zBI4VQZP.jpg",
+    year: 2007,
+  },
+  "tmdb:movie:1930": {
+    title: "The Amazing Spider-Man",
+    posterUrl: "https://image.tmdb.org/t/p/w342/swjygVNvJ84ztpgfFX9gRr2MPBZ.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:102382": {
+    title: "The Amazing Spider-Man 2: El poder de Electro",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8W0mMrmaVdSoLz5LnX61gJOXfEb.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:324857": {
+    title: "Spider-Man: un nuevo universo",
+    posterUrl: "https://image.tmdb.org/t/p/w342/xRMZikjAHNFebD1FLRqgDZeGV4a.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:569094": {
+    title: "Spider-Man: Cruzando el Multiverso",
+    posterUrl: "https://image.tmdb.org/t/p/w342/37WcNMgNOMxdhT87MFl7tq7FM1.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:335983": {
+    title: "Venom",
+    posterUrl: "https://image.tmdb.org/t/p/w342/jMBTJQiHAyGlZR05J2sq5coA6ew.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:580489": {
+    title: "Venom: habrá matanza",
+    posterUrl: "https://image.tmdb.org/t/p/w342/b0j9rHYpRML7dKm5xw9e97HTDJF.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:912649": {
+    title: "Venom: El último baile",
+    posterUrl: "https://image.tmdb.org/t/p/w342/toZiAd0n0NKhiuHTiGk7kBMmhtG.jpg",
+    year: 2024,
+  },
+  "tmdb:movie:671": {
+    title: "Harry Potter y la piedra filosofal",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3MKK7vAJLtSkBTABMTjxf6TOCo3.jpg",
+    year: 2001,
+  },
+  "tmdb:movie:672": {
+    title: "Harry Potter y la cámara secreta",
+    posterUrl: "https://image.tmdb.org/t/p/w342/bhCfAzeMMg7GyLDT11yVM2i1NPh.jpg",
+    year: 2002,
+  },
+  "tmdb:movie:673": {
+    title: "Harry Potter y el prisionero de Azkaban",
+    posterUrl: "https://image.tmdb.org/t/p/w342/wF9aoo4YZmpKP4bZPSy4Zwwek6G.jpg",
+    year: 2004,
+  },
+  "tmdb:movie:674": {
+    title: "Harry Potter y el cáliz de fuego",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5hrrncgY7GfRHz6JmnhPlvJUONe.jpg",
+    year: 2005,
+  },
+  "tmdb:movie:675": {
+    title: "Harry Potter y la Orden del Fénix",
+    posterUrl: "https://image.tmdb.org/t/p/w342/xxXiM2Ij7plbzibKWW9BfDk23aI.jpg",
+    year: 2007,
+  },
+  "tmdb:movie:767": {
+    title: "Harry Potter y el misterio del príncipe",
+    posterUrl: "https://image.tmdb.org/t/p/w342/tO0UGkNuQoxyXve0mvwtXP49NAO.jpg",
+    year: 2009,
+  },
+  "tmdb:movie:12444": {
+    title: "Harry Potter y las Reliquias de la Muerte - Parte 1",
+    posterUrl: "https://image.tmdb.org/t/p/w342/w6wsYKdXERaXRdByPsI2O9rn20b.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:12445": {
+    title: "Harry Potter y las Reliquias de la Muerte - Parte 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/aM1TuUiPtV8OAZyu61CTdy9Ymtk.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:259316": {
+    title: "Animales fantásticos y dónde encontrarlos",
+    posterUrl: "https://image.tmdb.org/t/p/w342/wduJFXlHQTIw1TBf6kTO3bHf2VN.jpg",
+    year: 2016,
+  },
+  "tmdb:movie:338952": {
+    title: "Animales fantásticos: Los crímenes de Grindelwald",
+    posterUrl: "https://image.tmdb.org/t/p/w342/p4BabO5lvfXnIsVIBLDpN2wLORz.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:338953": {
+    title: "Animales fantásticos: Los secretos de Dumbledore",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yOeuJdwag4bAlnvgrdweRoiuXGC.jpg",
+    year: 2022,
+  },
+  "tmdb:movie:120": {
+    title: "El señor de los anillos: La comunidad del anillo",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9xtH1RmAzQ0rrMBNUMXstb2s3er.jpg",
+    year: 2001,
+  },
+  "tmdb:movie:121": {
+    title: "El señor de los anillos: Las dos torres",
+    posterUrl: "https://image.tmdb.org/t/p/w342/up6gIHZlfEQZkHIfQwcOOaGOzOt.jpg",
+    year: 2002,
+  },
+  "tmdb:movie:122": {
+    title: "El señor de los anillos: El retorno del rey",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mWuFbQrXyLk2kMBKF9TUPtDwuPx.jpg",
+    year: 2003,
+  },
+  "tmdb:movie:49051": {
+    title: "El hobbit: Un viaje inesperado",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3dJELUqdpGEkXVrMj7V3BiOjrtf.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:57158": {
+    title: "El hobbit: La desolación de Smaug",
+    posterUrl: "https://image.tmdb.org/t/p/w342/1s8xZDmG5IkDU0m1LeW28YcwTRx.jpg",
+    year: 2013,
+  },
+  "tmdb:movie:122917": {
+    title: "El hobbit: La batalla de los cinco ejércitos",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6OiNSLcRKJsBLXwb6DEi6IQ0JFk.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:411": {
+    title: "Las crónicas de Narnia: El león, la bruja y el armario",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2Lv2wKf2YocOcRfzmvQYOUGRhFg.jpg",
+    year: 2005,
+  },
+  "tmdb:movie:2454": {
+    title: "Las crónicas de Narnia: El príncipe Caspian",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ccXSnN0bMBYc7Pno5chkpy7UYcq.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:10140": {
+    title: "Las crónicas de Narnia: La travesía del viajero del alba",
+    posterUrl: "https://image.tmdb.org/t/p/w342/i1VNVBUkai81eRQTS16zXllnN52.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:22": {
+    title: "Piratas del Caribe: La maldición de la Perla Negra",
+    posterUrl: "https://image.tmdb.org/t/p/w342/bVG48kmXuLaZYgPfSCmhs6EYFbX.jpg",
+    year: 2003,
+  },
+  "tmdb:movie:58": {
+    title: "Piratas del Caribe: El cofre del hombre muerto",
+    posterUrl: "https://image.tmdb.org/t/p/w342/7L7H6sHAt48EfwsqFaa0dw2NJhz.jpg",
+    year: 2006,
+  },
+  "tmdb:movie:285": {
+    title: "Piratas del Caribe: En el fin del mundo",
+    posterUrl: "https://image.tmdb.org/t/p/w342/xHcUMez2b1QiMGQYCuQTAlqwDEe.jpg",
+    year: 2007,
+  },
+  "tmdb:movie:1865": {
+    title: "Piratas del Caribe: En mareas misteriosas",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2oOARbiV871kCC27FyKBmYwOM3G.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:166426": {
+    title: "Piratas del Caribe: La venganza de Salazar",
+    posterUrl: "https://image.tmdb.org/t/p/w342/net3hZOe33XbieLzVkfJsQEdig2.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:85": {
+    title: "En busca del arca perdida",
+    posterUrl: "https://image.tmdb.org/t/p/w342/tECLVwLCMexSkls33RTCwedRZ6d.jpg",
+    year: 1981,
+  },
+  "tmdb:movie:87": {
+    title: "Indiana Jones y el templo maldito",
+    posterUrl: "https://image.tmdb.org/t/p/w342/tLEaz41vKyKY7AgCTGgijLGWzbk.jpg",
+    year: 1984,
+  },
+  "tmdb:movie:89": {
+    title: "Indiana Jones y la última cruzada",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5h45gK147AAJpLLC7Cicr597urz.jpg",
+    year: 1989,
+  },
+  "tmdb:movie:217": {
+    title: "Indiana Jones y el reino de la calavera de cristal",
+    posterUrl: "https://image.tmdb.org/t/p/w342/caC98g0VyWVztBStLu46rpKlbGw.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:335977": {
+    title: "Indiana Jones y el dial del destino",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3Sj5ubQ0BLXd6JuECq52Ira8Oor.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:564": {
+    title: "La momia",
+    posterUrl: "https://image.tmdb.org/t/p/w342/aGRMxB5ve2nSKsq8ww6PyUwhWpP.jpg",
+    year: 1999,
+  },
+  "tmdb:movie:1734": {
+    title: "El regreso de la momia",
+    posterUrl: "https://image.tmdb.org/t/p/w342/x5CeEQ2iq9A20LbU0K4Q1TMxFDs.jpg",
+    year: 2001,
+  },
+  "tmdb:movie:1735": {
+    title: "La momia: La tumba del emperador Dragón",
+    posterUrl: "https://image.tmdb.org/t/p/w342/wktniKrRfM6yXI2zEsLz9M3gNWP.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:603": {
+    title: "Matrix",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8rT9kG2EYkZpJmYCuTJNnPDEube.jpg",
+    year: 1999,
+  },
+  "tmdb:movie:604": {
+    title: "Matrix Reloaded",
+    posterUrl: "https://image.tmdb.org/t/p/w342/7IZk3Xp3HIpRJGXFYNvzmyRwDlt.jpg",
+    year: 2003,
+  },
+  "tmdb:movie:605": {
+    title: "Matrix Revolutions",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zi1UMF9jIM2JnQz0u2AyUw8QFZi.jpg",
+    year: 2003,
+  },
+  "tmdb:movie:624860": {
+    title: "Matrix Resurrections",
+    posterUrl: "https://image.tmdb.org/t/p/w342/dLIwpCTf4QoW01pp85KP9jcfTpu.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:218": {
+    title: "Terminator",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9KI49SBnwAOzGcMw1onIki7vd2.jpg",
+    year: 1984,
+  },
+  "tmdb:movie:280": {
+    title: "Terminator 2: El juicio final",
+    posterUrl: "https://image.tmdb.org/t/p/w342/10xtoK2SFv6ADIeWxr3mcrjko72.jpg",
+    year: 1991,
+  },
+  "tmdb:movie:296": {
+    title: "Terminator 3: La rebelión de las máquinas",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ugVNhnnH3DKUZZ3JtzRkViIh4L9.jpg",
+    year: 2003,
+  },
+  "tmdb:movie:534": {
+    title: "Terminator: Salvation",
+    posterUrl: "https://image.tmdb.org/t/p/w342/qPORLTWsJrqB27xXCkJRMjMl7fk.jpg",
+    year: 2009,
+  },
+  "tmdb:movie:87101": {
+    title: "Terminator Génesis",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5N5PnUoywvOduFb4Qw6HD2LkMtu.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:290859": {
+    title: "Terminator: Destino oscuro",
+    posterUrl: "https://image.tmdb.org/t/p/w342/k7PuHoj2oE7nEHExwliF2FSXFnr.jpg",
+    year: 2019,
+  },
+  "tmdb:movie:348": {
+    title: "Alien, el octavo pasajero",
+    posterUrl: "https://image.tmdb.org/t/p/w342/pZ9cAe5FxexJjpCaeiETbXzz3Fs.jpg",
+    year: 1979,
+  },
+  "tmdb:movie:679": {
+    title: "Aliens: El regreso",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3QU9EP8BFLnTh6w9ycDSCvhqbRU.jpg",
+    year: 1986,
+  },
+  "tmdb:movie:8077": {
+    title: "Alien³",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mj4lGdK8dyivFDKoRXEUmkaUKKf.jpg",
+    year: 1992,
+  },
+  "tmdb:movie:8078": {
+    title: "Alien: Resurrección",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6MLQ5ehGD3b8E0JZ9K2G4cZeFaI.jpg",
+    year: 1997,
+  },
+  "tmdb:movie:70981": {
+    title: "Prometheus",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5oYpDom6T7c1YiL2j5IImKklws7.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:126889": {
+    title: "Alien: Covenant",
+    posterUrl: "https://image.tmdb.org/t/p/w342/245tgZ3mTHWs0NRiPSwPjKobKHf.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:945961": {
+    title: "Alien: Romulus",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8PYqGSd8MOm5ce8io4qNSAiSExW.jpg",
+    year: 2024,
+  },
+  "tmdb:movie:106": {
+    title: "Depredador",
+    posterUrl: "https://image.tmdb.org/t/p/w342/spgPmu5bTk8N6KZXrIOBwfd3cNb.jpg",
+    year: 1987,
+  },
+  "tmdb:movie:169": {
+    title: "Depredador 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/92Lqy293CqAExYXlqDc456eYCWp.jpg",
+    year: 1990,
+  },
+  "tmdb:movie:34851": {
+    title: "Predators",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mYH9FtLUtaIgiGKrVqo82TklFIY.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:345940": {
+    title: "Megalodón",
+    posterUrl: "https://image.tmdb.org/t/p/w342/kBl4wXkKVZep4AVVxju67uh6uVV.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:766507": {
+    title: "Predator: La presa",
+    posterUrl: "https://image.tmdb.org/t/p/w342/sNAMqQ9T7YnXnvUSufeWzaRgK6Y.jpg",
+    year: 2022,
+  },
+  "tmdb:movie:1376434": {
+    title: "Predator: Asesino de asesinos",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8upWJ1KTR1bAPqXCHAuVOhfuiAZ.jpg",
+    year: 2025,
+  },
+  "tmdb:movie:1242898": {
+    title: "Predator: Badlands",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8nCEJ5hFJt0h8FhXafHGhEhT8d7.jpg",
+    year: 2025,
+  },
+  "tmdb:movie:9659": {
+    title: "Mad Max: Salvajes de la autopista",
+    posterUrl: "https://image.tmdb.org/t/p/w342/vWa1DEwV5RbAOiuAm0WNXD3Aydw.jpg",
+    year: 1979,
+  },
+  "tmdb:movie:8810": {
+    title: "Mad Max 2: El guerrero de la carretera",
+    posterUrl: "https://image.tmdb.org/t/p/w342/udpVgRB3xz5ZN553apthn4TyT6G.jpg",
+    year: 1981,
+  },
+  "tmdb:movie:9355": {
+    title: "Mad Max 3: Más allá de la cúpula del trueno",
+    posterUrl: "https://image.tmdb.org/t/p/w342/pgmOX4PQl5xPAdAx18zPPnQjQKs.jpg",
+    year: 1985,
+  },
+  "tmdb:movie:76341": {
+    title: "Mad Max: Furia en la carretera",
+    posterUrl: "https://image.tmdb.org/t/p/w342/fnY0VRsb31A5RLVCBjuR6EFUlo2.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:786892": {
+    title: "Furiosa: De la saga Mad Max",
+    posterUrl: "https://image.tmdb.org/t/p/w342/tGHUlykWn9V2IIQ4ZaATIAq9VLB.jpg",
+    year: 2024,
+  },
+  "tmdb:movie:871": {
+    title: "El planeta de los simios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/pMLpuzyeXFsttiW0dHzJLH5FXyK.jpg",
+    year: 1968,
+  },
+  "tmdb:movie:1685": {
+    title: "Regreso al planeta de los simios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/wNh22vYIfd2Xr6zBoh8ZQGivt1L.jpg",
+    year: 1970,
+  },
+  "tmdb:movie:1687": {
+    title: "Huida del planeta de los simios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mCbFub0UiNQi3SBSOjwGNLhEroc.jpg",
+    year: 1971,
+  },
+  "tmdb:movie:1688": {
+    title: "La rebelión de los simios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/J80xXgT6Mw8EiiQeHcEdJ4LfxC.jpg",
+    year: 1972,
+  },
+  "tmdb:movie:1705": {
+    title: "La conquista del planeta de los simios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9kQ0wmBzoL4EZEF2jTft58AhBuv.jpg",
+    year: 1973,
+  },
+  "tmdb:movie:61791": {
+    title: "El origen del planeta de los simios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6TqjIMQV11NkHMuriprN3xNoN6o.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:119450": {
+    title: "El amanecer del planeta de los simios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mP5Wr0YkO3EDqc6vkvtdifi7KKI.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:281338": {
+    title: "La guerra del planeta de los simios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/iAm7IAqfK6VL2h1yh9QbpcctaT.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:653346": {
+    title: "El reino del planeta de los simios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/kkFn3KM47Qq4Wjhd8GuFfe3LX27.jpg",
+    year: 2024,
+  },
+  "tmdb:movie:438631": {
+    title: "Dune",
+    posterUrl: "https://image.tmdb.org/t/p/w342/szcew6yyjcDvaL0isaPBk2e3nkF.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:693134": {
+    title: "Dune: Parte dos",
+    posterUrl: "https://image.tmdb.org/t/p/w342/xCHmhHeO7aOCMlzcNukGH6Q7EiD.jpg",
+    year: 2024,
+  },
+  "tmdb:movie:954": {
+    title: "Misión imposible",
+    posterUrl: "https://image.tmdb.org/t/p/w342/xCpmxw3UUjv4PGzbIPOHeoKAV0l.jpg",
+    year: 1996,
+  },
+  "tmdb:movie:955": {
+    title: "Misión imposible 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mskE3W88cjMRrnKQye8pjmJu3O1.jpg",
+    year: 2000,
+  },
+  "tmdb:movie:956": {
+    title: "Misión imposible 3",
+    posterUrl: "https://image.tmdb.org/t/p/w342/w61xBgFOfP8Z6uHKIKn1sl1TI8j.jpg",
+    year: 2006,
+  },
+  "tmdb:movie:56292": {
+    title: "Misión imposible: Protocolo fantasma",
+    posterUrl: "https://image.tmdb.org/t/p/w342/y0hjsPyieqxcunEcAxb9mrrE09c.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:177677": {
+    title: "Misión imposible: Nación secreta",
+    posterUrl: "https://image.tmdb.org/t/p/w342/q5twcJdIx9Swtl7CyzfvgQckWVK.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:353081": {
+    title: "Misión: Imposible - Fallout",
+    posterUrl: "https://image.tmdb.org/t/p/w342/cUlWqDLEYMN3OWlOZ0U18WcIw5F.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:575264": {
+    title: "Misión: Imposible - Sentencia mortal parte uno",
+    posterUrl: "https://image.tmdb.org/t/p/w342/83sGKvCv2T2CulYbd40Aeduc7n2.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:575265": {
+    title: "Misión: Imposible - Sentencia final",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mKK7cVNg4mQmKl0Qry9fvr5AqP7.jpg",
+    year: 2025,
+  },
+  "tmdb:movie:245891": {
+    title: "John Wick (Otro día para matar)",
+    posterUrl: "https://image.tmdb.org/t/p/w342/tDl5ac1VJwMRvlgINDCsDCqg9CE.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:324552": {
+    title: "John Wick: Pacto de sangre",
+    posterUrl: "https://image.tmdb.org/t/p/w342/tAAikrL3kH3TopsDC2Bgo4ARUiP.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:458156": {
+    title: "John Wick: Capítulo 3 - Parabellum",
+    posterUrl: "https://image.tmdb.org/t/p/w342/aKw7oqYdfn4pkKYvp18Gd1YhK6m.jpg",
+    year: 2019,
+  },
+  "tmdb:movie:603692": {
+    title: "John Wick 4",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mj2Z9HnRSIEk3n7yVPoOY4Uzzfh.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:9799": {
+    title: "A todo gas",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mrdf1KTSZxsPzqrrHSSCUV3CoU8.jpg",
+    year: 2001,
+  },
+  "tmdb:movie:584": {
+    title: "2 Fast 2 Furious: A todo gas 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/fZtSG5a6i5Ca39WQylLVmvWI5b.jpg",
+    year: 2003,
+  },
+  "tmdb:movie:9615": {
+    title: "A todo gas: Tokyo Race",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9FBbiTAfBkTLYbqVux9ycqed5vz.jpg",
+    year: 2006,
+  },
+  "tmdb:movie:13804": {
+    title: "Fast & Furious: Aún más rápido",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5Pf9sP5jmiwUToa1XAdTQQW4CjX.jpg",
+    year: 2009,
+  },
+  "tmdb:movie:51497": {
+    title: "Fast & Furious 5",
+    posterUrl: "https://image.tmdb.org/t/p/w342/d7OwxVxXdkfUOwh5VvW6JpY0Ot9.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:82992": {
+    title: "Fast & Furious 6",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6zUkjB5OtiFhN2DiqdT1IllNJTa.jpg",
+    year: 2013,
+  },
+  "tmdb:movie:168259": {
+    title: "Fast & Furious 7",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yWG5W4tKCQweHEdnKV4YEvqOBGx.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:337339": {
+    title: "Fast & Furious 8",
+    posterUrl: "https://image.tmdb.org/t/p/w342/vXntMTWnh3QRmbY8z53eUlQKmQB.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:385128": {
+    title: "Fast & Furious 9",
+    posterUrl: "https://image.tmdb.org/t/p/w342/TX1T3c3CDBN0y8iDNvlQbtiA5Z.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:385687": {
+    title: "Fast & Furious X",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3P9QvWVN02Etn4kYGC702WVoXEb.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:2501": {
+    title: "The Bourne Identity: El caso Bourne",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yYH7sqMQ1NJNd6scW44D1WjBmAw.jpg",
+    year: 2002,
+  },
+  "tmdb:movie:2502": {
+    title: "El mito de Bourne",
+    posterUrl: "https://image.tmdb.org/t/p/w342/kTFFwQHdaTUb5MJmB8KBGO7lh7N.jpg",
+    year: 2004,
+  },
+  "tmdb:movie:2503": {
+    title: "El ultimátum de Bourne",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ifuhCKw2DZ3ROlz7oSFxtJnznR7.jpg",
+    year: 2007,
+  },
+  "tmdb:movie:49040": {
+    title: "El legado de Bourne",
+    posterUrl: "https://image.tmdb.org/t/p/w342/pWVaLBdcVrTqSTBKIJLinmuxRso.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:324668": {
+    title: "Jason Bourne",
+    posterUrl: "https://image.tmdb.org/t/p/w342/jv58uIvzudh2MiBW7VERz9552me.jpg",
+    year: 2016,
+  },
+  "tmdb:movie:36557": {
+    title: "Casino Royale",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2Tygvjqrd6EfvOLwuS7bEIbHwH9.jpg",
+    year: 2006,
+  },
+  "tmdb:movie:10764": {
+    title: "Quantum of Solace",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zXkvsMkHbvFT9FMw7U9df0ZDuhb.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:37724": {
+    title: "Skyfall",
+    posterUrl: "https://image.tmdb.org/t/p/w342/lz5kTkm3az7Ww0uTLRvCGgudnaa.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:206647": {
+    title: "Spectre",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8NCrCV6tR0Uafp8eVYiZbRsvrAv.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:370172": {
+    title: "Sin tiempo para morir",
+    posterUrl: "https://image.tmdb.org/t/p/w342/4yk2270JA6QpnN8xkuRsnPVXgdP.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:476669": {
+    title: "The King's Man: La primera misión",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3vBuTxmO4fqbZiZe8i9cqmfiUh6.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:207703": {
+    title: "Kingsman: Servicio secreto",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2RNABhJ8sTfenTz84ADVUbPllxq.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:343668": {
+    title: "Kingsman: El círculo de oro",
+    posterUrl: "https://image.tmdb.org/t/p/w342/d0tCSswCeMBzaDsyXc82qfDDvPD.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:8681": {
+    title: "Venganza",
+    posterUrl: "https://image.tmdb.org/t/p/w342/fO9HTzeL7sd346tybTfbd99Nv3R.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:82675": {
+    title: "Venganza: Conexión Estambul",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2RQkFjXnqLxc6F8H4VsitxvSyuk.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:260346": {
+    title: "V3nganza",
+    posterUrl: "https://image.tmdb.org/t/p/w342/hCffcXqpH002rvSFt8AUnIC376s.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:862": {
+    title: "Toy Story",
+    posterUrl: "https://image.tmdb.org/t/p/w342/y59d8PjuFSgJJN4VRS7jDoRgSM9.jpg",
+    year: 1995,
+  },
+  "tmdb:movie:863": {
+    title: "Toy Story 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6zI0N9blJ9DwuV2xgl3TdGFLtn0.jpg",
+    year: 1999,
+  },
+  "tmdb:movie:10193": {
+    title: "Toy Story 3",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yBSISwqix2z0JiwIrM3r6fiI6Cm.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:301528": {
+    title: "Toy Story 4",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yF1vPDuHVrAUMX5dy1tVMbAjkEL.jpg",
+    year: 2019,
+  },
+  "tmdb:movie:808": {
+    title: "Shrek",
+    posterUrl: "https://image.tmdb.org/t/p/w342/jTQONM7jt1yv2lL972TtmWO0UIZ.jpg",
+    year: 2001,
+  },
+  "tmdb:movie:809": {
+    title: "Shrek 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/knRt4E8KyfwEv0SVu9LsLvD28IQ.jpg",
+    year: 2004,
+  },
+  "tmdb:movie:810": {
+    title: "Shrek tercero",
+    posterUrl: "https://image.tmdb.org/t/p/w342/7sTwtmVPTX77CFOUXdwAM7lKtKL.jpg",
+    year: 2007,
+  },
+  "tmdb:movie:10192": {
+    title: "Shrek, Felices para siempre",
+    posterUrl: "https://image.tmdb.org/t/p/w342/11K03KebrdD8nUlGFJX3rSL3KHK.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:10191": {
+    title: "Cómo entrenar a tu dragón",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8ekxsUORMAsfmSc8GzHmG8gWPbp.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:82702": {
+    title: "Cómo entrenar a tu dragón 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/bXcRw7FL8QzUZOvY2fZdwDv5ymQ.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:166428": {
+    title: "Cómo entrenar a tu dragón 3",
+    posterUrl: "https://image.tmdb.org/t/p/w342/rhnoAReqO3Xoe6GbJhT3409lnq8.jpg",
+    year: 2019,
+  },
+  "tmdb:movie:9502": {
+    title: "Kung Fu Panda",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zcORJ8s9zsBjvKxP0k4FASQSjpf.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:49444": {
+    title: "Kung Fu Panda 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/aNji9U9SPTecmoqGippQUBEyouy.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:140300": {
+    title: "Kung Fu Panda 3",
+    posterUrl: "https://image.tmdb.org/t/p/w342/t11f8palNbICK9Ip5QLrUfhLJYq.jpg",
+    year: 2016,
+  },
+  "tmdb:movie:1011985": {
+    title: "Kung Fu Panda 4",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2xgGWjM3a38E4KTLapvC53RnpN1.jpg",
+    year: 2024,
+  },
+  "tmdb:movie:953": {
+    title: "Madagascar",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zrV5GnfCcLWzyjrFgYTpjQPRMfl.jpg",
+    year: 2005,
+  },
+  "tmdb:movie:10527": {
+    title: "Madagascar 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zYbvSjajQrb2jU9rUo5Mt06stPd.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:80321": {
+    title: "Madagascar 3: De marcha por Europa",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8fKTIecTVNURB6CRFjYMypggRL2.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:20352": {
+    title: "Gru Mi villano favorito",
+    posterUrl: "https://image.tmdb.org/t/p/w342/AsaaPLSfisdFDeasEd9r0GiZVss.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:93456": {
+    title: "Gru 2. Mi villano favorito",
+    posterUrl: "https://image.tmdb.org/t/p/w342/hhksXOBVJ6Mu2BwAFgPJwZxNisd.jpg",
+    year: 2013,
+  },
+  "tmdb:movie:211672": {
+    title: "Los Minions",
+    posterUrl: "https://image.tmdb.org/t/p/w342/nmqLwaTfgyWLQWbYd82w159cAqJ.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:324852": {
+    title: "Gru 3. Mi villano favorito",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mz3zTmsnySgFWGc3ZsBbCQbalut.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:438148": {
+    title: "Minions: El origen de Gru",
+    posterUrl: "https://image.tmdb.org/t/p/w342/fzwG3cukayxKpCK0lqS1jkSBqJk.jpg",
+    year: 2022,
+  },
+  "tmdb:movie:519182": {
+    title: "Gru 4. Mi villano favorito",
+    posterUrl: "https://image.tmdb.org/t/p/w342/b6JX0fBne5yPFNBtdp4Imi3CpiE.jpg",
+    year: 2024,
+  },
+  "tmdb:movie:425": {
+    title: "Ice Age: La edad de hielo",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9rpdhn7p7mDZW2rUXsINf9c6sR5.jpg",
+    year: 2002,
+  },
+  "tmdb:movie:950": {
+    title: "Ice Age 2: El deshielo",
+    posterUrl: "https://image.tmdb.org/t/p/w342/q3D7vBGrJVrVrZSJjVQN8lN0e6c.jpg",
+    year: 2006,
+  },
+  "tmdb:movie:8355": {
+    title: "Ice Age 3: El origen de los dinosaurios",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zufHIdp8szvgkt8VCnJEF2fo1tN.jpg",
+    year: 2009,
+  },
+  "tmdb:movie:57800": {
+    title: "Ice Age 4: La formación de los continentes",
+    posterUrl: "https://image.tmdb.org/t/p/w342/qYiZOCXkOYtYfolUUdJKoZ8xPsL.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:278154": {
+    title: "Ice Age: El gran cataclismo",
+    posterUrl: "https://image.tmdb.org/t/p/w342/vgxlqI40AUXmpBzcwlLsYZI5EcR.jpg",
+    year: 2016,
+  },
+  "tmdb:movie:920": {
+    title: "Cars",
+    posterUrl: "https://image.tmdb.org/t/p/w342/lgBe9KD6DoLyQP28JZ6fSUGK8j0.jpg",
+    year: 2006,
+  },
+  "tmdb:movie:49013": {
+    title: "Cars 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/eQo1LQs5Vo9RHVHYUhNSfMZa3VB.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:260514": {
+    title: "Cars 3",
+    posterUrl: "https://image.tmdb.org/t/p/w342/4tp9W3QAbQcpanBtBceZtHD10UT.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:138843": {
+    title: "Expediente Warren: The Conjuring",
+    posterUrl: "https://image.tmdb.org/t/p/w342/sKuHxkCogdk6YWzTyXYPoo9qd9n.jpg",
+    year: 2013,
+  },
+  "tmdb:movie:250546": {
+    title: "Annabelle",
+    posterUrl: "https://image.tmdb.org/t/p/w342/sFxgTJizaUUI3NByNT80oCVnkA2.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:259693": {
+    title: "Expediente Warren: El caso Enfield",
+    posterUrl: "https://image.tmdb.org/t/p/w342/pdNW0HWw11Wn2N94VGea8O44wOA.jpg",
+    year: 2016,
+  },
+  "tmdb:movie:396422": {
+    title: "Annabelle: Creation",
+    posterUrl: "https://image.tmdb.org/t/p/w342/dpdPo1kPE5y1pBopxKnchlSX8i8.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:439079": {
+    title: "La monja",
+    posterUrl: "https://image.tmdb.org/t/p/w342/7fxjwtEvqI1BYkXEbGqJ3dQBgXD.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:480414": {
+    title: "La Llorona",
+    posterUrl: "https://image.tmdb.org/t/p/w342/1BIWytsnEr2aRobU6ERutzewm63.jpg",
+    year: 2019,
+  },
+  "tmdb:movie:521029": {
+    title: "Annabelle: Vuelve a casa",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zxwPksbRKGaAi06rapPfFTVsMHv.jpg",
+    year: 2019,
+  },
+  "tmdb:movie:423108": {
+    title: "Expediente Warren: Obligado por el demonio",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ghMQALCyytc6W0wlOlMIKiMSRKV.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:968051": {
+    title: "La monja II",
+    posterUrl: "https://image.tmdb.org/t/p/w342/cRp5MhCXwyEjJ3gqynmUME4nJPv.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:1038392": {
+    title: "Expediente Warren: El último rito",
+    posterUrl: "https://image.tmdb.org/t/p/w342/qdoqogLNR6myoRrxYFxF4UTkFne.jpg",
+    year: 2025,
+  },
+  "tmdb:movie:4232": {
+    title: "Scream",
+    posterUrl: "https://image.tmdb.org/t/p/w342/pO39MWOrEmJYthKyWT79BYCVRrO.jpg",
+    year: 1996,
+  },
+  "tmdb:movie:4233": {
+    title: "Scream 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/iCWp5oRMf7uGWqOCVfLOA5xLorZ.jpg",
+    year: 1997,
+  },
+  "tmdb:movie:4234": {
+    title: "Scream 3",
+    posterUrl: "https://image.tmdb.org/t/p/w342/dEEvUjBFW1JOVoDnJ7LxZRw75Ik.jpg",
+    year: 2000,
+  },
+  "tmdb:movie:41446": {
+    title: "Scream 4",
+    posterUrl: "https://image.tmdb.org/t/p/w342/sr7WNBgjX1UH9yw4Qq4o6GLAyVf.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:646385": {
+    title: "Scream",
+    posterUrl: "https://image.tmdb.org/t/p/w342/85euDQpOU7YNMVMdPZY1KuMe3q5.jpg",
+    year: 2022,
+  },
+  "tmdb:movie:934433": {
+    title: "Scream VI",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zh0JffFtxcWEJBLKayH3d34WnNT.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:176": {
+    title: "Saw",
+    posterUrl: "https://image.tmdb.org/t/p/w342/k9h1Don5JWNhLMAjspwbiMMoDzS.jpg",
+    year: 2004,
+  },
+  "tmdb:movie:215": {
+    title: "Saw II",
+    posterUrl: "https://image.tmdb.org/t/p/w342/gw7nQp0rXmEF81SvumCXWx7U5nb.jpg",
+    year: 2005,
+  },
+  "tmdb:movie:214": {
+    title: "Saw III",
+    posterUrl: "https://image.tmdb.org/t/p/w342/raUejCvrhUl0VTjcj8b0gJLBUhQ.jpg",
+    year: 2006,
+  },
+  "tmdb:movie:663": {
+    title: "Saw IV",
+    posterUrl: "https://image.tmdb.org/t/p/w342/owzhppFoegtjAkEhyxQhRtgPl96.jpg",
+    year: 2007,
+  },
+  "tmdb:movie:11917": {
+    title: "Saw V",
+    posterUrl: "https://image.tmdb.org/t/p/w342/1kxceLYLH3QB8QgtJeTDAQm1fjP.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:22804": {
+    title: "Saw VI",
+    posterUrl: "https://image.tmdb.org/t/p/w342/xeRsqKxQyMemmBZ4BSkzhwVPeud.jpg",
+    year: 2009,
+  },
+  "tmdb:movie:41439": {
+    title: "Saw VII",
+    posterUrl: "https://image.tmdb.org/t/p/w342/gn4z3QWHyBVbIIRNucsW6xuhJE2.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:298250": {
+    title: "Saw VIII",
+    posterUrl: "https://image.tmdb.org/t/p/w342/90T0Cjx2yl6RaFhxas1eKnCphh5.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:602734": {
+    title: "Spiral: Saw",
+    posterUrl: "https://image.tmdb.org/t/p/w342/97WyFdS8pQerysSSGezafXHW5ZH.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:951491": {
+    title: "Saw X",
+    posterUrl: "https://image.tmdb.org/t/p/w342/nzVkXj1IX0BNoYzpTVogtkcCStf.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:948": {
+    title: "La noche de Halloween",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6bsDpDL312h6vEGPOPWoweaZWUG.jpg",
+    year: 1978,
+  },
+  "tmdb:movie:11281": {
+    title: "Halloween II: Sanguinario",
+    posterUrl: "https://image.tmdb.org/t/p/w342/apMPhXFMkqfBHx8ltZKMDB9JuAi.jpg",
+    year: 1981,
+  },
+  "tmdb:movie:10676": {
+    title: "Halloween III: El día de la bruja",
+    posterUrl: "https://image.tmdb.org/t/p/w342/hbnLPuazrrUqHxbm2Tsd22tHdHQ.jpg",
+    year: 1982,
+  },
+  "tmdb:movie:11357": {
+    title: "Halloween 4: El regreso de Michael Myers",
+    posterUrl: "https://image.tmdb.org/t/p/w342/dajbRAwMb2hLGrTQwOHeCc6ouPR.jpg",
+    year: 1988,
+  },
+  "tmdb:movie:11361": {
+    title: "Halloween 5: La venganza de Michael Myers",
+    posterUrl: "https://image.tmdb.org/t/p/w342/aYW5YLdTQQ8taHCo8ezblLATCOB.jpg",
+    year: 1989,
+  },
+  "tmdb:movie:10987": {
+    title: "Halloween 6: La maldición de Michael Myers",
+    posterUrl: "https://image.tmdb.org/t/p/w342/gZTdirlRJUAJz36ex46VF1kUrpJ.jpg",
+    year: 1995,
+  },
+  "tmdb:movie:11675": {
+    title: "Halloween: H20. Veinte años después",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2xj2z8qqs6r5FTSe4tAuqCrYjK5.jpg",
+    year: 1998,
+  },
+  "tmdb:movie:11442": {
+    title: "Halloween: Resurrection",
+    posterUrl: "https://image.tmdb.org/t/p/w342/oY7zaqkuiO7uVvKzl1yL7iIHauR.jpg",
+    year: 2002,
+  },
+  "tmdb:movie:424139": {
+    title: "La noche de Halloween",
+    posterUrl: "https://image.tmdb.org/t/p/w342/tRwuTL3KhU03MA2EkXNdRXhH49V.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:610253": {
+    title: "Halloween Kills",
+    posterUrl: "https://image.tmdb.org/t/p/w342/j1Jf5OCpjCDBCp4K7Nnh8JlvNUJ.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:616820": {
+    title: "Halloween: El final",
+    posterUrl: "https://image.tmdb.org/t/p/w342/nP53tROjP7v9YnVF3lsFkOZRjF8.jpg",
+    year: 2022,
+  },
+  "tmdb:movie:49018": {
+    title: "Insidious",
+    posterUrl: "https://image.tmdb.org/t/p/w342/gIrBcrmtL2KEiydYKk8r94o1UGI.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:91586": {
+    title: "Insidious: Capítulo 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ybzJLYR0AbtFphcj6kMqe08Ak1F.jpg",
+    year: 2013,
+  },
+  "tmdb:movie:280092": {
+    title: "Insidious: Capítulo 3",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yc8vkZgbaJjaZjEE1K1qMrDWiB5.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:406563": {
+    title: "Insidious: La última llave",
+    posterUrl: "https://image.tmdb.org/t/p/w342/d5l0baYosvDH4HCEc6O7h1QgAp9.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:614479": {
+    title: "Insidious: La puerta roja",
+    posterUrl: "https://image.tmdb.org/t/p/w342/wD4eLIHUaTvrXQqAzlfduHQ1NYg.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:346364": {
+    title: "It (Eso)",
+    posterUrl: "https://image.tmdb.org/t/p/w342/sSrj4lnhrb113DOPEPTaO2jaDk3.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:474350": {
+    title: "It: Capítulo 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9oERKIVyTWpHNum3STVsAGD4ojz.jpg",
+    year: 2019,
+  },
+  "tmdb:movie:447332": {
+    title: "Un lugar tranquilo",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5pairI20KJs1SEa4Z8yAsPR779m.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:520763": {
+    title: "Un lugar tranquilo 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6uRb5axnwAd17h4ak4ENHcJqHVr.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:762441": {
+    title: "Un lugar tranquilo: Día uno",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6efQJ7pu9GPketUDBAhJtgZLkvD.jpg",
+    year: 2024,
+  },
+  "tmdb:movie:23827": {
+    title: "Paranormal Activity",
+    posterUrl: "https://image.tmdb.org/t/p/w342/919Xf5NshBIKuj4HP2XkGIfNaCF.jpg",
+    year: 2007,
+  },
+  "tmdb:movie:41436": {
+    title: "Paranormal Activity 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/b4Vuhm8L50nhVRUDqT5hbP4aG3x.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:72571": {
+    title: "Paranormal Activity 3",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2mgtnguCilTT7OtSURCWWE65iWr.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:82990": {
+    title: "Paranormal Activity 4",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zthZf2pnhmtQGFZhbHEcUlilsL4.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:227348": {
+    title: "Paranormal Activity: Los señalados",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ykyXkeoUb4RDUge7ZfiiIuVJ1bG.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:146301": {
+    title: "Paranormal Activity: Dimensión fantasma",
+    posterUrl: "https://image.tmdb.org/t/p/w342/wq7z719J82BvcxYfc4i2CpKvWCU.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:609972": {
+    title: "Paranormal Activity: Allegados",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5idw994cLDgixK2zuacXrAlYBp3.jpg",
+    year: 2021,
+  },
+  "tmdb:movie:329": {
+    title: "Jurassic Park (Parque Jurásico)",
+    posterUrl: "https://image.tmdb.org/t/p/w342/h831eszSFmEyr94WKcgscqPIRbh.jpg",
+    year: 1993,
+  },
+  "tmdb:movie:330": {
+    title: "El mundo perdido: Jurassic Park",
+    posterUrl: "https://image.tmdb.org/t/p/w342/80pXV9DEd81rBGqmlPBLbvr6h9a.jpg",
+    year: 1997,
+  },
+  "tmdb:movie:331": {
+    title: "Jurassic Park III (Parque Jurásico III)",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5GM4Nqc79PFE3IOqNKwmOxAWkX1.jpg",
+    year: 2001,
+  },
+  "tmdb:movie:135397": {
+    title: "Jurassic World",
+    posterUrl: "https://image.tmdb.org/t/p/w342/sOgfattHPWE5sWdVCGHQ08GEbaP.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:351286": {
+    title: "Jurassic World: El reino caído",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yHa2I7qxZvZUASLHrIR8vQLmZ4B.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:507086": {
+    title: "Jurassic World: Dominion",
+    posterUrl: "https://image.tmdb.org/t/p/w342/sXeWfpT1EhG7f4uBouqraOhmouH.jpg",
+    year: 2022,
+  },
+  "tmdb:movie:1858": {
+    title: "Transformers",
+    posterUrl: "https://image.tmdb.org/t/p/w342/jNZOozjyWKC0jTTvpZ3KOobGcED.jpg",
+    year: 2007,
+  },
+  "tmdb:movie:8373": {
+    title: "Transformers: La venganza de los caídos",
+    posterUrl: "https://image.tmdb.org/t/p/w342/qzEIlhHivIcpKhKVOkb61eBz2Mv.jpg",
+    year: 2009,
+  },
+  "tmdb:movie:38356": {
+    title: "Transformers: El lado oscuro de la luna",
+    posterUrl: "https://image.tmdb.org/t/p/w342/fMqXNNgzTaxalU1ve9KevpELiGe.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:91314": {
+    title: "Transformers: La era de la extinción",
+    posterUrl: "https://image.tmdb.org/t/p/w342/owqV5Qo2DMMomfB1fS6xYWv3yEh.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:335988": {
+    title: "Transformers: El último caballero",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mXEBnMqFwTJCrddVhknCH9fq3fB.jpg",
+    year: 2017,
+  },
+  "tmdb:movie:424783": {
+    title: "Bumblebee",
+    posterUrl: "https://image.tmdb.org/t/p/w342/lOW8vBMJqWHWcMxHbigVAytqiBn.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:667538": {
+    title: "Transformers: El despertar de las bestias",
+    posterUrl: "https://image.tmdb.org/t/p/w342/peIB7KBBrqW0JsCLQBt9ChEtZ7m.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:1366": {
+    title: "Rocky",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yyoGappf3WxXRrHz23yNbH2MffI.jpg",
+    year: 1976,
+  },
+  "tmdb:movie:1367": {
+    title: "Rocky II",
+    posterUrl: "https://image.tmdb.org/t/p/w342/nMaiiu0CzT77U4JZkUYV7KqdAjK.jpg",
+    year: 1979,
+  },
+  "tmdb:movie:1371": {
+    title: "Rocky III",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5Mn0xgB8w9mi2Ifo7WdS8aSgA7V.jpg",
+    year: 1982,
+  },
+  "tmdb:movie:1374": {
+    title: "Rocky IV",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2MHUit4H6OK5adcOjnCN6suCKOl.jpg",
+    year: 1985,
+  },
+  "tmdb:movie:1375": {
+    title: "Rocky V",
+    posterUrl: "https://image.tmdb.org/t/p/w342/kbt9oSpAX8TkmpV2T72p0Cl41vR.jpg",
+    year: 1990,
+  },
+  "tmdb:movie:1246": {
+    title: "Rocky Balboa",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8oN30JAimKk2LcLOusSYpGvMPgG.jpg",
+    year: 2006,
+  },
+  "tmdb:movie:312221": {
+    title: "Creed. La leyenda de Rocky",
+    posterUrl: "https://image.tmdb.org/t/p/w342/fTdozSSr2cTZcioldjfVUbBzhrW.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:480530": {
+    title: "Creed II: La leyenda de Rocky",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2t53WEu1Ck7qAMS3theMnQK2N2c.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:677179": {
+    title: "Creed III",
+    posterUrl: "https://image.tmdb.org/t/p/w342/fcFMd3HdyX7r5gtFwVnn2qr5Yhq.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:105": {
+    title: "Regreso al futuro",
+    posterUrl: "https://image.tmdb.org/t/p/w342/owk40tn1sFJmC7bhamEpmhdZPKa.jpg",
+    year: 1985,
+  },
+  "tmdb:movie:165": {
+    title: "Regreso al futuro II",
+    posterUrl: "https://image.tmdb.org/t/p/w342/oTiQdzBOP5biNvzvrSPAvPxiSKH.jpg",
+    year: 1989,
+  },
+  "tmdb:movie:196": {
+    title: "Regreso al futuro III",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yamBr3ihlWFF9jh3oOODSvjDY2e.jpg",
+    year: 1990,
+  },
+  "tmdb:movie:238": {
+    title: "El padrino",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ApiEfzSkrqS4m1L5a2GwWXzIiAs.jpg",
+    year: 1972,
+  },
+  "tmdb:movie:240": {
+    title: "El Padrino Parte II",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mbry0W5PRylSUHsYzdiY2FSJwze.jpg",
+    year: 1974,
+  },
+  "tmdb:movie:242": {
+    title: "El Padrino Parte III",
+    posterUrl: "https://image.tmdb.org/t/p/w342/l2D8Gzuzw8hN41UthdqM9Osu9I3.jpg",
+    year: 1990,
+  },
+  "tmdb:movie:70160": {
+    title: "Los Juegos del Hambre",
+    posterUrl: "https://image.tmdb.org/t/p/w342/qSEn7KsGchT7qB08HlviyeTPrEr.jpg",
+    year: 2012,
+  },
+  "tmdb:movie:101299": {
+    title: "Los Juegos del Hambre: En llamas",
+    posterUrl: "https://image.tmdb.org/t/p/w342/oxnKI1qiHz7xC0mNthC7dSqTcot.jpg",
+    year: 2013,
+  },
+  "tmdb:movie:131631": {
+    title: "Los Juegos del Hambre: Sinsajo - Parte 1",
+    posterUrl: "https://image.tmdb.org/t/p/w342/wfLsciidZamFPeOb4FD8ywk1Q9c.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:131634": {
+    title: "Los Juegos del Hambre: Sinsajo - Parte 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3qQPBc7JVGXJGo0Av5jrqndcdTm.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:695721": {
+    title: "Los Juegos del Hambre: Balada de pájaros cantores y serpientes",
+    posterUrl: "https://image.tmdb.org/t/p/w342/2vIK81ikjvdewSLmrwIg7AMoJIv.jpg",
+    year: 2023,
+  },
+  "tmdb:movie:198663": {
+    title: "El corredor del laberinto",
+    posterUrl: "https://image.tmdb.org/t/p/w342/egKi4jZKKVZzR8NaaNjEwMpEgHs.jpg",
+    year: 2014,
+  },
+  "tmdb:movie:294254": {
+    title: "El corredor del laberinto: Las pruebas",
+    posterUrl: "https://image.tmdb.org/t/p/w342/43K7XwlFzO5PGdNMFY5s36jXdWo.jpg",
+    year: 2015,
+  },
+  "tmdb:movie:336843": {
+    title: "El corredor del laberinto: La cura mortal",
+    posterUrl: "https://image.tmdb.org/t/p/w342/kuZOnvzplxPVh71t827F19zY5Ab.jpg",
+    year: 2018,
+  },
+  "tmdb:movie:8966": {
+    title: "Crepúsculo",
+    posterUrl: "https://image.tmdb.org/t/p/w342/40ollvfwHaVF85lkkg522SIl3Qc.jpg",
+    year: 2008,
+  },
+  "tmdb:movie:18239": {
+    title: "La saga Crepúsculo: Luna nueva",
+    posterUrl: "https://image.tmdb.org/t/p/w342/l5lF8VHTO5QKObAKE3Wp2QQfGZJ.jpg",
+    year: 2009,
+  },
+  "tmdb:movie:24021": {
+    title: "La saga Crepúsculo: Eclipse",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mckJPxNAQ51beBQw82evAa9a2Wd.jpg",
+    year: 2010,
+  },
+  "tmdb:movie:50619": {
+    title: "La saga Crepúsculo: Amanecer - Parte 1",
+    posterUrl: "https://image.tmdb.org/t/p/w342/27WlKKz9f3vMr6JvSf0LDBVdtaZ.jpg",
+    year: 2011,
+  },
+  "tmdb:movie:50620": {
+    title: "La saga Crepúsculo: Amanecer - Parte 2",
+    posterUrl: "https://image.tmdb.org/t/p/w342/pPB3rQx0oBOmj5CHZxLWgexo5nS.jpg",
+    year: 2012,
+  },
+  "tmdb:tv:1396": {
+    title: "Breaking Bad",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3xnWaLQjelJDDF7LT1WBo6f4BRe.jpg",
+    year: 2008,
+  },
+  "tmdb:tv:60059": {
+    title: "Better Call Saul",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zjg4jpK1Wp2kiRvtt5ND0kznako.jpg",
+    year: 2015,
+  },
+  "tmdb:tv:1399": {
+    title: "Juego de tronos",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3hDtRuwTfQQYRst3kjhvp4Cogjw.jpg",
+    year: 2011,
+  },
+  "tmdb:tv:94997": {
+    title: "La casa del dragón",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8MaxftF69sEAAD5673vTjIl8yT3.jpg",
+    year: 2022,
+  },
+  "tmdb:tv:1402": {
+    title: "The Walking Dead",
+    posterUrl: "https://image.tmdb.org/t/p/w342/hUblG1KZCTRpHc3wqqoU0DW98Q3.jpg",
+    year: 2010,
+  },
+  "tmdb:tv:62286": {
+    title: "Fear the Walking Dead",
+    posterUrl: "https://image.tmdb.org/t/p/w342/rdaB95H0qnBd2Y3j8FOjUkxBuBk.jpg",
+    year: 2015,
+  },
+  "tmdb:tv:94305": {
+    title: "The Walking Dead: World Beyond",
+    posterUrl: "https://image.tmdb.org/t/p/w342/6HanIV2hTLE2w7A5bI1KJb3bTL7.jpg",
+    year: 2020,
+  },
+  "tmdb:tv:136248": {
+    title: "Tales of the Walking Dead",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zRMUHvTgQ79zteQafNI46Nd9XFm.jpg",
+    year: 2022,
+  },
+  "tmdb:tv:194583": {
+    title: "The Walking Dead: Dead City",
+    posterUrl: "https://image.tmdb.org/t/p/w342/wq3vuQzQgbS83zX3malAFWMsSwX.jpg",
+    year: 2023,
+  },
+  "tmdb:tv:211684": {
+    title: "The Walking Dead: Daryl Dixon",
+    posterUrl: "https://image.tmdb.org/t/p/w342/1e6y2MiGL7KCTJfpqa3cNHLDpF3.jpg",
+    year: 2023,
+  },
+  "tmdb:tv:206586": {
+    title: "The Walking Dead: The Ones Who Live",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ywbacot78IuNhGW4uVZPxxxVTkm.jpg",
+    year: 2024,
+  },
+  "tmdb:tv:73586": {
+    title: "Yellowstone",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8mPGPuSx8NbSDmjABbEqlja0I96.jpg",
+    year: 2018,
+  },
+  "tmdb:tv:118357": {
+    title: "1883",
+    posterUrl: "https://image.tmdb.org/t/p/w342/waLbm384SQDwLTCn6ttPqQS5kfV.jpg",
+    year: 2021,
+  },
+  "tmdb:tv:157744": {
+    title: "1923",
+    posterUrl: "https://image.tmdb.org/t/p/w342/aE7pMhO58iCn9CdU1VYcyTfKr1o.jpg",
+    year: 2022,
+  },
+  "tmdb:tv:44217": {
+    title: "Vikingos",
+    posterUrl: "https://image.tmdb.org/t/p/w342/x0BOmMjIslyH9ZP5h2eMOdaZ8QX.jpg",
+    year: 2013,
+  },
+  "tmdb:tv:116135": {
+    title: "Vikingos: Valhalla",
+    posterUrl: "https://image.tmdb.org/t/p/w342/hZfPArlmeLS18oecv5yErmmf9lo.jpg",
+    year: 2022,
+  },
+  "tmdb:tv:1405": {
+    title: "Dexter",
+    posterUrl: "https://image.tmdb.org/t/p/w342/q8dWfc4JwQuv3HayIZeO84jAXED.jpg",
+    year: 2006,
+  },
+  "tmdb:tv:131927": {
+    title: "Dexter: New Blood",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9EBKgrFIsCFSV1RZKWhYUdbtGiv.jpg",
+    year: 2021,
+  },
+  "tmdb:tv:219937": {
+    title: "Dexter: Pecado Original",
+    posterUrl: "https://image.tmdb.org/t/p/w342/9XLULEZTkeLwRytTUQtgmx2HH4o.jpg",
+    year: 2024,
+  },
+  "tmdb:tv:259909": {
+    title: "Dexter: Resurrección",
+    posterUrl: "https://image.tmdb.org/t/p/w342/lZyvtYfG6RMJm3B6sjfJvcTVtFw.jpg",
+    year: 2025,
+  },
+  "tmdb:tv:67198": {
+    title: "Star Trek: Discovery",
+    posterUrl: "https://image.tmdb.org/t/p/w342/xwpOHgym48Ftz7fbJq5te5xoiwu.jpg",
+    year: 2017,
+  },
+  "tmdb:tv:85949": {
+    title: "Star Trek: Picard",
+    posterUrl: "https://image.tmdb.org/t/p/w342/nIlAKIrLKxOeoEnc0Urb65yNCp.jpg",
+    year: 2020,
+  },
+  "tmdb:tv:85948": {
+    title: "Star Trek: Lower Decks",
+    posterUrl: "https://image.tmdb.org/t/p/w342/i7Em3r7KCyNfkOwMkyqN8UMvK8S.jpg",
+    year: 2020,
+  },
+  "tmdb:tv:106393": {
+    title: "Star Trek: Prodigy",
+    posterUrl: "https://image.tmdb.org/t/p/w342/Aqub3PSzLm2F398vitkbkxjopjO.jpg",
+    year: 2021,
+  },
+  "tmdb:tv:103516": {
+    title: "Star Trek: Strange New Worlds",
+    posterUrl: "https://image.tmdb.org/t/p/w342/w6KapI2JvrCkOPmQhkwYPJNjqeo.jpg",
+    year: 2022,
+  },
+  "tmdb:tv:246": {
+    title: "Avatar: La leyenda de Aang",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ucNtkZfpZ6KgxqPo039nN4LAyFR.jpg",
+    year: 2005,
+  },
+  "tmdb:tv:33880": {
+    title: "La leyenda de Korra",
+    posterUrl: "https://image.tmdb.org/t/p/w342/eMo4uWsN3qceNhBPcuw5T2lFsc5.jpg",
+    year: 2012,
+  },
+  "tmdb:tv:71912": {
+    title: "The Witcher",
+    posterUrl: "https://image.tmdb.org/t/p/w342/gvn0m0LCIslrURjSo7UG5Rx6mV2.jpg",
+    year: 2019,
+  },
+  "tmdb:tv:106541": {
+    title: "The Witcher: El origen de la sangre",
+    posterUrl: "https://image.tmdb.org/t/p/w342/3BRkE6xK6uO6ov7EvYZDgkg5Ub3.jpg",
+    year: 2022,
+  },
+  "tmdb:tv:82856": {
+    title: "The Mandalorian",
+    posterUrl: "https://image.tmdb.org/t/p/w342/iLg3DzrwCDsHNovNaWx5JnQAsiV.jpg",
+    year: 2019,
+  },
+  "tmdb:tv:115036": {
+    title: "El libro de Boba Fett",
+    posterUrl: "https://image.tmdb.org/t/p/w342/4bffB2YV4UxNfEifp4HxdhfJulK.jpg",
+    year: 2021,
+  },
+  "tmdb:tv:92830": {
+    title: "Obi-Wan Kenobi",
+    posterUrl: "https://image.tmdb.org/t/p/w342/mVHpVzGwhB9NBpyS5j6qJsME7lo.jpg",
+    year: 2022,
+  },
+  "tmdb:tv:83867": {
+    title: "Andor",
+    posterUrl: "https://image.tmdb.org/t/p/w342/e3cWQzBxHK803AbZGjp1feQFgyS.jpg",
+    year: 2022,
+  },
+  "tmdb:tv:114461": {
+    title: "Ahsoka",
+    posterUrl: "https://image.tmdb.org/t/p/w342/co7oZ7eupt4t5o1MkTvqBpsaR0M.jpg",
+    year: 2023,
+  },
+  "tmdb:tv:4629": {
+    title: "Stargate SG-1",
+    posterUrl: "https://image.tmdb.org/t/p/w342/dQjmI7XxI47v8IM2MUysHG0LuU2.jpg",
+    year: 1997,
+  },
+  "tmdb:tv:2290": {
+    title: "Stargate Atlantis",
+    posterUrl: "https://image.tmdb.org/t/p/w342/l0JYr2iqwId6VOmCV8dHzlIM6Wd.jpg",
+    year: 2004,
+  },
+  "tmdb:tv:5148": {
+    title: "Stargate Universe",
+    posterUrl: "https://image.tmdb.org/t/p/w342/dHOaOZGUhnoRXeK9mhYeSRPh59H.jpg",
+    year: 2009,
+  },
+  "tmdb:tv:1412": {
+    title: "Arrow",
+    posterUrl: "https://image.tmdb.org/t/p/w342/u8ZHFj1jC384JEkTt3vNg1DfWEb.jpg",
+    year: 2012,
+  },
+  "tmdb:tv:60735": {
+    title: "The Flash",
+    posterUrl: "https://image.tmdb.org/t/p/w342/7ci4qqkBJorLxSBwTj28vwh0bU.jpg",
+    year: 2014,
+  },
+  "tmdb:tv:62688": {
+    title: "Supergirl",
+    posterUrl: "https://image.tmdb.org/t/p/w342/VsvR3ykugenhyRzz1Uf91V9U0c.jpg",
+    year: 2015,
+  },
+  "tmdb:tv:62643": {
+    title: "DC's Legends of Tomorrow",
+    posterUrl: "https://image.tmdb.org/t/p/w342/RChURu0ZBfHQ5f5t3aDJiq0M4s.jpg",
+    year: 2016,
+  },
+  "tmdb:tv:89247": {
+    title: "Batwoman",
+    posterUrl: "https://image.tmdb.org/t/p/w342/uMOZ7VZwGbHcoiMksZjvyO5AFRT.jpg",
+    year: 2019,
+  },
+  "tmdb:tv:76479": {
+    title: "The Boys",
+    posterUrl: "https://image.tmdb.org/t/p/w342/5kgY14oisiHcJ4zq0Xgq1e97PHm.jpg",
+    year: 2019,
+  },
+  "tmdb:tv:205715": {
+    title: "Generación V",
+    posterUrl: "https://image.tmdb.org/t/p/w342/fLJzwWk28vRrNQIvIXUSU5YBdT5.jpg",
+    year: 2023,
+  },
+  "tmdb:tv:61889": {
+    title: "Marvel - Daredevil",
+    posterUrl: "https://image.tmdb.org/t/p/w342/zdjmPOMNlDpmqXLgNaGBT7jAiFj.jpg",
+    year: 2015,
+  },
+  "tmdb:tv:38472": {
+    title: "Marvel - Jessica Jones",
+    posterUrl: "https://image.tmdb.org/t/p/w342/b3EVT7sSX8Y8L3OekYWyKLRS1Jt.jpg",
+    year: 2015,
+  },
+  "tmdb:tv:62126": {
+    title: "Marvel - Luke Cage",
+    posterUrl: "https://image.tmdb.org/t/p/w342/yzM1hMB3PUJqbISX0f421b3xOjB.jpg",
+    year: 2016,
+  },
+  "tmdb:tv:62127": {
+    title: "Marvel - Iron Fist",
+    posterUrl: "https://image.tmdb.org/t/p/w342/ywrvjIgK5K9Ff8RddgdFI3kfDqT.jpg",
+    year: 2017,
+  },
+  "tmdb:tv:62285": {
+    title: "Marvel - The Defenders",
+    posterUrl: "https://image.tmdb.org/t/p/w342/49XzINhH4LFsgz7cx6TOPcHUJUL.jpg",
+    year: 2017,
+  },
+  "tmdb:tv:67178": {
+    title: "Marvel - The Punisher",
+    posterUrl: "https://image.tmdb.org/t/p/w342/8OdIbo68mFE4w6jXA20aL8ocPsE.jpg",
+    year: 2017,
+  },
 };

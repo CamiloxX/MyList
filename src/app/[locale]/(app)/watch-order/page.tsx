@@ -11,8 +11,8 @@ import { searchTmdb, tmdbTitle, tmdbYear } from "@/lib/tmdb/search";
 
 export const dynamic = "force-dynamic";
 
-// Movies first, then anime — the two categories the curated list ships today.
-const CATEGORY_ORDER = ["movie", "anime"] as const;
+// Section order on the index: movies, then series, then anime.
+const CATEGORY_ORDER = ["movie", "tv", "anime"] as const;
 
 type PageProps = {
   searchParams: Promise<{ q?: string }>;

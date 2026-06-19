@@ -12,14 +12,19 @@ export type CuratedEntry =
 export type CuratedFranchise = {
   id: string;
   name: string;
-  /** Display category — drives the icon on the watch-order index. */
-  category: "movie" | "anime";
+  /** Display category — groups the franchise on the watch-order index. */
+  category: "movie" | "tv" | "anime";
   /** Recommended watch order (in-universe / story order). */
   chronological: CuratedEntry[];
 };
 
 function movies(...ids: number[]): CuratedEntry[] {
   return ids.map((id) => ({ source: "tmdb", kind: "movie", sourceId: String(id) }));
+}
+
+/** TV entries by TMDB id (the app's `tmdb`/tv key). */
+function series(...ids: number[]): CuratedEntry[] {
+  return ids.map((id) => ({ source: "tmdb", kind: "tv", sourceId: String(id) }));
 }
 
 /** Anime entries by MyAnimeList id (the app's `anilist`/anime key). */
@@ -368,6 +373,545 @@ export const CURATED_FRANCHISES: CuratedFranchise[] = [
     name: "5 Novias (Quintuplets)",
     category: "anime",
     chronological: animes(38101, 39783, 48548),
+  },
+
+  // --- Live-action movie sagas + TV franchises. TMDB ids resolved from the
+  // discover-franchises multi-agent workflow via scripts/resolve-tmdb-ids.mjs
+  // (matched by title + year, picked by vote count), 2026-06. Regenerate the
+  // data file after editing.
+  {
+    id: "dceu-universo-extendido-de-dc",
+    name: "DCEU (Universo Extendido de DC)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(
+      49521,
+      209112,
+      297761,
+      297762,
+      141052,
+      297802,
+      287947,
+      495764,
+      464052,
+      436969,
+      436270,
+      594767,
+      298618,
+      565770,
+      572802,
+    ),
+  },
+  {
+    id: "batman-la-trilogia-de-christopher-nolan",
+    name: "Batman: La trilogía de Christopher Nolan",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(272, 155, 49026),
+  },
+  {
+    id: "x-men",
+    name: "X-Men",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(
+      36657,
+      36658,
+      36668,
+      2080,
+      49538,
+      76170,
+      127585,
+      246655,
+      263115,
+      320288,
+      340102,
+    ),
+  },
+  {
+    id: "deadpool",
+    name: "Deadpool",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(293660, 383498, 533535),
+  },
+  {
+    id: "spider-man-trilogia-de-sam-raimi",
+    name: "Spider-Man (trilogía de Sam Raimi)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(557, 558, 559),
+  },
+  {
+    id: "the-amazing-spider-man-saga-de-marc-webb",
+    name: "The Amazing Spider-Man (saga de Marc Webb)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(1930, 102382),
+  },
+  {
+    id: "spider-man-spider-verse",
+    name: "Spider-Man: Spider-Verse",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(324857, 569094),
+  },
+  {
+    id: "venom",
+    name: "Venom",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(335983, 580489, 912649),
+  },
+  {
+    id: "harry-potter",
+    name: "Harry Potter",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(671, 672, 673, 674, 675, 767, 12444, 12445),
+  },
+  {
+    id: "animales-fantasticos",
+    name: "Animales Fantásticos",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(259316, 338952, 338953),
+  },
+  {
+    id: "el-senor-de-los-anillos",
+    name: "El Señor de los Anillos",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(120, 121, 122),
+  },
+  {
+    id: "el-hobbit",
+    name: "El Hobbit",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(49051, 57158, 122917),
+  },
+  {
+    id: "las-cronicas-de-narnia",
+    name: "Las Crónicas de Narnia",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(411, 2454, 10140),
+  },
+  {
+    id: "piratas-del-caribe",
+    name: "Piratas del Caribe",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(22, 58, 285, 1865, 166426),
+  },
+  {
+    id: "indiana-jones",
+    name: "Indiana Jones",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(85, 87, 89, 217, 335977),
+  },
+  {
+    id: "la-momia-trilogia-de-brendan-fraser",
+    name: "La Momia (trilogía de Brendan Fraser)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(564, 1734, 1735),
+  },
+  {
+    id: "matrix",
+    name: "Matrix",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(603, 604, 605, 624860),
+  },
+  {
+    id: "terminator",
+    name: "Terminator",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(218, 280, 296, 534, 87101, 290859),
+  },
+  {
+    id: "alien",
+    name: "Alien",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(348, 679, 8077, 8078, 70981, 126889, 945961),
+  },
+  {
+    id: "depredador-predator",
+    name: "Depredador (Predator)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(106, 169, 34851, 345940, 766507, 1376434, 1242898),
+  },
+  {
+    id: "mad-max",
+    name: "Mad Max",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(9659, 8810, 9355, 76341, 786892),
+  },
+  {
+    id: "el-planeta-de-los-simios-saga-clasica",
+    name: "El Planeta de los Simios (saga clásica)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(871, 1685, 1687, 1688, 1705),
+  },
+  {
+    id: "el-planeta-de-los-simios-nueva-saga",
+    name: "El Planeta de los Simios (nueva saga)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(61791, 119450, 281338, 653346),
+  },
+  {
+    id: "dune-saga-de-denis-villeneuve",
+    name: "Dune (saga de Denis Villeneuve)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(438631, 693134),
+  },
+  {
+    id: "mision-imposible",
+    name: "Misión Imposible",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(954, 955, 956, 56292, 177677, 353081, 575264, 575265),
+  },
+  {
+    id: "john-wick",
+    name: "John Wick",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(245891, 324552, 458156, 603692),
+  },
+  {
+    id: "rapidos-y-furiosos",
+    name: "Rápidos y Furiosos",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(9799, 584, 9615, 13804, 51497, 82992, 168259, 337339, 385128, 385687),
+  },
+  {
+    id: "jason-bourne",
+    name: "Jason Bourne",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(2501, 2502, 2503, 49040, 324668),
+  },
+  {
+    id: "james-bond-era-daniel-craig",
+    name: "James Bond (era Daniel Craig)",
+    category: "movie",
+    // orden de estreno (continuidad reiniciada)
+    chronological: movies(36557, 10764, 37724, 206647, 370172),
+  },
+  {
+    id: "kingsman",
+    name: "Kingsman",
+    category: "movie",
+    // orden cronológico (The King's Man es precuela)
+    chronological: movies(476669, 207703, 343668),
+  },
+  {
+    id: "busqueda-implacable-taken",
+    name: "Búsqueda implacable (Taken)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(8681, 82675, 260346),
+  },
+  {
+    id: "toy-story",
+    name: "Toy Story",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(862, 863, 10193, 301528),
+  },
+  {
+    id: "shrek",
+    name: "Shrek",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(808, 809, 810, 10192),
+  },
+  {
+    id: "como-entrenar-a-tu-dragon",
+    name: "Cómo entrenar a tu dragón",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(10191, 82702, 166428),
+  },
+  {
+    id: "kung-fu-panda",
+    name: "Kung Fu Panda",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(9502, 49444, 140300, 1011985),
+  },
+  {
+    id: "madagascar",
+    name: "Madagascar",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(953, 10527, 80321),
+  },
+  {
+    id: "mi-villano-favorito",
+    name: "Mi Villano Favorito",
+    category: "movie",
+    // orden de estreno (incluye los spin-off de Minions)
+    chronological: movies(20352, 93456, 211672, 324852, 438148, 519182),
+  },
+  {
+    id: "la-era-de-hielo",
+    name: "La Era de Hielo",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(425, 950, 8355, 57800, 278154),
+  },
+  {
+    id: "cars",
+    name: "Cars",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(920, 49013, 260514),
+  },
+  {
+    id: "el-conjuro-universo-warren",
+    name: "El Conjuro (Universo Warren)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(
+      138843,
+      250546,
+      259693,
+      396422,
+      439079,
+      480414,
+      521029,
+      423108,
+      968051,
+      1038392,
+    ),
+  },
+  {
+    id: "scream",
+    name: "Scream",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(4232, 4233, 4234, 41446, 646385, 934433),
+  },
+  {
+    id: "saw-el-juego-del-miedo",
+    name: "Saw (El Juego del Miedo)",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(176, 215, 214, 663, 11917, 22804, 41439, 298250, 602734, 951491),
+  },
+  {
+    id: "halloween",
+    name: "Halloween",
+    category: "movie",
+    // orden de estreno (saga original + reboot 2018)
+    chronological: movies(
+      948,
+      11281,
+      10676,
+      11357,
+      11361,
+      10987,
+      11675,
+      11442,
+      424139,
+      610253,
+      616820,
+    ),
+  },
+  {
+    id: "insidious",
+    name: "Insidious",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(49018, 91586, 280092, 406563, 614479),
+  },
+  {
+    id: "it",
+    name: "It",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(346364, 474350),
+  },
+  {
+    id: "un-lugar-en-silencio",
+    name: "Un lugar en silencio",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(447332, 520763, 762441),
+  },
+  {
+    id: "actividad-paranormal",
+    name: "Actividad Paranormal",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(23827, 41436, 72571, 82990, 227348, 146301, 609972),
+  },
+  {
+    id: "jurassic-park-jurassic-world",
+    name: "Jurassic Park / Jurassic World",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(329, 330, 331, 135397, 351286, 507086),
+  },
+  {
+    id: "transformers",
+    name: "Transformers",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(1858, 8373, 38356, 91314, 335988, 424783, 667538),
+  },
+  {
+    id: "rocky-creed",
+    name: "Rocky / Creed",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(1366, 1367, 1371, 1374, 1375, 1246, 312221, 480530, 677179),
+  },
+  {
+    id: "volver-al-futuro",
+    name: "Volver al Futuro",
+    category: "movie",
+    // orden de estreno (cronológico)
+    chronological: movies(105, 165, 196),
+  },
+  {
+    id: "el-padrino",
+    name: "El Padrino",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(238, 240, 242),
+  },
+  {
+    id: "los-juegos-del-hambre",
+    name: "Los Juegos del Hambre",
+    category: "movie",
+    // orden de estreno
+    chronological: movies(70160, 101299, 131631, 131634, 695721),
+  },
+  {
+    id: "maze-runner",
+    name: "Maze Runner",
+    category: "movie",
+    // orden de estreno (cronológico)
+    chronological: movies(198663, 294254, 336843),
+  },
+  {
+    id: "crepusculo",
+    name: "Crepúsculo",
+    category: "movie",
+    // orden de estreno (cronológico)
+    chronological: movies(8966, 18239, 24021, 50619, 50620),
+  },
+  {
+    id: "breaking-bad",
+    name: "Breaking Bad",
+    category: "tv",
+    // orden de estreno (la precuela Better Call Saul se disfruta mejor tras la serie original)
+    chronological: series(1396, 60059),
+  },
+  {
+    id: "juego-de-tronos",
+    name: "Juego de Tronos",
+    category: "tv",
+    // orden de estreno
+    chronological: series(1399, 94997),
+  },
+  {
+    id: "the-walking-dead",
+    name: "The Walking Dead",
+    category: "tv",
+    // orden de estreno
+    chronological: series(1402, 62286, 94305, 136248, 194583, 211684, 206586),
+  },
+  {
+    id: "yellowstone",
+    name: "Yellowstone",
+    category: "tv",
+    // orden de estreno
+    chronological: series(73586, 118357, 157744),
+  },
+  {
+    id: "vikingos",
+    name: "Vikingos",
+    category: "tv",
+    // orden de estreno (Valhalla transcurre ~100 años después)
+    chronological: series(44217, 116135),
+  },
+  {
+    id: "dexter",
+    name: "Dexter",
+    category: "tv",
+    // orden de estreno (la precuela Original Sin se ubica en 1991, antes de la serie original)
+    chronological: series(1405, 131927, 219937, 259909),
+  },
+  {
+    id: "universo-star-trek-era-moderna",
+    name: "Universo Star Trek (era moderna)",
+    category: "tv",
+    // orden de estreno de las series modernas
+    chronological: series(67198, 85949, 85948, 106393, 103516),
+  },
+  {
+    id: "avatar",
+    name: "Avatar",
+    category: "tv",
+    // orden cronológico (secuela)
+    chronological: series(246, 33880),
+  },
+  {
+    id: "the-witcher",
+    name: "The Witcher",
+    category: "tv",
+    // orden de estreno (la precuela El origen de la sangre salió después)
+    chronological: series(71912, 106541),
+  },
+  {
+    id: "star-wars-series-de-accion-real",
+    name: "Star Wars (series de acción real)",
+    category: "tv",
+    // orden de estreno
+    chronological: series(82856, 115036, 92830, 83867, 114461),
+  },
+  {
+    id: "stargate",
+    name: "Stargate",
+    category: "tv",
+    // orden de estreno
+    chronological: series(4629, 2290, 5148),
+  },
+  {
+    id: "arrowverse",
+    name: "Arrowverse",
+    category: "tv",
+    // orden de estreno
+    chronological: series(1412, 60735, 62688, 62643, 89247),
+  },
+  {
+    id: "the-boys-universo",
+    name: "The Boys (universo)",
+    category: "tv",
+    // orden de estreno
+    chronological: series(76479, 205715),
+  },
+  {
+    id: "marvel-los-defensores-netflix",
+    name: "Marvel / Los Defensores (Netflix)",
+    category: "tv",
+    // orden de estreno
+    chronological: series(61889, 38472, 62126, 62127, 62285, 67178),
   },
 ];
 

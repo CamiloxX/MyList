@@ -1063,6 +1063,7 @@
       "franchisesHeading": "Popular franchises",
       "categories": {
         "movie": "Movies",
+        "tv": "Series",
         "anime": "Anime"
       },
       "franchiseCount": "{count, plural, one {# title} other {# titles}}",

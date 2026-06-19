@@ -77,6 +77,36 @@ export async function getTmdbMovieBrief(movieId: string | number): Promise<{
   }
 }
 
+const tvBriefSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  poster_path: z.string().nullable().optional(),
+  first_air_date: z.string().nullable().optional(),
+});
+
+/** Minimal TV card data by id (name/poster/year). For resolving curated TV
+ *  franchises, which store only ids. Cached 24h; null on failure. */
+export async function getTmdbTvBrief(tvId: string | number): Promise<{
+  id: number;
+  title: string;
+  posterPath: string | null;
+  year: number | null;
+} | null> {
+  try {
+    const raw = await tmdbFetch<unknown>(`/tv/${tvId}`, { revalidate: 86400 });
+    const t = tvBriefSchema.parse(raw);
+    return {
+      id: t.id,
+      title: t.name,
+      posterPath: t.poster_path ?? null,
+      year: t.first_air_date ? Number.parseInt(t.first_air_date.slice(0, 4), 10) || null : null,
+    };
+  } catch (error) {
+    console.warn("[tmdb-tv-brief] failed:", error);
+    return null;
+  }
+}
+
 /** A collection's movies (`parts`). Order them by release_date for release order. */
 export async function getTmdbCollection(
   collectionId: number,

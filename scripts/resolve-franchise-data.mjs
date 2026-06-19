@@ -50,7 +50,7 @@ if (!TMDB_API_KEY) {
 // can't end it early, then strip `// comments` and read the numeric ids.
 const src = readFileSync(join(root, "src/features/library-v2/curated-franchises.ts"), "utf8");
 const franchiseRe =
-  /id:\s*"([^"]+)"[\s\S]*?category:\s*"([^"]+)"[\s\S]*?(movies|animes)\(([\s\S]*?)\)\s*,?\s*\}/g;
+  /id:\s*"([^"]+)"[\s\S]*?category:\s*"([^"]+)"[\s\S]*?(movies|animes|series)\(([\s\S]*?)\)\s*,?\s*\}/g;
 
 const entries = []; // { source, kind, sourceId }
 const seen = new Set();
@@ -59,8 +59,8 @@ let m;
 while ((m = franchiseRe.exec(src)) !== null) {
   franchiseCount++;
   const fn = m[3];
-  const source = fn === "movies" ? "tmdb" : "anilist";
-  const kind = fn === "movies" ? "movie" : "anime";
+  const source = fn === "animes" ? "anilist" : "tmdb";
+  const kind = fn === "animes" ? "anime" : fn === "series" ? "tv" : "movie";
   const ids = m[4].replace(/\/\/[^\n]*/g, "").match(/\d+/g) ?? [];
   for (const id of ids) {
     const key = `${source}:${kind}:${id}`;
@@ -113,6 +113,17 @@ async function tmdbEntry(id) {
   };
 }
 
+async function tmdbTvEntry(id) {
+  const data = await fetchJson(
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=es-ES`,
+  );
+  return {
+    title: data.name ?? data.original_name ?? `#${id}`,
+    posterUrl: data.poster_path ? `https://image.tmdb.org/t/p/w342${data.poster_path}` : null,
+    year: yearFrom(data.first_air_date),
+  };
+}
+
 async function jikanEntry(id) {
   const { data } = await fetchJson(`https://api.jikan.moe/v4/anime/${id}`);
   const title =
@@ -136,7 +147,12 @@ let done = 0;
 for (const e of entries) {
   const key = `${e.source}:${e.kind}:${e.sourceId}`;
   try {
-    const data = e.kind === "movie" ? await tmdbEntry(e.sourceId) : await jikanEntry(e.sourceId);
+    const data =
+      e.kind === "movie"
+        ? await tmdbEntry(e.sourceId)
+        : e.kind === "tv"
+          ? await tmdbTvEntry(e.sourceId)
+          : await jikanEntry(e.sourceId);
     out[key] = data;
     done++;
     console.log(`OK  [${done}/${entries.length}] ${key} -> ${data.title}`);
