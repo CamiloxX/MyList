@@ -172,6 +172,13 @@ export const CURATED_FRANCHISES: CuratedFranchise[] = [
     // S1 → S2 → S3 → S3 Part 2 → Final Season parts → Kanketsu-hen.
     chronological: animes(16498, 25777, 35760, 38524, 40028, 48583, 51535),
   },
+  {
+    id: "steins-gate",
+    name: "Steins;Gate",
+    category: "anime",
+    // TV → Steins;Gate 0 → movie (Fuka Ryouiki no Déjà vu). Side specials optional.
+    chronological: animes(9253, 30484, 11577),
+  },
 ];
 
 /** Finds the curated franchise a title belongs to (by exact source/kind/id). */
