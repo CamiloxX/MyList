@@ -6,6 +6,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { getTitleBadges } from "@/features/badges/queries";
 import { AnimeProvidersRow } from "@/features/discover/components/anime-providers-row";
 import { ProvidersRow } from "@/features/discover/components/providers-row";
 import { getMediaWatchUrl } from "@/features/library/actions";
@@ -19,6 +20,7 @@ import { WatchEntryList } from "@/features/library/components/watch-entry-list";
 import { WatchEntryTrigger } from "@/features/library/components/watch-entry-trigger";
 import type { MediaStatus } from "@/features/library/status";
 import { DesktopSeriesDetail } from "@/features/library-v2/components/desktop-series-detail";
+import { TitleBadgesCard } from "@/features/library-v2/components/title-badges-card";
 import { WatchOrderSection } from "@/features/library-v2/components/watch-order-section";
 import { type AnimeStreamingItem, resolveAnimeStreaming } from "@/features/library-v2/detail-data";
 import { AddToListButton } from "@/features/lists/components/add-to-list-button";
@@ -63,20 +65,29 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
     notFound();
   }
 
-  const [watchUrl, { data: entries }, trailer, providers, airing, nextEpisode, listMemberships] =
-    await Promise.all([
-      getMediaWatchUrl(id).catch(() => null),
-      supabase
-        .from("watch_entries")
-        .select("id, watched_on, rating, platform, notes, season_number")
-        .eq("media_item_id", id)
-        .order("watched_on", { ascending: false }),
-      fetchTrailerFor(item.source, item.kind, item.source_id),
-      fetchWatchProviders(item.source, item.kind, item.source_id),
-      fetchAiringStatus(item.source, item.kind, item.source_id),
-      fetchNextEpisode(item.source, item.kind, item.source_id),
-      getListsForItem(item.id),
-    ]);
+  const [
+    watchUrl,
+    { data: entries },
+    trailer,
+    providers,
+    airing,
+    nextEpisode,
+    listMemberships,
+    titleBadges,
+  ] = await Promise.all([
+    getMediaWatchUrl(id).catch(() => null),
+    supabase
+      .from("watch_entries")
+      .select("id, watched_on, rating, platform, notes, season_number")
+      .eq("media_item_id", id)
+      .order("watched_on", { ascending: false }),
+    fetchTrailerFor(item.source, item.kind, item.source_id),
+    fetchWatchProviders(item.source, item.kind, item.source_id),
+    fetchAiringStatus(item.source, item.kind, item.source_id),
+    fetchNextEpisode(item.source, item.kind, item.source_id),
+    getListsForItem(item.id),
+    getTitleBadges(item.source, item.source_id, item.kind),
+  ]);
 
   const entriesList = entries ?? [];
   const t = await getTranslations();
@@ -241,6 +252,8 @@ export default async function MediaDetailPage({ params, searchParams }: DetailPa
           </div>
         </div>
       </article>
+
+      <TitleBadgesCard badges={titleBadges} />
 
       {item.kind === "tv" && item.source === "tmdb" ? (
         <SeasonsList mediaItemId={item.id} tmdbId={item.source_id} />

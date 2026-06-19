@@ -3,7 +3,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { loadBadgeMap } from "./catalog";
 import { getAllBadgesWithStatus } from "./evaluator";
-import type { BadgeDefinition, BadgeWithStatus, EarnedBadge } from "./types";
+import type { BadgeCriterion, BadgeDefinition, BadgeWithStatus, EarnedBadge } from "./types";
 
 type ServerClient = Awaited<ReturnType<typeof createClient>>;
 
@@ -19,6 +19,51 @@ export async function getBadgesForCurrentUser(): Promise<BadgeWithStatus[] | nul
   if (!user) return null;
 
   return getAllBadgesWithStatus(supabase, user.id);
+}
+
+/**
+ * Badges whose unlock is tied to this specific title — `title_completed`,
+ * `title_season` or `title_episodes` criteria pointing at (source, sourceId,
+ * kind) — each with the current user's progress / earned state. Empty when no
+ * badge targets the title or the user is signed out. Powers the "achievements
+ * for this title" card on the library detail page. Reuses the full evaluation
+ * pass (same numbers as the /badges page), then keeps only the matching badges.
+ */
+export async function getTitleBadges(
+  source: string,
+  sourceId: string,
+  kind: string,
+): Promise<BadgeWithStatus[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const all = await getAllBadgesWithStatus(supabase, user.id);
+  return all.filter((b) => criterionTargetsTitle(b.criterion, source, sourceId, kind));
+}
+
+/** True when a title-based criterion points at this exact (source, sourceId, kind). */
+function criterionTargetsTitle(
+  criterion: BadgeCriterion,
+  source: string,
+  sourceId: string,
+  kind: string,
+): boolean {
+  switch (criterion.kind) {
+    case "title_completed":
+    case "title_season":
+      return (
+        criterion.source === source &&
+        criterion.sourceId === sourceId &&
+        criterion.mediaKind === kind
+      );
+    case "title_episodes":
+      return criterion.source === source && criterion.sourceId === sourceId;
+    default:
+      return false;
+  }
 }
 
 /**

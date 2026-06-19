@@ -1,6 +1,8 @@
 import "server-only";
 
 import { z } from "zod";
+import { getTitleBadges } from "@/features/badges/queries";
+import type { BadgeWithStatus } from "@/features/badges/types";
 import { getMediaWatchUrl } from "@/features/library/actions";
 import { getListsForItem } from "@/features/lists/queries";
 import type { AiringStatus } from "@/lib/airing-status";
@@ -51,6 +53,7 @@ export type SeriesDetailData = {
   nextEpisode: NextEpisodeInfo | null;
   lists: Awaited<ReturnType<typeof getListsForItem>>;
   ratings: OmdbRatings | null;
+  titleBadges: BadgeWithStatus[];
 };
 
 /**
@@ -65,21 +68,31 @@ export async function loadSeriesDetail(id: string): Promise<SeriesDetailData | n
   const { data: item } = await supabase.from("media_items").select("*").eq("id", id).maybeSingle();
   if (!item) return null;
 
-  const [watchUrl, { data: entries }, trailer, providers, airing, nextEpisode, lists, ratings] =
-    await Promise.all([
-      getMediaWatchUrl(id).catch(() => null),
-      supabase
-        .from("watch_entries")
-        .select("id, watched_on, rating, platform, notes, season_number")
-        .eq("media_item_id", id)
-        .order("watched_on", { ascending: false }),
-      fetchTrailerFor(item.source, item.kind, item.source_id),
-      fetchWatchProviders(item.source, item.kind, item.source_id),
-      fetchAiringStatus(item.source, item.kind, item.source_id),
-      fetchNextEpisode(item.source, item.kind, item.source_id),
-      getListsForItem(item.id),
-      fetchTitleRatings(item.source, item.kind, item.source_id),
-    ]);
+  const [
+    watchUrl,
+    { data: entries },
+    trailer,
+    providers,
+    airing,
+    nextEpisode,
+    lists,
+    ratings,
+    titleBadges,
+  ] = await Promise.all([
+    getMediaWatchUrl(id).catch(() => null),
+    supabase
+      .from("watch_entries")
+      .select("id, watched_on, rating, platform, notes, season_number")
+      .eq("media_item_id", id)
+      .order("watched_on", { ascending: false }),
+    fetchTrailerFor(item.source, item.kind, item.source_id),
+    fetchWatchProviders(item.source, item.kind, item.source_id),
+    fetchAiringStatus(item.source, item.kind, item.source_id),
+    fetchNextEpisode(item.source, item.kind, item.source_id),
+    getListsForItem(item.id),
+    fetchTitleRatings(item.source, item.kind, item.source_id),
+    getTitleBadges(item.source, item.source_id, item.kind),
+  ]);
 
   return {
     item,
@@ -91,6 +104,7 @@ export async function loadSeriesDetail(id: string): Promise<SeriesDetailData | n
     nextEpisode,
     lists,
     ratings,
+    titleBadges,
   };
 }
 

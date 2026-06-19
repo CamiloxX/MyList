@@ -28,6 +28,7 @@ import {
   loadSeriesDetail,
   resolveGenreNames,
 } from "../detail-data";
+import { TitleBadgesCard } from "./title-badges-card";
 import { WatchOrderSection } from "./watch-order-section";
 
 /**
@@ -45,7 +46,18 @@ export async function DesktopSeriesDetail({
 }) {
   const data = await loadSeriesDetail(id);
   if (!data) notFound();
-  const { item, entries, watchUrl, trailer, providers, airing, nextEpisode, lists, ratings } = data;
+  const {
+    item,
+    entries,
+    watchUrl,
+    trailer,
+    providers,
+    airing,
+    nextEpisode,
+    lists,
+    ratings,
+    titleBadges,
+  } = data;
 
   const t = await getTranslations();
   const format = await getFormatter();
@@ -320,6 +332,8 @@ export async function DesktopSeriesDetail({
               </p>
             </div>
           ) : null}
+
+          <TitleBadgesCard badges={titleBadges} />
 
           <div className="rounded-2xl border bg-card p-5">
             <h3 className="mb-4 text-sm font-semibold tracking-tight">
