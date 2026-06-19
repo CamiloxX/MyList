@@ -30,9 +30,11 @@ function relationSlug(raw: string): string {
 }
 
 /**
- * Numbered, ordered list of franchise entries. Owned entries link to their
- * detail and show an "in your library" check; not-owned ones link to the preview
- * and offer a one-tap add. The current title is highlighted. Mirrors SeasonsList.
+ * Franchise watch order rendered as a vertical timeline flowing downward: a
+ * numbered node per entry connected by a rail, with the title card to the right.
+ * Owned entries link to their detail and show an "in your library" check;
+ * not-owned ones link to the preview and offer a one-tap add. The current title
+ * is highlighted.
  */
 export async function WatchOrderList({
   entries,
@@ -45,7 +47,7 @@ export async function WatchOrderList({
   const tk = await getTranslations();
 
   return (
-    <ol className="flex flex-col gap-2">
+    <ol className="flex flex-col">
       {entries.map((entry, i) => {
         const key = libraryItemKey({
           source: entry.source,
@@ -60,58 +62,75 @@ export async function WatchOrderList({
         const relation =
           slug && KNOWN_RELATIONS.has(slug) ? t(`relations.${slug}`) : entry.relationLabel;
         const meta = [entry.year ? String(entry.year) : null, relation].filter(Boolean).join(" · ");
+        const isLast = i === entries.length - 1;
 
         return (
-          <li
-            key={`${entry.source}-${entry.sourceId}`}
-            className={cn(
-              "flex items-center gap-3 rounded-xl border bg-card p-2.5",
-              entry.isCurrent && "border-primary/50 bg-primary/5",
-            )}
-          >
-            <span className="w-6 shrink-0 text-center text-sm font-semibold tabular-nums text-muted-foreground">
-              {i + 1}
-            </span>
-            <Link href={href} className="flex min-w-0 flex-1 items-center gap-3">
-              <div className="relative aspect-[2/3] w-11 shrink-0 overflow-hidden rounded-md bg-muted">
-                {entry.posterUrl ? (
-                  <Image
-                    src={entry.posterUrl}
-                    alt={tk("posters.alt", { title: entry.title })}
-                    fill
-                    sizes="44px"
-                    className="object-cover"
-                  />
-                ) : null}
+          <li key={`${entry.source}-${entry.sourceId}`} className="flex gap-3 sm:gap-4">
+            {/* Timeline rail: numbered node + connector line down to the next one. */}
+            <div className="flex flex-col items-center" aria-hidden>
+              <span
+                className={cn(
+                  "z-10 flex size-8 shrink-0 items-center justify-center rounded-full border-2 bg-background text-sm font-semibold tabular-nums",
+                  entry.isCurrent
+                    ? "border-primary text-primary"
+                    : "border-border text-muted-foreground",
+                )}
+              >
+                {i + 1}
+              </span>
+              {!isLast ? <span className="my-1 w-0.5 grow rounded bg-border" /> : null}
+            </div>
+
+            {/* Entry card */}
+            <div className="min-w-0 flex-1 pb-5">
+              <div
+                className={cn(
+                  "flex items-center gap-3 rounded-xl border bg-card p-2.5",
+                  entry.isCurrent && "border-primary/50 bg-primary/5",
+                )}
+              >
+                <Link href={href} className="flex min-w-0 flex-1 items-center gap-3">
+                  <div className="relative aspect-[2/3] w-11 shrink-0 overflow-hidden rounded-md bg-muted">
+                    {entry.posterUrl ? (
+                      <Image
+                        src={entry.posterUrl}
+                        alt={tk("posters.alt", { title: entry.title })}
+                        fill
+                        sizes="44px"
+                        className="object-cover"
+                      />
+                    ) : null}
+                  </div>
+                  <div className="flex min-w-0 flex-col">
+                    <span className="truncate text-sm font-medium">{entry.title}</span>
+                    {meta ? (
+                      <span className="truncate text-xs text-muted-foreground">{meta}</span>
+                    ) : null}
+                  </div>
+                </Link>
+                <div className="shrink-0">
+                  {entry.isCurrent ? (
+                    <Badge variant="secondary" className="bg-primary/10 text-primary">
+                      {t("current")}
+                    </Badge>
+                  ) : ownedId ? (
+                    <span className="inline-flex items-center gap-1 px-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                      <CheckIcon className="size-4" aria-hidden />
+                      <span className="hidden sm:inline">{t("owned")}</span>
+                    </span>
+                  ) : (
+                    <AddToLibraryButton
+                      source={entry.source}
+                      sourceId={entry.sourceId}
+                      kind={entry.kind}
+                      title={entry.title}
+                      posterUrl={entry.posterUrl}
+                      year={entry.year}
+                      genres={[]}
+                    />
+                  )}
+                </div>
               </div>
-              <div className="flex min-w-0 flex-col">
-                <span className="truncate text-sm font-medium">{entry.title}</span>
-                {meta ? (
-                  <span className="truncate text-xs text-muted-foreground">{meta}</span>
-                ) : null}
-              </div>
-            </Link>
-            <div className="shrink-0">
-              {entry.isCurrent ? (
-                <Badge variant="secondary" className="bg-primary/10 text-primary">
-                  {t("current")}
-                </Badge>
-              ) : ownedId ? (
-                <span className="inline-flex items-center gap-1 px-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                  <CheckIcon className="size-4" aria-hidden />
-                  <span className="hidden sm:inline">{t("owned")}</span>
-                </span>
-              ) : (
-                <AddToLibraryButton
-                  source={entry.source}
-                  sourceId={entry.sourceId}
-                  kind={entry.kind}
-                  title={entry.title}
-                  posterUrl={entry.posterUrl}
-                  year={entry.year}
-                  genres={[]}
-                />
-              )}
             </div>
           </li>
         );

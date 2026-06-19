@@ -1,5 +1,6 @@
 import { ArrowRightIcon, ClapperboardIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { AnimeIcon } from "@/features/discover/components/media-icons";
 import { LibrarySearchInput } from "@/features/library/components/library-search-input";
 import { PosterCard } from "@/features/library-v2/components/poster-card";
 import { CURATED_FRANCHISES } from "@/features/library-v2/curated-franchises";
@@ -75,6 +76,7 @@ export default async function WatchOrderIndexPage({ searchParams }: PageProps) {
             {CURATED_FRANCHISES.map((franchise) => {
               const first = franchise.chronological[0];
               if (!first) return null;
+              const Icon = franchise.category === "anime" ? AnimeIcon : ClapperboardIcon;
               return (
                 <Link
                   key={franchise.id}
@@ -83,7 +85,7 @@ export default async function WatchOrderIndexPage({ searchParams }: PageProps) {
                 >
                   <span className="flex items-center gap-3">
                     <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
-                      <ClapperboardIcon className="size-5" aria-hidden />
+                      <Icon className="size-5" aria-hidden />
                     </span>
                     <span className="font-semibold">{franchise.name}</span>
                   </span>

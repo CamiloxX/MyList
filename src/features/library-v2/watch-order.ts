@@ -111,6 +111,30 @@ async function getAnimeWatchOrder(originId: string): Promise<WatchOrderResult | 
   const origin = Number.parseInt(originId, 10);
   if (!Number.isFinite(origin)) return null;
 
+  // Prefer a hand-curated order (verified MAL ids in the recommended sequence)
+  // over the Jikan relations graph, which is noisy for movie/recap-heavy
+  // franchises. The curated list is already in watch order — just resolve each
+  // entry's details (sequentially, to respect Jikan's rate limit).
+  const curated = findCuratedFranchise("anilist", "anime", originId);
+  if (curated) {
+    const entries: WatchOrderEntry[] = [];
+    for (const e of curated.chronological) {
+      const detail = await getJikanAnimeById(Number(e.sourceId));
+      await sleep(ANIME_DETAIL_DELAY_MS);
+      entries.push({
+        source: "anilist",
+        kind: "anime",
+        sourceId: e.sourceId,
+        title: detail ? jikanTitle(detail) : `MAL #${e.sourceId}`,
+        posterUrl: detail ? jikanPoster(detail) : null,
+        year: detail?.year ?? null,
+        isCurrent: e.sourceId === originId,
+      });
+    }
+    if (entries.length < 2) return null;
+    return { franchiseName: curated.name, orders: { story: entries } };
+  }
+
   const nodes = await traverseAnimeFranchise(origin);
   if (nodes.length < 2) return null;
 
