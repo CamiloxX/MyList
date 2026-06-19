@@ -1061,6 +1061,11 @@
       "pageSubtitle": "Descubre en qué orden ver cada saga de pelis y anime.",
       "searchPlaceholder": "Buscar una saga o título…",
       "franchisesHeading": "Sagas populares",
+      "categories": {
+        "movie": "Películas",
+        "anime": "Anime"
+      },
+      "franchiseCount": "{count, plural, one {# título} other {# títulos}}",
       "empty": "Este título no es parte de una saga que podamos ordenar.",
       "truncated": "Mostrando las primeras {count} entradas.",
       "relations": {

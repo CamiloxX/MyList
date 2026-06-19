@@ -1061,6 +1061,11 @@
       "pageSubtitle": "Find out what order to watch each movie and anime franchise in.",
       "searchPlaceholder": "Search a franchise or title…",
       "franchisesHeading": "Popular franchises",
+      "categories": {
+        "movie": "Movies",
+        "anime": "Anime"
+      },
+      "franchiseCount": "{count, plural, one {# title} other {# titles}}",
       "empty": "This title isn't part of a franchise we can order.",
       "truncated": "Showing the first {count} entries.",
       "relations": {

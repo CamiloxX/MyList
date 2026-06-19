@@ -1,16 +1,18 @@
-import { ArrowRightIcon, ClapperboardIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { AnimeIcon } from "@/features/discover/components/media-icons";
 import { LibrarySearchInput } from "@/features/library/components/library-search-input";
+import { FranchiseCard } from "@/features/library-v2/components/franchise-card";
 import { PosterCard } from "@/features/library-v2/components/poster-card";
+import { FRANCHISE_COVERS } from "@/features/library-v2/curated-franchise-covers";
 import { CURATED_FRANCHISES } from "@/features/library-v2/curated-franchises";
 import type { PosterItem } from "@/features/library-v2/types";
-import { Link } from "@/i18n/navigation";
 import { jikanPoster, jikanTitle, searchJikan } from "@/lib/jikan/search";
 import { tmdbImage } from "@/lib/tmdb/images";
 import { searchTmdb, tmdbTitle, tmdbYear } from "@/lib/tmdb/search";
 
 export const dynamic = "force-dynamic";
+
+// Movies first, then anime — the two categories the curated list ships today.
+const CATEGORY_ORDER = ["movie", "anime"] as const;
 
 type PageProps = {
   searchParams: Promise<{ q?: string }>;
@@ -70,33 +72,34 @@ export default async function WatchOrderIndexPage({ searchParams }: PageProps) {
           ))}
         </div>
       ) : (
-        <section className="flex flex-col gap-3">
+        <section className="flex flex-col gap-6">
           <h2 className="text-lg font-semibold tracking-tight">{t("franchisesHeading")}</h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {CURATED_FRANCHISES.map((franchise) => {
-              const first = franchise.chronological[0];
-              if (!first) return null;
-              const Icon = franchise.category === "anime" ? AnimeIcon : ClapperboardIcon;
-              return (
-                <Link
-                  key={franchise.id}
-                  href={`/watch-order/${first.source}/${first.kind}/${first.sourceId}`}
-                  className="group flex items-center justify-between gap-3 rounded-2xl border bg-gradient-to-br from-primary/10 to-primary/5 p-4 transition-colors hover:border-primary/40"
-                >
-                  <span className="flex items-center gap-3">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
-                      <Icon className="size-5" aria-hidden />
-                    </span>
-                    <span className="font-semibold">{franchise.name}</span>
-                  </span>
-                  <ArrowRightIcon
-                    className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
-                    aria-hidden
-                  />
-                </Link>
-              );
-            })}
-          </div>
+          {CATEGORY_ORDER.map((category) => {
+            const list = CURATED_FRANCHISES.filter((f) => f.category === category);
+            if (list.length === 0) return null;
+            return (
+              <div key={category} className="flex flex-col gap-3">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  {t(`categories.${category}`)}
+                </h3>
+                <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
+                  {list.map((franchise) => {
+                    const first = franchise.chronological[0];
+                    if (!first) return null;
+                    return (
+                      <FranchiseCard
+                        key={franchise.id}
+                        href={`/watch-order/${first.source}/${first.kind}/${first.sourceId}`}
+                        name={franchise.name}
+                        posterUrl={FRANCHISE_COVERS[franchise.id] ?? null}
+                        count={franchise.chronological.length}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
         </section>
       )}
     </div>
