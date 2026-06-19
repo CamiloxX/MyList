@@ -179,6 +179,196 @@ export const CURATED_FRANCHISES: CuratedFranchise[] = [
     // TV → Steins;Gate 0 → movie (Fuka Ryouiki no Déjà vu). Side specials optional.
     chronological: animes(9253, 30484, 11577),
   },
+
+  // --- Anime, batch 2 (popular franchises; MAL ids verified one-by-one via the
+  // Jikan API by a multi-agent research workflow, 2026-06). ---------------------
+  {
+    id: "naruto",
+    name: "Naruto",
+    category: "anime",
+    chronological: animes(20, 1735, 16870, 34566),
+  },
+  {
+    id: "dragon-ball",
+    name: "Dragon Ball",
+    category: "anime",
+    chronological: animes(223, 813, 14837, 25389, 30694, 36946, 48903),
+  },
+  {
+    id: "bleach",
+    name: "Bleach",
+    category: "anime",
+    chronological: animes(269, 41467, 53998, 56784, 60636, 1686, 2889, 4835, 8247),
+  },
+  {
+    id: "my-hero-academia",
+    name: "My Hero Academia",
+    category: "anime",
+    chronological: animes(31964, 33486, 36896, 36456, 38408, 39565, 41587, 44200, 49918, 54789),
+  },
+  {
+    id: "re-zero",
+    name: "Re:Zero",
+    category: "anime",
+    chronological: animes(31240, 36286, 38414, 39587, 42203),
+  },
+  {
+    id: "mob-psycho-100",
+    name: "Mob Psycho 100",
+    category: "anime",
+    chronological: animes(32182, 36616, 37510, 50172),
+  },
+  {
+    id: "mushoku-tensei",
+    name: "Mushoku Tensei",
+    category: "anime",
+    chronological: animes(39535, 45576, 50360, 55818, 51179, 55888),
+  },
+  {
+    id: "toaru",
+    name: "Toaru (Index / Railgun)",
+    category: "anime",
+    chronological: animes(4654, 6213, 8937, 16049, 11743, 36432, 38480, 38481),
+  },
+  {
+    id: "ghost-in-the-shell",
+    name: "Ghost in the Shell",
+    category: "anime",
+    chronological: animes(43, 467, 801, 1566, 38799, 41750),
+  },
+  {
+    id: "jojo",
+    name: "JoJo's Bizarre Adventure",
+    category: "anime",
+    chronological: animes(14719, 20899, 26055, 31933, 37991, 48661, 51367, 53273),
+  },
+  {
+    id: "konosuba",
+    name: "KonoSuba",
+    category: "anime",
+    chronological: animes(30831, 32937, 38040, 49458),
+  },
+  {
+    id: "overlord",
+    name: "Overlord",
+    category: "anime",
+    chronological: animes(29803, 35073, 37675, 34161, 34428, 48895),
+  },
+  {
+    id: "shield-hero",
+    name: "Shield Hero",
+    category: "anime",
+    chronological: animes(35790, 40356, 40357),
+  },
+  {
+    id: "tensura",
+    name: "Tensei Slime (Tensura)",
+    category: "anime",
+    chronological: animes(37430, 39551, 41487, 49877, 53580),
+  },
+  {
+    id: "made-in-abyss",
+    name: "Made in Abyss",
+    category: "anime",
+    chronological: animes(34599, 36862, 41084),
+  },
+  {
+    id: "violet-evergarden",
+    name: "Violet Evergarden",
+    category: "anime",
+    chronological: animes(33352, 39741, 37987),
+  },
+  { id: "k-on", name: "K-On!", category: "anime", chronological: animes(5680, 7791, 9617) },
+  {
+    id: "psycho-pass",
+    name: "Psycho-Pass",
+    category: "anime",
+    chronological: animes(13601, 23281, 21339, 52747, 39491, 40858),
+  },
+  {
+    id: "tokyo-ghoul",
+    name: "Tokyo Ghoul",
+    category: "anime",
+    chronological: animes(22319, 27899, 36511, 37799),
+  },
+  {
+    id: "chainsaw-man",
+    name: "Chainsaw Man",
+    category: "anime",
+    chronological: animes(44511, 57555),
+  },
+  {
+    id: "spy-x-family",
+    name: "Spy x Family",
+    category: "anime",
+    chronological: animes(50265, 50602, 53887, 53888),
+  },
+  {
+    id: "vinland-saga",
+    name: "Vinland Saga",
+    category: "anime",
+    chronological: animes(37521, 49387),
+  },
+  {
+    id: "dr-stone",
+    name: "Dr. Stone",
+    category: "anime",
+    chronological: animes(38691, 40852, 50612, 48549, 55644, 57592, 61322),
+  },
+  {
+    id: "promised-neverland",
+    name: "The Promised Neverland",
+    category: "anime",
+    chronological: animes(37779, 39617, 47616),
+  },
+  {
+    id: "haikyuu",
+    name: "Haikyuu!!",
+    category: "anime",
+    chronological: animes(20583, 28891, 32935, 38883, 40776, 52742),
+  },
+  {
+    id: "kaguya-sama",
+    name: "Kaguya-sama",
+    category: "anime",
+    chronological: animes(37999, 40591, 43608, 52198),
+  },
+  {
+    id: "bunny-girl-senpai",
+    name: "Bunny Girl Senpai",
+    category: "anime",
+    chronological: animes(37450, 38329, 53129, 54870),
+  },
+  {
+    id: "fruits-basket",
+    name: "Fruits Basket",
+    category: "anime",
+    chronological: animes(38680, 40417, 42938, 49310),
+  },
+  {
+    id: "seven-deadly-sins",
+    name: "Seven Deadly Sins",
+    category: "anime",
+    chronological: animes(23755, 31722, 34577, 35946, 39701, 41491, 46420),
+  },
+  {
+    id: "date-a-live",
+    name: "Date A Live",
+    category: "anime",
+    chronological: animes(15583, 19163, 24655, 36633, 41461, 52196),
+  },
+  {
+    id: "clannad",
+    name: "Clannad",
+    category: "anime",
+    chronological: animes(2167, 4181, 4059, 6351, 1723),
+  },
+  {
+    id: "quintessential-quintuplets",
+    name: "5 Novias (Quintuplets)",
+    category: "anime",
+    chronological: animes(38101, 39783, 48548),
+  },
 ];
 
 /** Finds the curated franchise a title belongs to (by exact source/kind/id). */
