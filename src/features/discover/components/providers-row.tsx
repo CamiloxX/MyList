@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { tmdbImage } from "@/lib/tmdb/client";
 import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
@@ -63,14 +62,14 @@ export async function ProvidersRow({ data, max = DEFAULT_MAX, withLabel = true }
           <span
             key={provider.provider_id}
             title={provider.provider_name}
-            className="relative inline-block size-7 overflow-hidden rounded-md ring-1 ring-border"
+            className="inline-block size-7 overflow-hidden rounded-md ring-1 ring-border"
           >
-            <Image
+            {/* biome-ignore lint/performance/noImgElement: tiny external provider logo loaded directly — the next/image optimizer wasn't rendering these. */}
+            <img
               src={logo}
               alt={provider.provider_name}
-              fill
-              sizes="28px"
-              className="object-cover"
+              className="size-full object-cover"
+              loading="lazy"
             />
           </span>
         );

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
 type Item = { name: string; url: string; iconUrl: string | null };
@@ -37,12 +36,14 @@ export async function AnimeProvidersRow({ items, withLabel = true }: Props) {
             aria-label={provider.name}
             className="inline-flex size-7 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-border transition-opacity hover:opacity-80"
           >
-            <Image
+            {/* biome-ignore lint/performance/noImgElement: tiny external provider logo loaded directly — the next/image optimizer wasn't rendering these. */}
+            <img
               src={provider.iconUrl}
               alt={provider.name}
               width={20}
               height={20}
               className="size-5 object-contain"
+              loading="lazy"
             />
           </a>
         ) : (

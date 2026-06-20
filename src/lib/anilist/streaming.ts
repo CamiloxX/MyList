@@ -21,12 +21,12 @@ export type AnimeStreamingProvider = {
   iconUrl: string | null;
 };
 
-/** Keep only icons AniList serves from its own CDN, so next/image (which is
- *  scoped to `**.anilist.co`) never throws on an unconfigured remote host. */
+/** Accept any https icon URL (the row renders them with a plain <img>, so no
+ *  per-host allowlist is needed). Drops blanks and non-https values. */
 function safeIcon(icon: string | null | undefined): string | null {
   if (typeof icon !== "string" || icon.length === 0) return null;
   try {
-    return new URL(icon).hostname.endsWith("anilist.co") ? icon : null;
+    return new URL(icon).protocol === "https:" ? icon : null;
   } catch {
     return null;
   }
