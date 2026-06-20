@@ -64,9 +64,7 @@ export function BadgeUnlockOverlay({
       aria-label={badge.name}
       className={cn(
         "fixed inset-0 z-50 flex items-center justify-center p-4",
-        leaving
-          ? "animate-out fade-out duration-200"
-          : "animate-in fade-in duration-300",
+        leaving ? "animate-out fade-out duration-200" : "animate-in fade-in duration-300",
       )}
     >
       <button
@@ -98,18 +96,27 @@ export function BadgeUnlockOverlay({
         {/* Medal */}
         <div
           className={cn(
-            "relative flex size-28 items-center justify-center rounded-full bg-gradient-to-br text-white shadow-xl ring-8 ring-offset-4 ring-offset-card",
+            "relative flex size-28 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br text-white shadow-xl ring-8 ring-offset-4 ring-offset-card",
             TIER_GRADIENT[badge.tier],
             TIER_GLOW[badge.tier],
             TIER_RING[badge.tier],
           )}
         >
-          <BadgeIcon
-            iconKey={badge.iconKey}
-            iconUrl={badge.iconUrl}
-            name={badge.name}
-            className="size-14 drop-shadow-md"
-          />
+          {badge.iconUrl ? (
+            // biome-ignore lint/performance/noImgElement: user-uploaded badge art on an arbitrary URL; shown whole (contain) so the artwork isn't cropped to the circle.
+            <img
+              src={badge.iconUrl}
+              alt={badge.name}
+              className="size-20 object-contain drop-shadow-md"
+            />
+          ) : (
+            <BadgeIcon
+              iconKey={badge.iconKey}
+              iconUrl={null}
+              name={badge.name}
+              className="size-14 drop-shadow-md"
+            />
+          )}
           {/* Rotating sheen */}
           <span
             className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
