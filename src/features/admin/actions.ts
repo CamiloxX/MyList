@@ -334,6 +334,45 @@ export async function getSeriesSeasonsForBadge(sourceId: string): Promise<BadgeS
   };
 }
 
+const LIBRARY_ID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+
+/**
+ * Resolves a library link (…/library/<id>) or a raw media_items id to the title
+ * behind it — source/sourceId/mediaKind plus a display title — so an admin can
+ * pin a badge to a title the text search can't find by name. Reads under the
+ * admin's own RLS (their library), which is exactly where the pasted link lives.
+ */
+export async function resolveTitleFromLibrary(
+  input: string,
+): Promise<AdminActionResultWith<BadgeTitleResult>> {
+  const admin = await requireAdmin();
+  if (!admin.ok) return admin;
+
+  const match = (input ?? "").match(LIBRARY_ID_RE);
+  if (!match) return { ok: false, error: "Pega un enlace de tu biblioteca o un ID válido" };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("media_items")
+    .select("source, source_id, kind, title, year, poster_url")
+    .eq("id", match[0])
+    .maybeSingle();
+  if (error) return { ok: false, error: safeActionError("admin.resolveTitleFromLibrary", error) };
+  if (!data) return { ok: false, error: "No encontré ese título en tu biblioteca" };
+
+  return {
+    ok: true,
+    data: {
+      source: data.source,
+      sourceId: data.source_id,
+      mediaKind: data.kind,
+      title: data.title,
+      year: data.year,
+      posterUrl: data.poster_url,
+    },
+  };
+}
+
 // ============================================================================
 // Grant badges by hand (Fase 3)
 // ============================================================================

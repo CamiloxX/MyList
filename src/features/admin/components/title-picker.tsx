@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
 import { cn } from "@/lib/utils";
 import { type BadgeTitleResult, searchTitlesForBadge } from "../actions";
+import { LibraryLinkInput } from "./library-link-input";
 
 /** The `title_completed` slice of BadgeCriterion the picker edits. */
 type TitleValue = {
@@ -150,6 +151,13 @@ export function TitlePicker({
               ))}
             </ul>
           ) : null}
+
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
+            {t("condition.linkOr")}
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <LibraryLinkInput onResolved={handleSelect} />
         </>
       )}
     </div>

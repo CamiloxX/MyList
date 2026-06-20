@@ -19,6 +19,7 @@ import {
   getSeriesSeasonsForBadge,
   searchSeriesForBadge,
 } from "../actions";
+import { LibraryLinkInput } from "./library-link-input";
 
 /** The `title_season` slice of BadgeCriterion the picker edits. */
 type TitleSeasonValue = {
@@ -89,7 +90,12 @@ export function SeriesPicker({
     setSelectedLabel(item.year ? `${item.title} (${item.year})` : item.title);
     setQuery("");
     setResults([]);
-    onChange({ source: item.source, sourceId: item.sourceId, mediaKind: item.mediaKind, season: 1 });
+    onChange({
+      source: item.source,
+      sourceId: item.sourceId,
+      mediaKind: item.mediaKind,
+      season: 1,
+    });
   };
 
   const clearSelection = () => {
@@ -169,6 +175,31 @@ export function SeriesPicker({
         </ul>
       ) : null}
 
+      {!value.sourceId ? (
+        <>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
+            {t("condition.linkOr")}
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <LibraryLinkInput
+            onResolved={(r) =>
+              handleSelect({
+                source: "tmdb",
+                sourceId: r.sourceId,
+                mediaKind: "tv",
+                title: r.title,
+                year: r.year,
+                posterUrl: r.posterUrl,
+              })
+            }
+            accept={(r) =>
+              r.source === "tmdb" && r.mediaKind === "tv" ? null : t("condition.linkNotSeries")
+            }
+          />
+        </>
+      ) : null}
+
       {value.sourceId ? (
         <div className="flex flex-col gap-1.5">
           <span className="text-xs font-medium text-muted-foreground">{t("condition.season")}</span>
@@ -195,7 +226,9 @@ export function SeriesPicker({
               type="number"
               min={1}
               value={value.season}
-              onChange={(e) => onChange({ ...value, season: Math.max(1, Number(e.target.value) || 1) })}
+              onChange={(e) =>
+                onChange({ ...value, season: Math.max(1, Number(e.target.value) || 1) })
+              }
             />
           )}
         </div>
