@@ -47,30 +47,21 @@ export async function ProvidersRow({ data, max = DEFAULT_MAX, withLabel = true }
       ) : null}
       {visible.map((provider) => {
         const logo = tmdbImage(provider.logo_path, "w92");
-        if (!logo) {
-          return (
-            <span
-              key={provider.provider_id}
-              title={provider.provider_name}
-              className="rounded-md border bg-muted px-1.5 py-0.5 text-[10px] font-medium"
-            >
-              {provider.provider_name}
-            </span>
-          );
-        }
         return (
           <span
             key={provider.provider_id}
-            title={provider.provider_name}
-            className="inline-block size-7 overflow-hidden rounded-md ring-1 ring-border"
+            className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 py-0.5 pr-2 pl-1"
           >
-            {/* biome-ignore lint/performance/noImgElement: tiny external provider logo loaded directly — the next/image optimizer wasn't rendering these. */}
-            <img
-              src={logo}
-              alt={provider.provider_name}
-              className="size-full object-cover"
-              loading="lazy"
-            />
+            {logo ? (
+              // biome-ignore lint/performance/noImgElement: tiny external provider logo loaded directly.
+              <img
+                src={logo}
+                alt=""
+                className="size-4 shrink-0 rounded-sm object-cover"
+                loading="lazy"
+              />
+            ) : null}
+            <span className="text-xs font-medium">{provider.provider_name}</span>
           </span>
         );
       })}

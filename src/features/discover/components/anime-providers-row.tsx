@@ -25,39 +25,27 @@ export async function AnimeProvidersRow({ items, withLabel = true }: Props) {
           {t("label")}
         </span>
       ) : null}
-      {items.map((provider) =>
-        provider.iconUrl ? (
-          <a
-            key={provider.url}
-            href={provider.url}
-            target="_blank"
-            rel="noreferrer"
-            title={provider.name}
-            aria-label={provider.name}
-            className="inline-flex size-7 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-border transition-opacity hover:opacity-80"
-          >
-            {/* biome-ignore lint/performance/noImgElement: tiny external provider logo loaded directly — the next/image optimizer wasn't rendering these. */}
+      {items.map((provider) => (
+        <a
+          key={provider.url}
+          href={provider.url}
+          target="_blank"
+          rel="noreferrer"
+          title={provider.name}
+          className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 py-0.5 pr-2 pl-1 transition-colors hover:bg-muted"
+        >
+          {provider.iconUrl ? (
+            // biome-ignore lint/performance/noImgElement: tiny external provider logo loaded directly.
             <img
               src={provider.iconUrl}
-              alt={provider.name}
-              width={20}
-              height={20}
-              className="size-5 object-contain"
+              alt=""
+              className="size-4 shrink-0 rounded-sm bg-white object-contain"
               loading="lazy"
             />
-          </a>
-        ) : (
-          <a
-            key={provider.url}
-            href={provider.url}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-md border bg-muted/60 px-2 py-0.5 text-[11px] font-medium transition-colors hover:bg-muted"
-          >
-            {provider.name}
-          </a>
-        ),
-      )}
+          ) : null}
+          <span className="text-xs font-medium">{provider.name}</span>
+        </a>
+      ))}
     </div>
   );
 }
