@@ -36,7 +36,7 @@ export async function TitleBadgesCard({ badges }: { badges: BadgeWithStatus[] })
             <li key={badge.id} className="flex items-center gap-3">
               <div
                 className={cn(
-                  "flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br",
+                  "flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br",
                   TIER_STYLES[badge.tier],
                   !earned && "grayscale",
                 )}
@@ -45,7 +45,7 @@ export async function TitleBadgesCard({ badges }: { badges: BadgeWithStatus[] })
                   iconKey={badge.iconKey}
                   iconUrl={badge.iconUrl}
                   name={badge.name}
-                  className="size-5"
+                  className="size-6"
                 />
               </div>
               <div className="min-w-0 flex-1">
