@@ -33,10 +33,10 @@ export async function TitleBadgesCard({ badges }: { badges: BadgeWithStatus[] })
             Math.round((badge.progress.current / badge.progress.target) * 100),
           );
           return (
-            <li key={badge.id} className="flex items-center gap-3">
+            <li key={badge.id} className="flex items-center gap-4">
               <div
                 className={cn(
-                  "flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br",
+                  "flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br",
                   TIER_STYLES[badge.tier],
                   !earned && "grayscale",
                 )}
@@ -45,11 +45,11 @@ export async function TitleBadgesCard({ badges }: { badges: BadgeWithStatus[] })
                   iconKey={badge.iconKey}
                   iconUrl={badge.iconUrl}
                   name={badge.name}
-                  className="size-6"
+                  className="size-8"
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium leading-tight">{badge.name}</p>
+                <p className="truncate text-[15px] font-semibold leading-tight">{badge.name}</p>
                 {showProgress ? (
                   <div className="mt-1.5 flex items-center gap-2">
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
