@@ -33,7 +33,8 @@ export function FranchiseCategoryFilter({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center gap-1 self-start rounded-lg border bg-card p-1">
+      {/* Mobile: one scrollable row of chips; desktop: inline segmented control. */}
+      <div className="flex w-full items-center gap-1 overflow-x-auto rounded-lg border bg-card p-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:w-auto sm:flex-wrap sm:self-start sm:overflow-visible [&::-webkit-scrollbar]:hidden">
         {tabs.map((tab) => {
           const Icon = ICONS[tab.key];
           return (
@@ -42,7 +43,7 @@ export function FranchiseCategoryFilter({
               type="button"
               onClick={() => setActive(tab.key)}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                "inline-flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
                 tab.key === active
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground",
