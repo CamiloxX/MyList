@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { proxyImg } from "@/lib/img-proxy";
 
 type Item = { name: string; url: string; iconUrl: string | null };
 
@@ -25,27 +26,30 @@ export async function AnimeProvidersRow({ items, withLabel = true }: Props) {
           {t("label")}
         </span>
       ) : null}
-      {items.map((provider) => (
-        <a
-          key={provider.url}
-          href={provider.url}
-          target="_blank"
-          rel="noreferrer"
-          title={provider.name}
-          className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 py-0.5 pr-2 pl-1 transition-colors hover:bg-muted"
-        >
-          {provider.iconUrl ? (
-            // biome-ignore lint/performance/noImgElement: tiny external provider logo loaded directly.
-            <img
-              src={provider.iconUrl}
-              alt=""
-              className="size-4 shrink-0 rounded-sm bg-white object-contain"
-              loading="lazy"
-            />
-          ) : null}
-          <span className="text-xs font-medium">{provider.name}</span>
-        </a>
-      ))}
+      {items.map((provider) => {
+        const icon = proxyImg(provider.iconUrl);
+        return (
+          <a
+            key={provider.url}
+            href={provider.url}
+            target="_blank"
+            rel="noreferrer"
+            title={provider.name}
+            className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 py-0.5 pr-2 pl-1 transition-colors hover:bg-muted"
+          >
+            {icon ? (
+              // biome-ignore lint/performance/noImgElement: tiny external provider logo via our /api/img proxy.
+              <img
+                src={icon}
+                alt=""
+                className="size-4 shrink-0 rounded-sm bg-white object-contain"
+                loading="lazy"
+              />
+            ) : null}
+            <span className="text-xs font-medium">{provider.name}</span>
+          </a>
+        );
+      })}
     </div>
   );
 }

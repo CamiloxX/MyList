@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { proxyImg } from "@/lib/img-proxy";
 import { tmdbImage } from "@/lib/tmdb/client";
 import type { WatchProvidersForTitle } from "@/lib/tmdb/discover";
 
@@ -46,14 +47,14 @@ export async function ProvidersRow({ data, max = DEFAULT_MAX, withLabel = true }
         </span>
       ) : null}
       {visible.map((provider) => {
-        const logo = tmdbImage(provider.logo_path, "w92");
+        const logo = proxyImg(tmdbImage(provider.logo_path, "w92"));
         return (
           <span
             key={provider.provider_id}
             className="inline-flex items-center gap-1.5 rounded-md border bg-muted/40 py-0.5 pr-2 pl-1"
           >
             {logo ? (
-              // biome-ignore lint/performance/noImgElement: tiny external provider logo loaded directly.
+              // biome-ignore lint/performance/noImgElement: tiny external provider logo via our /api/img proxy.
               <img
                 src={logo}
                 alt=""
