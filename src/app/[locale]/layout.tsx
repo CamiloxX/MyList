@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { CommandPalette } from "@/features/shell/components/command-palette";
 import { routing } from "@/i18n/routing";
+import { siteUrl } from "@/lib/site-url";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,16 +38,32 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "app" });
+  const title = t("title");
+  const description = t("tagline");
   return {
-    title: t("title"),
-    description: t("tagline"),
+    metadataBase: siteUrl(),
+    title: { default: title, template: `%s · ${title}` },
+    description,
+    applicationName: title,
     manifest: "/manifest.webmanifest",
-    applicationName: t("title"),
     appleWebApp: {
       capable: true,
       statusBarStyle: "black-translucent",
-      title: t("title"),
+      title,
     },
+    openGraph: {
+      type: "website",
+      siteName: title,
+      title,
+      description,
+      locale: locale === "en" ? "en_US" : "es_ES",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+    robots: { index: true, follow: true },
   };
 }
 

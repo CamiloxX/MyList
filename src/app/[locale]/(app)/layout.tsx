@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { BrandMark, Wordmark } from "@/components/brand/brand-mark";
@@ -16,6 +17,11 @@ import { Link, redirect } from "@/i18n/navigation";
 import { isMobileUserAgent } from "@/lib/device";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
+
+// Private app pages must never be indexed: they sit behind auth and show a
+// user's own data. This robots metadata is inherited by every page under the
+// (app) layout (library, search, stats, settings, admin, watch-order, …).
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function AppLayout({
   children,
