@@ -1,4 +1,4 @@
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, TrophyIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import type { BadgeTier, BadgeWithStatus } from "@/features/badges/types";
@@ -20,11 +20,28 @@ const TIER_STYLES: Record<BadgeTier, string> = {
 export async function TitleBadgesCard({ badges }: { badges: BadgeWithStatus[] }) {
   if (badges.length === 0) return null;
   const t = await getTranslations("libraryV2.detail");
+  const earnedCount = badges.filter((badge) => badge.earnedAt != null).length;
 
   return (
-    <div className="rounded-2xl border bg-card p-5">
-      <h3 className="mb-4 text-sm font-semibold tracking-tight">{t("achievements")}</h3>
-      <ul className="flex flex-col gap-4">
+    <div className="relative overflow-hidden rounded-2xl border bg-card p-5">
+      {/* Warm corner glow so the achievements card stands out from the neutral
+          details/providers cards and nudges the user to chase the badges. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full bg-amber-400/15 blur-2xl"
+      />
+      <div className="relative mb-4 flex items-center gap-3">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 text-white shadow-sm shadow-amber-500/30">
+          <TrophyIcon className="size-5" aria-hidden />
+        </span>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold tracking-tight">{t("achievements")}</h3>
+          <p className="text-xs text-muted-foreground">
+            {t("achievementsCount", { earned: earnedCount, total: badges.length })}
+          </p>
+        </div>
+      </div>
+      <ul className="relative flex flex-col gap-4">
         {badges.map((badge) => {
           const earned = badge.earnedAt != null;
           const showProgress = !earned && badge.progress.target > 1;

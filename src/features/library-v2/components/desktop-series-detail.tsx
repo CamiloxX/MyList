@@ -1,4 +1,11 @@
-import { ArrowLeftIcon, PlayIcon, StarIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  InfoIcon,
+  MonitorPlayIcon,
+  PlayIcon,
+  StarIcon,
+  TrendingUpIcon,
+} from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -164,7 +171,7 @@ export async function DesktopSeriesDetail({
           <div className="absolute inset-0 z-0 bg-card" aria-hidden />
         )}
 
-        <div className="relative z-10 px-6 pt-6 lg:px-10">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pt-6 lg:px-10">
           <Link
             href="/library"
             aria-label={t("library.detail.back")}
@@ -177,7 +184,7 @@ export async function DesktopSeriesDetail({
           </Link>
         </div>
 
-        <div className="relative z-10 flex flex-col gap-6 px-6 pb-10 pt-28 sm:flex-row sm:items-end sm:pt-44 lg:px-10">
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 pb-10 pt-28 sm:flex-row sm:items-end sm:pt-44 lg:px-10">
           <div className="relative aspect-[2/3] w-40 shrink-0 overflow-hidden rounded-xl border bg-muted shadow-2xl sm:w-48">
             {item.poster_url ? (
               <Image
@@ -254,8 +261,10 @@ export async function DesktopSeriesDetail({
         </div>
       </header>
 
-      {/* Two-column body */}
-      <div className="grid grid-cols-1 gap-8 px-6 py-8 lg:grid-cols-[minmax(0,1fr)_330px] lg:px-10">
+      {/* Two-column body. Capped + centered so the right rail (achievements,
+          details, providers) stays next to the content instead of drifting to
+          the far edge on ultrawide / 27" displays. */}
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-6 py-8 lg:grid-cols-[minmax(0,1fr)_330px] lg:px-10">
         {/* Left: actions, synopsis, episodes, history */}
         <div className="flex min-w-0 flex-col gap-8">
           <div className="flex flex-wrap items-center gap-2">
@@ -314,8 +323,13 @@ export async function DesktopSeriesDetail({
         <aside className="flex flex-col gap-5">
           {item.kind === "anime" && progressPct != null ? (
             <div className="rounded-2xl border bg-card p-5">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold">{t("libraryV2.detail.progress")}</span>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <TrendingUpIcon className="size-5" aria-hidden />
+                  </span>
+                  <span className="text-sm font-semibold">{t("libraryV2.detail.progress")}</span>
+                </div>
                 <span className="text-sm font-bold text-primary">{progressPct}%</span>
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
@@ -336,9 +350,14 @@ export async function DesktopSeriesDetail({
           <TitleBadgesCard badges={titleBadges} />
 
           <div className="rounded-2xl border bg-card p-5">
-            <h3 className="mb-4 text-sm font-semibold tracking-tight">
-              {t("libraryV2.detail.details")}
-            </h3>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <InfoIcon className="size-5" aria-hidden />
+              </span>
+              <h3 className="text-sm font-semibold tracking-tight">
+                {t("libraryV2.detail.details")}
+              </h3>
+            </div>
             <dl className="flex flex-col gap-3">
               {detailRows.map(([k, v]) => (
                 <div key={k} className="flex items-center justify-between gap-4 text-sm">
@@ -351,9 +370,14 @@ export async function DesktopSeriesDetail({
 
           {providers ? (
             <div className="rounded-2xl border bg-card p-5">
-              <h3 className="mb-4 text-sm font-semibold tracking-tight">
-                {t("libraryV2.detail.availableOn")}
-              </h3>
+              <div className="mb-4 flex items-center gap-3">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <MonitorPlayIcon className="size-5" aria-hidden />
+                </span>
+                <h3 className="text-sm font-semibold tracking-tight">
+                  {t("libraryV2.detail.availableOn")}
+                </h3>
+              </div>
               {providers.type === "tmdb" ? (
                 <ProvidersRow data={providers.data} max={8} withLabel={false} />
               ) : (
@@ -364,7 +388,7 @@ export async function DesktopSeriesDetail({
         </aside>
       </div>
 
-      <div className="px-6 pb-12 lg:px-10">
+      <div className="mx-auto w-full max-w-7xl px-6 pb-12 lg:px-10">
         <TitleComments source={item.source} sourceId={item.source_id} kind={item.kind} />
       </div>
     </div>

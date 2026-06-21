@@ -1049,6 +1049,7 @@
       "progressLine": "{watched} of {total} episodes",
       "availableOn": "Available on",
       "achievements": "Achievements",
+      "achievementsCount": "{earned} of {total} unlocked",
       "badgeUnlocked": "Unlocked",
       "badgeLocked": "Locked",
       "labelType": "Type",
