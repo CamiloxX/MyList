@@ -165,6 +165,14 @@
     "optional": "Optional",
     "today": "Today"
   },
+  "errors": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again.",
+    "retry": "Try again",
+    "goHome": "Go to my library",
+    "discoverTitle": "We couldn't load Discover",
+    "discoverDescription": "An external source (TMDB, OMDb or Jikan) didn't respond. Retrying usually fixes it."
+  },
   "calendar": {
     "prevMonth": "Previous month",
     "nextMonth": "Next month",

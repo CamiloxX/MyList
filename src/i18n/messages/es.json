@@ -165,6 +165,14 @@
     "optional": "Opcional",
     "today": "Hoy"
   },
+  "errors": {
+    "title": "Algo salió mal",
+    "description": "Ocurrió un error inesperado. Vuelve a intentarlo.",
+    "retry": "Reintentar",
+    "goHome": "Ir a mi biblioteca",
+    "discoverTitle": "No pudimos cargar Descubrir",
+    "discoverDescription": "Alguna fuente externa (TMDB, OMDb o Jikan) no respondió. Suele arreglarse reintentando."
+  },
   "calendar": {
     "prevMonth": "Mes anterior",
     "nextMonth": "Mes siguiente",
