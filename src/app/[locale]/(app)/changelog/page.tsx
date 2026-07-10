@@ -55,9 +55,9 @@ export default async function ChangelogPage() {
                 {formatMonth(group.key, locale)}
               </h2>
               <ol className="flex flex-col gap-3">
-                {group.entries.map((entry, idx) => (
+                {group.entries.map((entry) => (
                   <EntryCard
-                    key={`${entry.date}-${idx}`}
+                    key={`${entry.date}-${entry.title.es}`}
                     entry={entry}
                     locale={locale}
                     tagLabel={t(`tags.${entry.tag}`)}
