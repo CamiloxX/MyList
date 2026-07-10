@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -34,4 +35,14 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+// Sentry wraps the config to upload source maps at build time (needs
+// SENTRY_AUTH_TOKEN / SENTRY_ORG / SENTRY_PROJECT; without them it only
+// warns). tunnelRoute is deliberately OFF: the next-intl middleware would
+// rewrite the tunnel path with a locale prefix and break it.
+export default withSentryConfig(withNextIntl(nextConfig), {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: true,
+  widenClientFileUpload: true,
+  webpack: { treeshake: { removeDebugLogging: true } },
+});

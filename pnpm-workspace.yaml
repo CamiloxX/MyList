@@ -3,11 +3,13 @@
 # pnpm 11 (local). pnpm 11 reads `allowBuilds`; pnpm 10 reads `onlyBuiltDependencies`.
 onlyBuiltDependencies:
   - "@parcel/watcher"
+  - "@sentry/cli"
   - "@swc/core"
   - sharp
   - unrs-resolver
 allowBuilds:
   "@parcel/watcher": true
+  "@sentry/cli": true
   "@swc/core": true
   msw: false
   sharp: true

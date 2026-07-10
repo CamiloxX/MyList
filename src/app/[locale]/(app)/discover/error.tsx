@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { ErrorState } from "@/components/error-state";
@@ -19,6 +20,7 @@ export default function DiscoverError({
   const t = useTranslations("errors");
 
   useEffect(() => {
+    Sentry.captureException(error);
     console.error(error);
   }, [error]);
 
