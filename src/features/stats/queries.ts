@@ -2,6 +2,7 @@ import "server-only";
 
 import { yearMonthRange, yearRange } from "@/lib/dates";
 import { genreLabel } from "@/lib/genres";
+import { fetchAllRows } from "@/lib/supabase/fetch-all";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -322,7 +323,11 @@ function buildHeatmap(
   return { days, maxCount, activeDays };
 }
 
-function computeStreaks(dates: Set<string>, today: string): { current: number; longest: number } {
+/** Exported for the Wrapped feature (longest run bounded to a single year). */
+export function computeStreaks(
+  dates: Set<string>,
+  today: string,
+): { current: number; longest: number } {
   if (dates.size === 0) return { current: 0, longest: 0 };
 
   const sorted = [...dates].sort();
@@ -514,6 +519,122 @@ export async function getTopRatedMediaForUser(
   return [...byMediaId.values()].sort((a, b) => b.bestRating - a.bestRating).slice(0, limit);
 }
 
+// ===========================================================================
+// Year-over-year comparison
+// ===========================================================================
+
+export type YearlyStat = {
+  year: number;
+  totalEntries: number;
+  totalHours: number;
+  hoursByKind: KindHours;
+  dominantGenre: string | null;
+};
+
+/**
+ * Buckets the user's entire watch history by calendar year. One paginated
+ * fetch (fetchAllRows dodges PostgREST's ~1000-row cap, which matters here
+ * because this is the only all-history query joined with media data).
+ */
+export async function getYearlyStatsForUser(
+  client: StatsClient,
+  userId: string,
+  locale: "es" | "en",
+): Promise<YearlyStat[]> {
+  type Row = {
+    watched_on: string;
+    media_items: {
+      kind: "movie" | "tv" | "anime";
+      runtime_minutes: number | null;
+      genres: unknown;
+    };
+  };
+  const rows = await fetchAllRows<Row>(
+    (from, to) =>
+      client
+        .from("watch_entries")
+        .select(`watched_on, media_items!inner ( kind, runtime_minutes, genres )`)
+        .eq("user_id", userId)
+        .order("watched_on")
+        .range(from, to) as unknown as PromiseLike<{
+        data: Row[] | null;
+        error: { message: string } | null;
+      }>,
+  );
+
+  type Bucket = {
+    totalEntries: number;
+    totalMinutes: number;
+    minutesByKind: KindHours;
+    genreCounts: Map<string, number>;
+  };
+  const buckets = new Map<number, Bucket>();
+
+  for (const row of rows) {
+    const year = Number.parseInt(row.watched_on.slice(0, 4), 10);
+    if (Number.isNaN(year)) continue;
+    const media = row.media_items;
+    const minutes =
+      media.runtime_minutes ?? (media.kind === "tv" || media.kind === "anime" ? 22 : 0);
+
+    let bucket = buckets.get(year);
+    if (!bucket) {
+      bucket = {
+        totalEntries: 0,
+        totalMinutes: 0,
+        minutesByKind: { movie: 0, tv: 0, anime: 0 },
+        genreCounts: new Map(),
+      };
+      buckets.set(year, bucket);
+    }
+    bucket.totalEntries += 1;
+    bucket.totalMinutes += minutes;
+    bucket.minutesByKind[media.kind] += minutes;
+
+    const genres = Array.isArray(media.genres) ? (media.genres as Array<string | number>) : [];
+    const seen = new Set<string>();
+    for (const raw of genres) {
+      const label = genreLabel(raw, locale);
+      if (!label || seen.has(label)) continue;
+      seen.add(label);
+      bucket.genreCounts.set(label, (bucket.genreCounts.get(label) ?? 0) + 1);
+    }
+  }
+
+  const toHours = (minutes: number) => Math.round((minutes / 60) * 10) / 10;
+  return [...buckets.entries()]
+    .sort(([a], [b]) => a - b)
+    .map(([year, bucket]) => ({
+      year,
+      totalEntries: bucket.totalEntries,
+      totalHours: toHours(bucket.totalMinutes),
+      hoursByKind: {
+        movie: toHours(bucket.minutesByKind.movie),
+        tv: toHours(bucket.minutesByKind.tv),
+        anime: toHours(bucket.minutesByKind.anime),
+      },
+      dominantGenre: [...bucket.genreCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null,
+    }));
+}
+
+/** Authed wrapper: year-over-year stats for the current user. */
+export async function getYearlyStats(locale: "es" | "en"): Promise<YearlyStat[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return getYearlyStatsForUser(supabase, user?.id ?? NIL_UUID, locale);
+}
+
+/** Authed wrapper: top titles of a year for the current user. */
+export async function getTopOfYear(year: number, limit = 5): Promise<TopRatedItem[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return getTopOfYearForUser(supabase, user?.id ?? NIL_UUID, year, limit);
+}
+
 /** Authed wrapper: top-rated titles for the current user. */
 export async function getTopRatedMedia(limit = 5): Promise<TopRatedItem[]> {
   const supabase = await createClient();
@@ -527,12 +648,17 @@ export async function getTopRatedMedia(limit = 5): Promise<TopRatedItem[]> {
  * Returns the user's top-N media_items watched in a given year, ranked by
  * best rating from watch_entries inside that year.
  */
-export async function getTopOfYear(year: number, limit = 5): Promise<TopRatedItem[]> {
+export async function getTopOfYearForUser(
+  client: StatsClient,
+  userId: string,
+  year: number,
+  limit = 5,
+): Promise<TopRatedItem[]> {
   const range = yearRange(year);
-  const supabase = await createClient();
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("watch_entries")
     .select(`rating, media_items!inner ( id, title, poster_url, kind, year )`)
+    .eq("user_id", userId)
     .gte("watched_on", range.start)
     .lt("watched_on", range.endExclusive)
     .not("rating", "is", null);
