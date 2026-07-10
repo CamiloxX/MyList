@@ -1,14 +1,11 @@
 "use client";
 
-import { useFormatter, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  cancelScheduledNotification,
-  createScheduledNotification,
-} from "../actions";
+import { cancelScheduledNotification, createScheduledNotification } from "../actions";
 import type { ScheduledNotification, ScheduledTarget } from "../types";
 
 const inputClass =

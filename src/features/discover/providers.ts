@@ -1,9 +1,6 @@
 import "server-only";
 
-import {
-  getWatchProvidersForTitle,
-  type WatchProvidersForTitle,
-} from "@/lib/tmdb/discover";
+import { getWatchProvidersForTitle, type WatchProvidersForTitle } from "@/lib/tmdb/discover";
 import type { TmdbSearchResult } from "@/lib/tmdb/schemas";
 
 export type ProvidersByTmdbId = Map<number, WatchProvidersForTitle>;

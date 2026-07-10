@@ -42,10 +42,7 @@ export function PaginationControls({ page, hasMore }: Props) {
   if (!canGoBack && !canGoForward) return null;
 
   return (
-    <nav
-      aria-label={t("aria")}
-      className="flex items-center justify-between gap-3 pt-2"
-    >
+    <nav aria-label={t("aria")} className="flex items-center justify-between gap-3 pt-2">
       {canGoBack ? (
         <Link
           href={buildHref(page - 1)}

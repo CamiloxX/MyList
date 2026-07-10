@@ -169,9 +169,7 @@ export function LibraryFilters({ counts }: { counts: LibraryFilterCounts }) {
             ) : (
               <span />
             )}
-            <DrawerClose
-              render={<Button type="button" size="sm" className="px-5" />}
-            >
+            <DrawerClose render={<Button type="button" size="sm" className="px-5" />}>
               {t("library.filters.done")}
             </DrawerClose>
           </DrawerFooter>

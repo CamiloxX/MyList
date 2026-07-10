@@ -95,10 +95,7 @@ export function WatchEntryForm({
   return (
     <form
       onSubmit={onSubmit}
-      className={cn(
-        "flex flex-col gap-4",
-        !isEmbedded && "rounded-xl border bg-card p-4",
-      )}
+      className={cn("flex flex-col gap-4", !isEmbedded && "rounded-xl border bg-card p-4")}
     >
       {isEmbedded ? null : <h3 className="text-base font-medium">{t("title")}</h3>}
 

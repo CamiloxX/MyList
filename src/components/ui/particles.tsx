@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  type ComponentPropsWithoutRef,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface MousePosition {
@@ -251,9 +246,7 @@ export function Particles({
         canvasSize.current.h - circle.y - circle.translateY - circle.size,
       ];
       const closestEdge = edge.reduce((a, b) => Math.min(a, b));
-      const remapClosestEdge = Number.parseFloat(
-        remapValue(closestEdge, 0, 20, 0, 1).toFixed(2),
-      );
+      const remapClosestEdge = Number.parseFloat(remapValue(closestEdge, 0, 20, 0, 1).toFixed(2));
       if (remapClosestEdge > 1) {
         circle.alpha += 0.02;
         if (circle.alpha > circle.targetAlpha) {

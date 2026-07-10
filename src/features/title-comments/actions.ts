@@ -6,15 +6,13 @@ import { safeActionError } from "@/lib/action-error";
 import { createClient } from "@/lib/supabase/server";
 import {
   type CommentCreateInput,
-  commentCreateSchema,
   type CommentEditInput,
+  commentCreateSchema,
   commentEditSchema,
 } from "./schemas";
 
 export type CommentActionResult = { ok: true } | { ok: false; error: string };
-export type CommentActionResultWith<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: string };
+export type CommentActionResultWith<T> = { ok: true; data: T } | { ok: false; error: string };
 
 const idSchema = z.string().uuid();
 const NOT_SIGNED_IN = "Inicia sesión primero";

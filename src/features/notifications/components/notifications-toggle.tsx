@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { clientEnv } from "@/lib/env/client";
-import { subscribeToPush, sendTestPush, unsubscribeFromPush } from "../actions";
+import { sendTestPush, subscribeToPush, unsubscribeFromPush } from "../actions";
 import { arrayBufferToBase64, urlBase64ToUint8Array } from "../push-key";
 
 type PermState = "granted" | "denied" | "default" | "unsupported";
@@ -17,11 +17,7 @@ type PermState = "granted" | "denied" | "default" | "unsupported";
  */
 function isSupported(): boolean {
   if (typeof window === "undefined") return false;
-  return (
-    "serviceWorker" in navigator &&
-    "PushManager" in window &&
-    "Notification" in window
-  );
+  return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
 }
 
 export function NotificationsToggle() {
@@ -120,12 +116,7 @@ export function NotificationsToggle() {
   return (
     <div className="flex flex-col gap-3">
       {!subscribed ? (
-        <Button
-          type="button"
-          size="sm"
-          onClick={handleSubscribe}
-          disabled={isPending || !vapidKey}
-        >
+        <Button type="button" size="sm" onClick={handleSubscribe} disabled={isPending || !vapidKey}>
           {isPending ? t("subscribing") : t("subscribe")}
         </Button>
       ) : (
@@ -139,7 +130,13 @@ export function NotificationsToggle() {
           >
             {isPending ? t("unsubscribing") : t("unsubscribe")}
           </Button>
-          <Button type="button" size="sm" variant="secondary" onClick={handleTest} disabled={isPending}>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={handleTest}
+            disabled={isPending}
+          >
             {t("test.button")}
           </Button>
         </div>

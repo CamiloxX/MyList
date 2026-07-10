@@ -12,9 +12,7 @@ export type PushPayload = {
   tag?: string;
 };
 
-export type SubscribeResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type SubscribeResult = { ok: true } | { ok: false; error: string };
 
 /** Who a scheduled notification targets. */
 export type ScheduledTarget = "all" | "self";

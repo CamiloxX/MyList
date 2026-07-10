@@ -16,7 +16,10 @@ const schema = z.object({
   // Web Push private half. All three (public on the client, private + subject
   // on the server) must be set together for push to actually work.
   VAPID_PRIVATE_KEY: z.string().min(1).optional(),
-  VAPID_SUBJECT: z.string().regex(/^(mailto:|https?:\/\/)/).optional(),
+  VAPID_SUBJECT: z
+    .string()
+    .regex(/^(mailto:|https?:\/\/)/)
+    .optional(),
   // Shared secret the scheduled-notifications cron must present in the
   // Authorization header. Optional: without it /api/cron/notifications refuses
   // to run (503), so the endpoint is inert until you wire up the cron.

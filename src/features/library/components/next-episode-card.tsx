@@ -66,9 +66,7 @@ export function NextEpisodeCard({
         aria-hidden
       />
       <div className="flex min-w-0 flex-col leading-tight">
-        <span className="truncate text-xs font-semibold text-white">
-          {countdown ?? dateLabel}
-        </span>
+        <span className="truncate text-xs font-semibold text-white">{countdown ?? dateLabel}</span>
         <span className="truncate text-[0.65rem] text-white/70">{detail}</span>
       </div>
     </div>

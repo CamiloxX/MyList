@@ -3,11 +3,7 @@
 import { getLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
-import {
-  type ExportFormat,
-  type ExportPayload,
-  exportContent,
-} from "./format";
+import { type ExportFormat, type ExportPayload, exportContent } from "./format";
 
 export type ExportLibraryResult =
   | {

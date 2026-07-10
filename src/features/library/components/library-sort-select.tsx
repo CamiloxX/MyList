@@ -72,9 +72,7 @@ export function LibrarySortSelect({ current }: { current: LibrarySort }) {
                   aria-pressed={isActive}
                   className={cn(
                     "flex items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "hover:bg-accent active:bg-accent",
+                    isActive ? "bg-primary/10 text-primary" : "hover:bg-accent active:bg-accent",
                   )}
                 >
                   <Icon
@@ -96,11 +94,7 @@ export function LibrarySortSelect({ current }: { current: LibrarySort }) {
   );
 }
 
-function buildSortHref(
-  pathname: string,
-  searchParams: URLSearchParams,
-  sort: LibrarySort,
-): string {
+function buildSortHref(pathname: string, searchParams: URLSearchParams, sort: LibrarySort): string {
   const params = new URLSearchParams(searchParams.toString());
   // Drop the default sort from the URL to keep it clean.
   if (sort === "recent") {

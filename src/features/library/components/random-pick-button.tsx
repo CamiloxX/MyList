@@ -101,10 +101,7 @@ export function RandomPickButton() {
               <Link
                 href={`/library/${item.id}`}
                 onClick={() => setOpen(false)}
-                className={cn(
-                  buttonVariants({ variant: "default", size: "sm" }),
-                  "flex-1 gap-2",
-                )}
+                className={cn(buttonVariants({ variant: "default", size: "sm" }), "flex-1 gap-2")}
               >
                 <ArrowRightIcon className="size-4" aria-hidden />
                 {t("seeDetail")}
@@ -117,10 +114,7 @@ export function RandomPickButton() {
                 disabled={isPending}
                 className="flex-1 gap-2"
               >
-                <RotateCcwIcon
-                  className={cn("size-4", isPending && "animate-spin")}
-                  aria-hidden
-                />
+                <RotateCcwIcon className={cn("size-4", isPending && "animate-spin")} aria-hidden />
                 {t("reroll")}
               </Button>
             </div>
@@ -160,9 +154,7 @@ function PickedItem({
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 pt-1">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="secondary">{kindLabel}</Badge>
-          {item.year ? (
-            <span className="text-xs text-muted-foreground">{item.year}</span>
-          ) : null}
+          {item.year ? <span className="text-xs text-muted-foreground">{item.year}</span> : null}
         </div>
         <h3 className="text-lg font-semibold leading-tight">{item.title}</h3>
         {item.original_title && item.original_title !== item.title ? (

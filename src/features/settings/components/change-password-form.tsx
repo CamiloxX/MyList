@@ -65,9 +65,7 @@ export function ChangePasswordForm() {
         register={register("currentPassword")}
         error={errors.currentPassword?.message}
         visible={visible.currentPassword}
-        onToggle={() =>
-          setVisible((prev) => ({ ...prev, currentPassword: !prev.currentPassword }))
-        }
+        onToggle={() => setVisible((prev) => ({ ...prev, currentPassword: !prev.currentPassword }))}
         toggleAria={t("settings.security.toggleVisibility")}
       />
       <PasswordField
@@ -88,9 +86,7 @@ export function ChangePasswordForm() {
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
         visible={visible.confirmPassword}
-        onToggle={() =>
-          setVisible((prev) => ({ ...prev, confirmPassword: !prev.confirmPassword }))
-        }
+        onToggle={() => setVisible((prev) => ({ ...prev, confirmPassword: !prev.confirmPassword }))}
         toggleAria={t("settings.security.toggleVisibility")}
       />
 

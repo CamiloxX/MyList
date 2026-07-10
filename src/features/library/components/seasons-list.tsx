@@ -3,8 +3,8 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { tmdbImage } from "@/lib/tmdb/images";
 import { getTmdbTvSeasons } from "@/lib/tmdb/tv";
-import { SeasonsCollapsible } from "./seasons-collapsible";
 import { SeasonToggle } from "./season-toggle";
+import { SeasonsCollapsible } from "./seasons-collapsible";
 
 /**
  * Server component that lists every season of a TMDB TV show. Each row shows

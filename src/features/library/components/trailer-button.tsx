@@ -12,13 +12,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
  * open so navigating away cuts the video stream — no autoplay-in-background
  * once the user closes it.
  */
-export function TrailerButton({
-  youtubeKey,
-  title,
-}: {
-  youtubeKey: string;
-  title: string;
-}) {
+export function TrailerButton({ youtubeKey, title }: { youtubeKey: string; title: string }) {
   const t = useTranslations("library.trailer");
   const [open, setOpen] = useState(false);
 
@@ -35,10 +29,7 @@ export function TrailerButton({
         {t("watch")}
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent
-          className="overflow-hidden bg-black p-0 ring-0 sm:max-w-3xl"
-          showCloseButton
-        >
+        <DialogContent className="overflow-hidden bg-black p-0 ring-0 sm:max-w-3xl" showCloseButton>
           <DialogTitle className="sr-only">{t("dialogTitle", { title })}</DialogTitle>
           {open ? (
             <div className="aspect-video w-full">

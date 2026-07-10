@@ -11,8 +11,8 @@ import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
 import { cn } from "@/lib/utils";
 import {
-  getGrantedBadgeIds,
   type GrantUser,
+  getGrantedBadgeIds,
   grantBadge,
   revokeBadge,
   searchUsersForGrant,

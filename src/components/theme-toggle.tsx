@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon, LaptopIcon, MoonIcon, SunIcon, type LucideIcon } from "lucide-react";
+import { CheckIcon, LaptopIcon, type LucideIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -79,9 +79,7 @@ export function ThemeToggle() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger
-        render={
-          <Button type="button" variant="ghost" size="icon" aria-label={t("toggleLabel")} />
-        }
+        render={<Button type="button" variant="ghost" size="icon" aria-label={t("toggleLabel")} />}
       >
         <ActiveIcon className="size-5" aria-hidden />
       </DrawerTrigger>
@@ -100,9 +98,7 @@ export function ThemeToggle() {
                   aria-pressed={isActive}
                   className={cn(
                     "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "hover:bg-accent active:bg-accent",
+                    isActive ? "bg-primary/10 text-primary" : "hover:bg-accent active:bg-accent",
                   )}
                 >
                   <Icon

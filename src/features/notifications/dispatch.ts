@@ -64,10 +64,7 @@ export async function dispatchDueNotifications(): Promise<DispatchSummary> {
       ? await sendPushToUserAdmin(row.target_user_id, payload)
       : await sendPushToAll(payload);
 
-    await admin
-      .from("scheduled_notifications")
-      .update({ result: stats })
-      .eq("id", row.id);
+    await admin.from("scheduled_notifications").update({ result: stats }).eq("id", row.id);
 
     summary.processed += 1;
     summary.sent += stats.sent;

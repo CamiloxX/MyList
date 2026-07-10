@@ -21,10 +21,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useNotifyBadges } from "@/features/badges/notify";
+import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { updateLibraryStatus } from "../actions";
 import { type MediaStatus, STATUS_OPTIONS } from "../status";
-import { useRouter } from "@/i18n/navigation";
 
 const STATUS_ICONS: Record<MediaStatus, LucideIcon> = {
   watching: EyeIcon,
@@ -89,10 +89,7 @@ export function StatusSelect({ id, current }: { id: string; current: MediaStatus
           />
         }
       >
-        <CurrentIcon
-          className={cn("size-4 shrink-0", STATUS_ACCENT[current])}
-          aria-hidden
-        />
+        <CurrentIcon className={cn("size-4 shrink-0", STATUS_ACCENT[current])} aria-hidden />
         <span>{t(current)}</span>
         <ChevronDownIcon className="size-3.5 text-muted-foreground" aria-hidden />
       </DrawerTrigger>
@@ -113,9 +110,7 @@ export function StatusSelect({ id, current }: { id: string; current: MediaStatus
                 aria-pressed={isSelected}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors",
-                  isSelected
-                    ? "bg-primary/10 text-primary"
-                    : "hover:bg-accent active:bg-accent",
+                  isSelected ? "bg-primary/10 text-primary" : "hover:bg-accent active:bg-accent",
                   isPending && "opacity-60",
                 )}
               >
@@ -127,9 +122,7 @@ export function StatusSelect({ id, current }: { id: string; current: MediaStatus
                   aria-hidden
                 />
                 <span className="flex-1 text-sm font-medium">{t(option.value)}</span>
-                {isSelected ? (
-                  <CheckIcon className="size-4 text-primary" aria-hidden />
-                ) : null}
+                {isSelected ? <CheckIcon className="size-4 text-primary" aria-hidden /> : null}
               </button>
             );
           })}

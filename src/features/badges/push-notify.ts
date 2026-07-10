@@ -12,10 +12,7 @@ import type { BadgeDefinition } from "./types";
  * For a single badge we send one detailed notification; for two or more we
  * collapse into a single "N nuevos logros" line so the device doesn't spam.
  */
-export async function pushNewBadges(
-  userId: string,
-  badges: BadgeDefinition[],
-): Promise<void> {
+export async function pushNewBadges(userId: string, badges: BadgeDefinition[]): Promise<void> {
   if (badges.length === 0) return;
   try {
     const tBadges = await getTranslations("badges");

@@ -2,8 +2,8 @@
 
 // Client component: lottie-react relies on lottie-web, which needs the DOM.
 import Lottie from "lottie-react";
-import animationData from "./mylist-loader.json";
 import { cn } from "@/lib/utils";
+import animationData from "./mylist-loader.json";
 
 type Props = {
   /** Square render size in pixels. */

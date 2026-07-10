@@ -167,7 +167,8 @@ export function toTxt(payload: ExportPayload, locale: "es" | "en"): string {
   lines.push("MyList — Export");
   lines.push("================");
   lines.push(isEs ? `Exportado: ${payload.exported_at}` : `Exported: ${payload.exported_at}`);
-  if (payload.user_email) lines.push(isEs ? `Usuario: ${payload.user_email}` : `User: ${payload.user_email}`);
+  if (payload.user_email)
+    lines.push(isEs ? `Usuario: ${payload.user_email}` : `User: ${payload.user_email}`);
   lines.push(
     isEs
       ? `Total: ${payload.items_count} títulos · ${payload.entries_count} visualizaciones`
@@ -225,6 +226,10 @@ export function exportContent(
     case "csv":
       return { content: toCsv(payload), mimeType: "text/csv;charset=utf-8", extension: "csv" };
     case "txt":
-      return { content: toTxt(payload, locale), mimeType: "text/plain;charset=utf-8", extension: "txt" };
+      return {
+        content: toTxt(payload, locale),
+        mimeType: "text/plain;charset=utf-8",
+        extension: "txt",
+      };
   }
 }

@@ -11,18 +11,10 @@ import { cn } from "@/lib/utils";
 
 type IconProps = { className?: string };
 
-export function TomatoIcon({
-  fresh,
-  className,
-}: IconProps & { fresh: boolean }) {
+export function TomatoIcon({ fresh, className }: IconProps & { fresh: boolean }) {
   if (!fresh) {
     return (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden
-        className={cn("shrink-0", className)}
-      >
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden className={cn("shrink-0", className)}>
         <title>Rotten Tomatoes (rotten)</title>
         <path
           d="M5 14 Q3.5 10 7 8 Q9.5 4 14 6 Q18.5 4.5 20 10 Q22 13.5 19 16 Q18 21 12 19 Q5.5 20.5 5 14 Z"
@@ -35,12 +27,7 @@ export function TomatoIcon({
     );
   }
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-      className={cn("shrink-0", className)}
-    >
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={cn("shrink-0", className)}>
       <title>Rotten Tomatoes (fresh)</title>
       <path
         d="M9 4.5 C9 6.2 10.2 7 12 7 C13.8 7 15 6.2 15 4.5 C15 6 13.8 6.6 12 6.6 C10.2 6.6 9 6 9 4.5 Z"
@@ -55,12 +42,7 @@ export function TomatoIcon({
 
 export function ImdbWordmark({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 36 16"
-      fill="none"
-      aria-hidden
-      className={cn("shrink-0", className)}
-    >
+    <svg viewBox="0 0 36 16" fill="none" aria-hidden className={cn("shrink-0", className)}>
       <title>IMDb</title>
       <rect width="36" height="16" rx="2.5" fill="#f5c518" />
       <text
@@ -79,18 +61,10 @@ export function ImdbWordmark({ className }: IconProps) {
   );
 }
 
-export function MetacriticTile({
-  value,
-  className,
-}: IconProps & { value: number }) {
+export function MetacriticTile({ value, className }: IconProps & { value: number }) {
   const fill = value >= 75 ? "#36b37e" : value >= 50 ? "#ffbd3f" : "#ff6874";
   return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden
-      className={cn("shrink-0", className)}
-    >
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden className={cn("shrink-0", className)}>
       <title>Metacritic</title>
       <rect width="16" height="16" rx="3" fill={fill} />
       <text

@@ -74,7 +74,9 @@ export function ExportCard() {
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-xs text-muted-foreground">{t(`formats.${format}.description`)}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t(`formats.${format}.description`)}
+                  </p>
                 </div>
               </div>
               <Button

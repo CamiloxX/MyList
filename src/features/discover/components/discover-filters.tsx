@@ -82,10 +82,7 @@ export function DiscoverFilters({
             type="button"
             variant="outline"
             size="sm"
-            className={cn(
-              "gap-2 rounded-full px-4",
-              hasActive && "border-primary/50 text-primary",
-            )}
+            className={cn("gap-2 rounded-full px-4", hasActive && "border-primary/50 text-primary")}
           />
         }
       >

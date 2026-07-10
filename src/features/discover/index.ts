@@ -5,5 +5,5 @@ export { MediaTypeTabs } from "./components/media-type-tabs";
 export { PaginationControls } from "./components/pagination-controls";
 export { ProvidersRow } from "./components/providers-row";
 export { RatingsBadge } from "./components/ratings-badge";
-export { discoverFiltersSchema } from "./schemas";
 export type { DiscoverRegion, DiscoverTab, DiscoverType } from "./schemas";
+export { discoverFiltersSchema } from "./schemas";

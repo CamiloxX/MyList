@@ -74,7 +74,10 @@ function WatchEntryRow({ entry, mediaItemId }: { entry: WatchEntryRow; mediaItem
           <span className="text-sm font-medium">{formatWatchedOn(entry.watched_on, locale)}</span>
           {entry.rating ? <StarRatingReadonly value={entry.rating} size="sm" /> : null}
           {entry.season_number !== null ? (
-            <Badge variant="outline" className="border-emerald-400/50 text-emerald-600 dark:text-emerald-400">
+            <Badge
+              variant="outline"
+              className="border-emerald-400/50 text-emerald-600 dark:text-emerald-400"
+            >
               {tSeasons("seasonBadge", { number: entry.season_number })}
             </Badge>
           ) : null}

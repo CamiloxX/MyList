@@ -4,12 +4,7 @@ import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type Props = {
   open: boolean;
@@ -47,10 +42,7 @@ export function AvatarCropDialog({ open, imageSrc, onCancel, onConfirm, busy }: 
 
   return (
     <Dialog open={open} onOpenChange={(value) => !value && onCancel()}>
-      <DialogContent
-        className="sm:max-w-md"
-        onPointerDown={(e) => e.stopPropagation()}
-      >
+      <DialogContent className="sm:max-w-md" onPointerDown={(e) => e.stopPropagation()}>
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
         </DialogHeader>
@@ -112,17 +104,7 @@ async function renderCroppedImage(src: string, area: Area): Promise<Blob | null>
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
-  ctx.drawImage(
-    img,
-    area.x,
-    area.y,
-    area.width,
-    area.height,
-    0,
-    0,
-    OUTPUT_PX,
-    OUTPUT_PX,
-  );
+  ctx.drawImage(img, area.x, area.y, area.width, area.height, 0, 0, OUTPUT_PX, OUTPUT_PX);
 
   return new Promise<Blob | null>((resolve) => {
     canvas.toBlob((blob) => resolve(blob), "image/webp", 0.9);

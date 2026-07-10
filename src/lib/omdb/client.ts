@@ -17,7 +17,9 @@ const RATINGS_TTL = 60 * 60 * 24 * 7;
  *   - OMDb says the title is unknown (`Response: "False"`).
  *   - The network call fails (we swallow the error to never break a card).
  */
-export async function getOmdbRatings(imdbId: string | null | undefined): Promise<OmdbRatings | null> {
+export async function getOmdbRatings(
+  imdbId: string | null | undefined,
+): Promise<OmdbRatings | null> {
   if (!serverEnv.OMDB_API_KEY) return null;
   if (!imdbId || imdbId === "N/A") return null;
 

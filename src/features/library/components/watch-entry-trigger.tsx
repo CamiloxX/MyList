@@ -1,8 +1,9 @@
 "use client";
 
 import { PlusIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -11,8 +12,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useRouter, usePathname } from "@/i18n/navigation";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { WatchEntryForm } from "./watch-entry-form";
 
 /**
@@ -54,9 +54,7 @@ export function WatchEntryTrigger({
 
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
-      <DrawerTrigger
-        render={<Button type="button" size="lg" className="w-full gap-2 sm:w-auto" />}
-      >
+      <DrawerTrigger render={<Button type="button" size="lg" className="w-full gap-2 sm:w-auto" />}>
         <PlusIcon className="size-4" aria-hidden />
         {t("addCta")}
       </DrawerTrigger>

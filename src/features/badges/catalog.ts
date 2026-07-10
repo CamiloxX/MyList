@@ -49,10 +49,7 @@ function parseCriterion(raw: unknown): BadgeCriterion {
   return { kind: "manual" };
 }
 
-function resolveText(
-  t: Translator | null,
-  row: BadgeRow,
-): { name: string; description: string } {
+function resolveText(t: Translator | null, row: BadgeRow): { name: string; description: string } {
   // Only built-ins carry an i18n_key; those entries always exist in messages,
   // so the `.has` check is just defensive for partial translation files.
   if (t && row.i18n_key && (t.has?.(`items.${row.i18n_key}.name`) ?? true)) {

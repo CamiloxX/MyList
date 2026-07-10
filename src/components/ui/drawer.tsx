@@ -34,11 +34,7 @@ function DrawerOverlay({ className, ...props }: DrawerPrimitive.Backdrop.Props) 
  * rounded top corners, drag handle), and capped to a comfortable width on
  * tablet+ so the sheet doesn't span the whole screen on desktop.
  */
-function DrawerContent({
-  className,
-  children,
-  ...props
-}: DrawerPrimitive.Popup.Props) {
+function DrawerContent({ className, children, ...props }: DrawerPrimitive.Popup.Props) {
   return (
     <DrawerPrimitive.Portal>
       <DrawerOverlay />
@@ -69,11 +65,7 @@ function DrawerContent({
 
 function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
-      data-slot="drawer-header"
-      className={cn("flex flex-col gap-1", className)}
-      {...props}
-    />
+    <div data-slot="drawer-header" className={cn("flex flex-col gap-1", className)} {...props} />
   );
 }
 

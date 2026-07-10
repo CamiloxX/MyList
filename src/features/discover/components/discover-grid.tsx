@@ -2,8 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { getLibraryItemKeys, libraryItemKey } from "@/features/library/queries";
 import { AnimeCard } from "@/features/search/components/anime-card";
 import { MediaCard } from "@/features/search/components/media-card";
-import type { DiscoverList } from "../queries";
 import { fetchProvidersForTmdbItems } from "../providers";
+import type { DiscoverList } from "../queries";
 import { fetchRatingsForTmdbItems } from "../ratings";
 
 type Props = {
@@ -41,7 +41,11 @@ export async function DiscoverGrid({ list, region, emptyMessage }: Props) {
               ratings={ratings.get(item.id) ?? null}
               providers={providers.get(item.id) ?? null}
               alreadyAdded={libraryKeys.has(
-                libraryItemKey({ source: "tmdb", sourceId: String(item.id), kind: item.media_type }),
+                libraryItemKey({
+                  source: "tmdb",
+                  sourceId: String(item.id),
+                  kind: item.media_type,
+                }),
               )}
             />
           </li>

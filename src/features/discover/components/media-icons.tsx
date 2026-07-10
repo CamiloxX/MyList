@@ -10,12 +10,7 @@ type IconProps = { className?: string };
  */
 export function AnimeIcon({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-      className={cn("shrink-0", className)}
-    >
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={cn("shrink-0", className)}>
       <title>Anime</title>
       <path
         d="M3 12 C 6 5, 18 5, 21 12 C 18 19, 6 19, 3 12 Z"

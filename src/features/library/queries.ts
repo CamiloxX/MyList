@@ -37,6 +37,8 @@ export async function getLibraryItemKeys(): Promise<Set<LibraryItemKey>> {
 
   if (error || !data) return new Set();
   return new Set(
-    data.map((row) => libraryItemKey({ source: row.source, sourceId: row.source_id, kind: row.kind })),
+    data.map((row) =>
+      libraryItemKey({ source: row.source, sourceId: row.source_id, kind: row.kind }),
+    ),
   );
 }

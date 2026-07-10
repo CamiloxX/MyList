@@ -7,12 +7,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -172,7 +167,10 @@ export function BadgeFormDrawer({
         <DrawerHeader>
           <DrawerTitle>{editing ? t("form.editTitle") : t("form.createTitle")}</DrawerTitle>
         </DrawerHeader>
-        <form onSubmit={onSubmit} className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto px-4 pb-4">
+        <form
+          onSubmit={onSubmit}
+          className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto px-4 pb-4"
+        >
           {/* Icon */}
           <div className="flex items-center gap-4">
             <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-muted">
@@ -218,7 +216,11 @@ export function BadgeFormDrawer({
               <Label htmlFor="badge-id">{t("form.id")}</Label>
               <Input
                 id="badge-id"
-                {...register("id", { onChange: () => { idEdited.current = true; } })}
+                {...register("id", {
+                  onChange: () => {
+                    idEdited.current = true;
+                  },
+                })}
                 className="font-mono text-sm"
               />
               {errors.id ? <p className="text-xs text-destructive">{errors.id.message}</p> : null}

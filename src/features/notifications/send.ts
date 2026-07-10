@@ -39,7 +39,11 @@ function ensureConfigured(): boolean {
  * the deletion runs under the same privileges (own-rows via RLS, or all rows
  * via service-role). Shared by all the public senders below.
  */
-async function deliver(client: Client, subs: SubRow[], payload: PushPayload): Promise<DeliveryStats> {
+async function deliver(
+  client: Client,
+  subs: SubRow[],
+  payload: PushPayload,
+): Promise<DeliveryStats> {
   const body = JSON.stringify(payload);
   const stale: string[] = [];
   let sent = 0;
