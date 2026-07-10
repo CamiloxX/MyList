@@ -1,8 +1,10 @@
-import { ClapperboardIcon, ClockIcon, FlameIcon, type LucideIcon, TrophyIcon } from "lucide-react";
+import { ClapperboardIcon, ClockIcon, FlameIcon, TrophyIcon } from "lucide-react";
 import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { EmptyState } from "@/components/empty-state";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { BarList, EmptyHint, KindHoursBar, StatTile } from "@/features/stats/components/charts";
 import {
   type ActivityStats,
   getActivityStats,
@@ -10,7 +12,9 @@ import {
   getTopOfYear,
   getTopRatedMedia,
   getUserOverview,
+  getYearlyStats,
   type TopRatedItem,
+  type YearlyStat,
 } from "@/features/stats/queries";
 import { Link } from "@/i18n/navigation";
 import { currentYear } from "@/lib/dates";
@@ -23,12 +27,13 @@ export default async function StatsPage() {
   await loadingDemoDelay();
   const t = await getTranslations();
   const locale = (await getLocale()) === "en" ? "en" : "es";
-  const [overview, topRated, topOfYear, activity, breakdown] = await Promise.all([
+  const [overview, topRated, topOfYear, activity, breakdown, yearly] = await Promise.all([
     getUserOverview(),
     getTopRatedMedia(5),
     getTopOfYear(Number.parseInt(currentYear(), 10), 5),
     getActivityStats(),
     getLibraryBreakdown(locale),
+    getYearlyStats(locale),
   ]);
 
   if (overview.totalEntries === 0) {
@@ -47,9 +52,17 @@ export default async function StatsPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("stats.title")}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{t("stats.subtitle")}</p>
+      <header className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("stats.title")}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t("stats.subtitle")}</p>
+        </div>
+        <Link
+          href={`/wrapped/${year}`}
+          className={cn(buttonVariants({ variant: "outline", size: "sm" }), "shrink-0 gap-1.5")}
+        >
+          ✨ {t("wrapped.openWrapped", { year })}
+        </Link>
       </header>
 
       {/* Summary tiles */}
@@ -153,6 +166,110 @@ export default async function StatsPage() {
           />
         )}
       </section>
+
+      {/* Year over year */}
+      <section className="flex flex-col gap-3">
+        <h2 className="text-base font-medium">{t("stats.yearly.title")}</h2>
+        {yearly.length === 0 ? (
+          <EmptyHint message={t("stats.yearly.empty")} />
+        ) : (
+          <YearlyComparison
+            years={yearly}
+            entriesLabel={t("stats.yearly.entries")}
+            hoursLabel={t("stats.yearly.hours")}
+          />
+        )}
+      </section>
+    </div>
+  );
+}
+
+/**
+ * One row per year: entries + hours bars normalized to the all-time maxima,
+ * delta vs the previous year, and the dominant genre as a chip.
+ */
+function YearlyComparison({
+  years,
+  entriesLabel,
+  hoursLabel,
+}: {
+  years: YearlyStat[];
+  entriesLabel: string;
+  hoursLabel: string;
+}) {
+  const maxEntries = Math.max(1, ...years.map((y) => y.totalEntries));
+  const maxHours = Math.max(1, ...years.map((y) => y.totalHours));
+
+  return (
+    <div className="flex flex-col gap-5 rounded-xl border bg-card p-4">
+      {years.map((year, index) => {
+        const prev = index > 0 ? years[index - 1] : undefined;
+        const delta =
+          prev && prev.totalEntries > 0
+            ? Math.round(((year.totalEntries - prev.totalEntries) / prev.totalEntries) * 100)
+            : null;
+        return (
+          <div key={year.year} className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold tabular-nums">{year.year}</span>
+              {delta !== null ? (
+                <span
+                  className={cn(
+                    "text-xs font-medium tabular-nums",
+                    delta >= 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-red-600 dark:text-red-400",
+                  )}
+                >
+                  {delta >= 0 ? "▲" : "▼"} {Math.abs(delta)}%
+                </span>
+              ) : null}
+              {year.dominantGenre ? (
+                <Badge variant="secondary" className="ml-auto">
+                  {year.dominantGenre}
+                </Badge>
+              ) : null}
+            </div>
+            <YearBar
+              label={entriesLabel}
+              value={year.totalEntries}
+              max={maxEntries}
+              barClass="bg-chart-1"
+            />
+            <YearBar
+              label={hoursLabel}
+              value={year.totalHours}
+              max={maxHours}
+              barClass="bg-chart-2"
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function YearBar({
+  label,
+  value,
+  max,
+  barClass,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  barClass: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 text-xs">
+      <span className="w-14 shrink-0 text-muted-foreground">{label}</span>
+      <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+        <div
+          className={cn("h-full rounded-full", barClass)}
+          style={{ width: `${Math.max(1.5, (value / max) * 100)}%` }}
+        />
+      </div>
+      <span className="w-12 shrink-0 text-right tabular-nums text-muted-foreground">{value}</span>
     </div>
   );
 }
@@ -214,105 +331,6 @@ function ActivityHeatmap({
       </div>
     </div>
   );
-}
-
-function BarList({ items }: { items: { label: string; value: number }[] }) {
-  const max = Math.max(1, ...items.map((i) => i.value));
-  return (
-    <div className="flex flex-col gap-2 rounded-xl border bg-card p-4">
-      {items.map((item) => (
-        <div key={item.label} className="flex items-center gap-3 text-sm">
-          <span className="w-28 shrink-0 truncate" title={item.label}>
-            {item.label}
-          </span>
-          <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full rounded-full bg-chart-2"
-              style={{ width: `${(item.value / max) * 100}%` }}
-            />
-          </div>
-          <span className="w-6 shrink-0 text-right tabular-nums text-muted-foreground">
-            {item.value}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function KindHoursBar({
-  hours,
-  movieLabel,
-  tvLabel,
-  animeLabel,
-}: {
-  hours: { movie: number; tv: number; anime: number };
-  movieLabel: string;
-  tvLabel: string;
-  animeLabel: string;
-}) {
-  const total = Math.max(0.0001, hours.movie + hours.tv + hours.anime);
-  const segments = [
-    { key: "movie", label: movieLabel, value: hours.movie, color: "bg-chart-1" },
-    { key: "tv", label: tvLabel, value: hours.tv, color: "bg-chart-2" },
-    { key: "anime", label: animeLabel, value: hours.anime, color: "bg-chart-4" },
-  ];
-
-  return (
-    <div className="flex flex-col gap-3 rounded-xl border bg-card p-4">
-      <div className="flex h-3 overflow-hidden rounded-full bg-muted">
-        {segments.map((segment) => {
-          const pct = (segment.value / total) * 100;
-          if (pct <= 0) return null;
-          return (
-            <div
-              key={segment.key}
-              className={segment.color}
-              style={{ width: `${pct}%` }}
-              title={`${segment.label}: ${segment.value} h`}
-            />
-          );
-        })}
-      </div>
-      <ul className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
-        {segments.map((segment) => (
-          <li key={segment.key} className="flex items-center gap-2">
-            <span className={`inline-block size-2.5 rounded-sm ${segment.color}`} aria-hidden />
-            <span className="font-medium">{segment.label}</span>
-            <span className="ml-auto tabular-nums text-muted-foreground">{segment.value} h</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function StatTile({
-  Icon,
-  value,
-  label,
-  iconClass,
-}: {
-  Icon: LucideIcon;
-  value: number;
-  label: string;
-  iconClass: string;
-}) {
-  return (
-    <div className="flex flex-col gap-2.5 rounded-xl border bg-card p-4">
-      <span className={cn("flex size-9 items-center justify-center rounded-lg", iconClass)}>
-        <Icon className="size-[18px]" aria-hidden />
-      </span>
-      <div className="flex flex-col gap-0.5">
-        <p className="text-2xl font-semibold leading-none tabular-nums">{value}</p>
-        <p className="text-xs text-muted-foreground">{label}</p>
-      </div>
-    </div>
-  );
-}
-
-function EmptyHint({ message }: { message: string }) {
-  return <EmptyState title={message} size="sm" />;
 }
 
 function TopList({

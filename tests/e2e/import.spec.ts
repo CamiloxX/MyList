@@ -77,16 +77,29 @@ test.beforeEach(async () => {
   await clearLibrary(await e2eUserId());
 });
 
+type UploadFile = { name: string; mimeType: string; buffer: Buffer };
+
+/**
+ * Feeds the hidden file input, retrying until the card reacts: right after a
+ * goto the input exists in the server HTML before React hydrates, so an
+ * immediate setInputFiles can fire change with no listener attached yet.
+ */
+async function pickImportFile(page: import("@playwright/test").Page, file: UploadFile) {
+  await expect(async () => {
+    await page.locator('input[accept*="json"]').setInputFiles(file);
+    await expect(page.getByRole("button", { name: "Analizar" })).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout: 30_000 });
+}
+
 test("import a JSON export, then re-import is a no-op", async ({ page }) => {
-  const file = {
+  const file: UploadFile = {
     name: "mylist-export.json",
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(buildExport())),
   };
 
   await page.goto("/es/settings");
-  const fileInput = page.locator('input[accept*="json"]');
-  await fileInput.setInputFiles(file);
+  await pickImportFile(page, file);
 
   // Local parse feedback, then dry-run preview.
   await expect(page.getByText("2 títulos · 2 visualizaciones en el archivo")).toBeVisible();
@@ -106,7 +119,7 @@ test("import a JSON export, then re-import is a no-op", async ({ page }) => {
 
   // Idempotency: same file again -> nothing new, everything duplicate.
   await page.goto("/es/settings");
-  await page.locator('input[accept*="json"]').setInputFiles(file);
+  await pickImportFile(page, file);
   await page.getByRole("button", { name: "Analizar" }).click();
   await expect(page.getByText("0 títulos nuevos")).toBeVisible({ timeout: 20_000 });
   await expect(page.getByText("2 duplicadas (se ignoran)")).toBeVisible();

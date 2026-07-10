@@ -189,6 +189,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      wrapped_shares: {
+        Row: {
+          id: string;
+          user_id: string;
+          year: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          year: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          year?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       watch_entries: {
         Row: {
           id: string;

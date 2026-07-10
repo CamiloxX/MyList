@@ -522,7 +522,45 @@
     "genresEmpty": "Aún no hay géneros para mostrar.",
     "decadesTitle": "Por década",
     "decadesEmpty": "Aún no hay años suficientes para mostrar.",
-    "decadeLabel": "{decade}s"
+    "decadeLabel": "{decade}s",
+    "yearly": {
+      "title": "Año a año",
+      "empty": "Aún no hay historial suficiente para comparar años.",
+      "entries": "vistas",
+      "hours": "horas"
+    }
+  },
+  "wrapped": {
+    "title": "MyList Wrapped {year}",
+    "subtitle": "Tu año en pelis, series y anime",
+    "openWrapped": "Tu Wrapped {year}",
+    "heroLabel": "Este año viste",
+    "titles": "títulos",
+    "viewings": "visualizaciones",
+    "hours": "horas",
+    "topGenre": "Tu género del año",
+    "mostActiveMonth": "Tu mes más activo",
+    "mostActiveMonthCount": "{count} visualizaciones",
+    "longestStreak": "Tu mejor racha",
+    "streakDays": "{days} días seguidos",
+    "topRated": "Lo mejor que viste",
+    "byKind": "Cómo repartiste tus horas",
+    "empty": "No hay visualizaciones registradas en {year}.",
+    "invalidYear": "Ese año no parece válido.",
+    "goStats": "Volver a estadísticas",
+    "sharedBy": "El año de {name}",
+    "poweredBy": "Hecho con MyList",
+    "share": {
+      "button": "Compartir",
+      "shareTitle": "Mi MyList Wrapped {year}",
+      "copied": "Enlace copiado",
+      "copyError": "No se pudo copiar el enlace",
+      "copy": "Copiar enlace",
+      "stop": "Dejar de compartir",
+      "stopped": "Enlace revocado",
+      "sharedHint": "Cualquiera con el enlace puede verlo.",
+      "failed": "No se pudo actualizar el enlace. Intenta de nuevo."
+    }
   },
   "lists": {
     "title": "Listas",
