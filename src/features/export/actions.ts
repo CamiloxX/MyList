@@ -33,7 +33,7 @@ export async function exportLibrary(format: ExportFormat): Promise<ExportLibrary
     supabase
       .from("media_items")
       .select(
-        "id, source, source_id, kind, title, original_title, year, runtime_minutes, episode_count, poster_url, status, genres, created_at, updated_at",
+        "id, source, source_id, kind, title, original_title, year, runtime_minutes, episode_count, episodes_watched, poster_url, status, genres, created_at, updated_at",
       )
       .eq("user_id", user.id)
       .order("created_at", { ascending: true }),
@@ -54,6 +54,7 @@ export async function exportLibrary(format: ExportFormat): Promise<ExportLibrary
   }
 
   const payload: ExportPayload = {
+    format_version: 1,
     exported_at: new Date().toISOString(),
     user_email: user.email ?? null,
     items_count: itemsRes.data?.length ?? 0,

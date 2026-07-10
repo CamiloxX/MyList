@@ -12,6 +12,7 @@ export type ExportMediaItem = {
   year: number | null;
   runtime_minutes: number | null;
   episode_count: number | null;
+  episodes_watched: number | null;
   poster_url: string | null;
   status: "watching" | "watched" | "pending" | "dropped";
   genres: unknown;
@@ -31,6 +32,8 @@ export type ExportWatchEntry = {
 };
 
 export type ExportPayload = {
+  /** Bump when the shape changes; the import schema accepts older versions. */
+  format_version: 1;
   exported_at: string;
   user_email: string | null;
   items_count: number;
