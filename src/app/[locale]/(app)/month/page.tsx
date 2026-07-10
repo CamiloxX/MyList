@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import { EmptyState } from "@/components/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { PlatformIcon } from "@/features/library/components/platform-icon";
@@ -79,9 +80,7 @@ export default async function MonthPage({ params, searchParams }: MonthPageProps
       </nav>
 
       {summary.totalEntries === 0 ? (
-        <div className="rounded-xl border border-dashed p-12 text-center">
-          <p className="text-sm text-muted-foreground">{t("month.empty")}</p>
-        </div>
+        <EmptyState title={t("month.empty")} />
       ) : (
         <ol className="flex flex-col gap-6">
           {[...summary.entriesByDate.entries()].map(([date, entries]) => (

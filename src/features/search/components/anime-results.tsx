@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { EmptyState } from "@/components/empty-state";
 import { getLibraryItemKeys, libraryItemKey } from "@/features/library/queries";
 import { searchJikan } from "@/lib/jikan/search";
 import { AnimeCard } from "./anime-card";
@@ -13,19 +14,11 @@ export async function AnimeResults({ query }: { query: string }) {
   try {
     results = await searchJikan(query);
   } catch {
-    return (
-      <div className="rounded-xl border border-dashed p-12 text-center">
-        <p className="text-sm text-muted-foreground">{t("animeUnavailable")}</p>
-      </div>
-    );
+    return <EmptyState title={t("animeUnavailable")} />;
   }
 
   if (results.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed p-12 text-center">
-        <p className="text-sm text-muted-foreground">{t("noResultsAnime", { query })}</p>
-      </div>
-    );
+    return <EmptyState title={t("noResultsAnime", { query })} />;
   }
 
   const libraryKeys = await getLibraryItemKeys();

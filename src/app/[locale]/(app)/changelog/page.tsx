@@ -1,6 +1,7 @@
 import { SparklesIcon, WrenchIcon, ZapIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { ComponentType, SVGProps } from "react";
+import { EmptyState } from "@/components/empty-state";
 import type { Locale } from "@/i18n/routing";
 import { CHANGELOG, type ChangelogEntry, type ChangelogTag } from "@/lib/changelog";
 import { loadingDemoDelay } from "@/lib/loading-demo";
@@ -44,9 +45,7 @@ export default async function ChangelogPage() {
       </header>
 
       {grouped.length === 0 ? (
-        <div className="rounded-xl border border-dashed p-12 text-center">
-          <p className="text-sm text-muted-foreground">{t("empty")}</p>
-        </div>
+        <EmptyState title={t("empty")} />
       ) : (
         <div className="flex flex-col gap-8">
           {grouped.map((group) => (

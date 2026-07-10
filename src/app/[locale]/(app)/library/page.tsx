@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
+import { EmptyState } from "@/components/empty-state";
 import { buttonVariants } from "@/components/ui/button";
 import { LibraryCard } from "@/features/library/components/library-card";
 import {
@@ -145,7 +146,7 @@ export default async function LibraryPage({ searchParams }: LibraryPageProps) {
       </div>
 
       {itemsList.length === 0 ? (
-        <EmptyState filtered={Boolean(status || kind || queryText)} />
+        <LibraryEmpty filtered={Boolean(status || kind || queryText)} />
       ) : (
         <ul className="flex flex-col gap-3">
           {itemsList.map((item) => (
@@ -176,21 +177,19 @@ function aggregateCounts(
   return { total: rows.length, byStatus, byKind };
 }
 
-async function EmptyState({ filtered }: { filtered: boolean }) {
+async function LibraryEmpty({ filtered }: { filtered: boolean }) {
   const t = await getTranslations("library");
   if (filtered) {
-    return (
-      <div className="rounded-xl border border-dashed p-12 text-center">
-        <p className="text-sm text-muted-foreground">{t("emptyFiltered")}</p>
-      </div>
-    );
+    return <EmptyState title={t("emptyFiltered")} />;
   }
   return (
-    <div className="rounded-xl border border-dashed p-12 text-center flex flex-col items-center gap-3">
-      <p className="text-sm text-muted-foreground">{t("emptyTitle")}</p>
-      <Link href="/search" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
-        {t("emptyAction")}
-      </Link>
-    </div>
+    <EmptyState
+      title={t("emptyTitle")}
+      action={
+        <Link href="/search" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
+          {t("emptyAction")}
+        </Link>
+      }
+    />
   );
 }

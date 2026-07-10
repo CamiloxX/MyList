@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { EmptyState } from "@/components/empty-state";
 import { getLibraryItemKeys, libraryItemKey } from "@/features/library/queries";
 import { AnimeCard } from "@/features/search/components/anime-card";
 import { MediaCard } from "@/features/search/components/media-card";
@@ -26,7 +27,7 @@ export async function DiscoverGrid({ list, region, emptyMessage }: Props) {
   const fallback = emptyMessage ?? t("emptyResults");
 
   if (list.kind === "tmdb") {
-    if (list.items.length === 0) return <EmptyState message={fallback} />;
+    if (list.items.length === 0) return <EmptyState title={fallback} />;
     const [ratings, providers, libraryKeys] = await Promise.all([
       fetchRatingsForTmdbItems(list.items),
       fetchProvidersForTmdbItems(list.items, region),
@@ -54,7 +55,7 @@ export async function DiscoverGrid({ list, region, emptyMessage }: Props) {
     );
   }
 
-  if (list.items.length === 0) return <EmptyState message={fallback} />;
+  if (list.items.length === 0) return <EmptyState title={fallback} />;
   const libraryKeys = await getLibraryItemKeys();
   return (
     <ul className="flex flex-col gap-3">
@@ -69,13 +70,5 @@ export async function DiscoverGrid({ list, region, emptyMessage }: Props) {
         </li>
       ))}
     </ul>
-  );
-}
-
-function EmptyState({ message }: { message: string }) {
-  return (
-    <div className="rounded-xl border border-dashed p-12 text-center">
-      <p className="text-sm text-muted-foreground">{message}</p>
-    </div>
   );
 }

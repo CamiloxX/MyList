@@ -2,6 +2,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { EmptyState } from "@/components/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { isCurrentUserAdmin } from "@/features/admin/queries";
@@ -96,9 +97,7 @@ export default async function ListDetailPage({
       ) : null}
 
       {data.items.length === 0 ? (
-        <div className="rounded-xl border border-dashed p-12 text-center">
-          <p className="text-sm text-muted-foreground">{t("lists.emptyList")}</p>
-        </div>
+        <EmptyState title={t("lists.emptyList")} />
       ) : (
         <ul className="flex flex-col gap-3">
           {data.items.map((item, index) => (

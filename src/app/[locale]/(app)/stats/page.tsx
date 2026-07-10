@@ -1,6 +1,7 @@
 import { ClapperboardIcon, ClockIcon, FlameIcon, type LucideIcon, TrophyIcon } from "lucide-react";
 import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
+import { EmptyState } from "@/components/empty-state";
 import { Badge } from "@/components/ui/badge";
 import {
   type ActivityStats,
@@ -37,9 +38,7 @@ export default async function StatsPage() {
           <h1 className="text-2xl font-semibold tracking-tight">{t("stats.title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("stats.subtitle")}</p>
         </header>
-        <div className="rounded-xl border border-dashed p-12 text-center">
-          <p className="text-sm text-muted-foreground">{t("stats.empty")}</p>
-        </div>
+        <EmptyState title={t("stats.empty")} />
       </div>
     );
   }
@@ -313,11 +312,7 @@ function StatTile({
 }
 
 function EmptyHint({ message }: { message: string }) {
-  return (
-    <div className="rounded-xl border border-dashed p-6 text-center">
-      <p className="text-sm text-muted-foreground">{message}</p>
-    </div>
-  );
+  return <EmptyState title={message} size="sm" />;
 }
 
 function TopList({

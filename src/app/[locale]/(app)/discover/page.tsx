@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
+import { EmptyState } from "@/components/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DiscoverFilters } from "@/features/discover/components/discover-filters";
 import { DiscoverGrid } from "@/features/discover/components/discover-grid";
@@ -194,11 +195,7 @@ async function ForYouSection({ region }: { region: DiscoverRegion }) {
   const isEmpty = result.movies.length === 0 && result.tv.length === 0 && result.anime.length === 0;
 
   if (isEmpty) {
-    return (
-      <div className="rounded-xl border border-dashed p-12 text-center">
-        <p className="text-sm text-muted-foreground">{t("empty")}</p>
-      </div>
-    );
+    return <EmptyState title={t("empty")} />;
   }
 
   const fallbackNotice = result.fallback ? (

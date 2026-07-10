@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
+import { EmptyState } from "@/components/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnimeResults } from "@/features/search/components/anime-results";
 import { SearchInput } from "@/features/search/components/search-input";
@@ -41,19 +42,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           )}
         </Suspense>
       ) : (
-        <EmptyState />
+        <SearchPrompt />
       )}
     </div>
   );
 }
 
-async function EmptyState() {
+async function SearchPrompt() {
   const t = await getTranslations("search");
-  return (
-    <div className="rounded-xl border border-dashed p-12 text-center">
-      <p className="text-sm text-muted-foreground">{t("emptyPrompt")}</p>
-    </div>
-  );
+  return <EmptyState title={t("emptyPrompt")} />;
 }
 
 function ResultsSkeleton() {

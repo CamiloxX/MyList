@@ -1,5 +1,6 @@
 import { CompassIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { EmptyState } from "@/components/empty-state";
 import { buttonVariants } from "@/components/ui/button";
 import { CreateListButton } from "@/features/lists/components/create-list-button";
 import { ListCover } from "@/features/lists/components/list-cover";
@@ -55,9 +56,7 @@ export default async function ListsPage() {
       <section className="flex flex-col gap-3">
         {official.length > 0 ? <h2 className="text-base font-medium">{t("mine")}</h2> : null}
         {lists.length === 0 ? (
-          <div className="rounded-xl border border-dashed p-12 text-center">
-            <p className="text-sm text-muted-foreground">{t("empty")}</p>
-          </div>
+          <EmptyState title={t("empty")} />
         ) : (
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {lists.map((list) => (
