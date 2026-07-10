@@ -5,6 +5,7 @@ import { BadgeIcon } from "@/features/badges/components/badge-icon";
 import { FeaturedBadgesCard } from "@/features/badges/components/featured-badges-card";
 import { getEarnedBadgesForCurrentUser, getRecentEarnedBadges } from "@/features/badges/queries";
 import { ExportCard } from "@/features/export/components/export-card";
+import { ImportCard } from "@/features/import/components/import-card";
 import {
   BroadcastForm,
   listScheduledNotifications,
@@ -215,6 +216,14 @@ export default async function SettingsPage() {
           <p className="text-sm text-muted-foreground">{t("export.description")}</p>
         </div>
         <ExportCard />
+      </section>
+
+      <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-base font-medium">{t("import.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("import.description")}</p>
+        </div>
+        <ImportCard />
       </section>
 
       <section className="flex flex-col gap-3 rounded-xl border bg-card p-4">

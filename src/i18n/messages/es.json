@@ -730,7 +730,7 @@
     "export": {
       "title": "Exportar tu biblioteca",
       "description": "Descarga una copia de tus pelis, series y anime. Guárdala donde quieras: así, aunque cierre la app, no pierdes tu historial.",
-      "hint": "El JSON conserva todos los datos (ideal por si más adelante hay opción de re-importar). El CSV se abre en Excel o Google Sheets. El TXT es una lista legible para humanos.",
+      "hint": "El JSON conserva todos los datos y puedes re-importarlo desde esta misma página. El CSV se abre en Excel o Google Sheets. El TXT es una lista legible para humanos.",
       "download": "Descargar",
       "downloading": "Generando…",
       "recommended": "Recomendado",
@@ -752,6 +752,46 @@
       "errors": {
         "notSignedIn": "Inicia sesión primero.",
         "queryFailed": "No pudimos exportar tu biblioteca. Intenta de nuevo."
+      }
+    },
+    "import": {
+      "title": "Importar tu biblioteca",
+      "description": "Restaura un export JSON de MyList. Analiza primero: verás exactamente qué se añadiría antes de confirmar.",
+      "pick": "Elegir archivo JSON",
+      "localSummary": "{items} títulos · {entries} visualizaciones en el archivo",
+      "policyLabel": "Si un título ya existe",
+      "policy": {
+        "merge": "Fusionar",
+        "skip": "Omitir"
+      },
+      "policyHint": {
+        "merge": "Actualiza el estado si el archivo es más reciente y rellena datos que falten. Nunca borra nada.",
+        "skip": "Los títulos que ya tienes quedan intactos; solo se añade lo nuevo."
+      },
+      "analyze": "Analizar",
+      "analyzing": "Analizando…",
+      "confirm": "Importar ahora",
+      "importing": "Importando…",
+      "cancel": "Cancelar",
+      "preview": {
+        "newItems": "{count} títulos nuevos",
+        "mergedItems": "{count} se fusionarán",
+        "skippedItems": "{count} se omitirán",
+        "newEntries": "{count} visualizaciones nuevas",
+        "duplicateEntries": "{count} duplicadas (se ignoran)",
+        "warnings": "{count} entradas huérfanas descartadas"
+      },
+      "successToast": "Importados {items} títulos y {entries} visualizaciones",
+      "doneTitle": "Importación completada",
+      "doneSummary": "{items} títulos nuevos, {merged} fusionados, {entries} visualizaciones nuevas y {duplicates} duplicadas ignoradas.",
+      "again": "Importar otro archivo",
+      "hint": "Re-importar el mismo archivo es seguro: no crea duplicados. Máximo 5 MB.",
+      "errors": {
+        "fileTooBig": "El archivo supera los 5 MB.",
+        "invalidFile": "El archivo no es un export JSON válido de MyList.",
+        "notSignedIn": "Inicia sesión primero.",
+        "invalidPayload": "El contenido del archivo no pasó la validación.",
+        "importFailed": "No pudimos completar la importación. Re-importar es seguro: intenta de nuevo."
       }
     }
   },

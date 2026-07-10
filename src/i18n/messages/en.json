@@ -730,7 +730,7 @@
     "export": {
       "title": "Export your library",
       "description": "Download a copy of your movies, series and anime. Keep it wherever you like — so if the app ever goes down, your history is safe.",
-      "hint": "JSON keeps every detail (ideal if a future import option is added). CSV opens in Excel or Google Sheets. TXT is a human-readable list.",
+      "hint": "JSON keeps every detail and can be re-imported from this same page. CSV opens in Excel or Google Sheets. TXT is a human-readable list.",
       "download": "Download",
       "downloading": "Generating…",
       "recommended": "Recommended",
@@ -752,6 +752,46 @@
       "errors": {
         "notSignedIn": "Sign in first.",
         "queryFailed": "We couldn't export your library. Try again."
+      }
+    },
+    "import": {
+      "title": "Import your library",
+      "description": "Restore a MyList JSON export. Analyze first: you'll see exactly what would be added before confirming.",
+      "pick": "Choose JSON file",
+      "localSummary": "{items} titles · {entries} viewings in the file",
+      "policyLabel": "If a title already exists",
+      "policy": {
+        "merge": "Merge",
+        "skip": "Skip"
+      },
+      "policyHint": {
+        "merge": "Updates the status when the file is newer and fills in missing data. Never deletes anything.",
+        "skip": "Titles you already have stay untouched; only new things are added."
+      },
+      "analyze": "Analyze",
+      "analyzing": "Analyzing…",
+      "confirm": "Import now",
+      "importing": "Importing…",
+      "cancel": "Cancel",
+      "preview": {
+        "newItems": "{count} new titles",
+        "mergedItems": "{count} will be merged",
+        "skippedItems": "{count} will be skipped",
+        "newEntries": "{count} new viewings",
+        "duplicateEntries": "{count} duplicates (ignored)",
+        "warnings": "{count} orphan entries discarded"
+      },
+      "successToast": "Imported {items} titles and {entries} viewings",
+      "doneTitle": "Import complete",
+      "doneSummary": "{items} new titles, {merged} merged, {entries} new viewings and {duplicates} duplicates ignored.",
+      "again": "Import another file",
+      "hint": "Re-importing the same file is safe: it creates no duplicates. 5 MB max.",
+      "errors": {
+        "fileTooBig": "The file exceeds 5 MB.",
+        "invalidFile": "The file is not a valid MyList JSON export.",
+        "notSignedIn": "Sign in first.",
+        "invalidPayload": "The file contents failed validation.",
+        "importFailed": "We couldn't complete the import. Re-importing is safe: try again."
       }
     }
   },
