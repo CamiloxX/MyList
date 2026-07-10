@@ -68,10 +68,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Run on every request except Next internals, static image assets, and
-  // /api routes (the cron endpoint authenticates itself with a bearer secret
-  // and must not be touched by locale routing or session redirects).
+  // Run on every request except Next internals, static image assets, the
+  // offline fallback page (the service worker must fetch it verbatim — a
+  // locale redirect would break cache.add at install time), and /api routes
+  // (the cron endpoint authenticates itself with a bearer secret and must
+  // not be touched by locale routing or session redirects).
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|offline.html|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };

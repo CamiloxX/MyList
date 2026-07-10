@@ -5,10 +5,11 @@ import type { MetadataRoute } from "next";
  * a single global resource — per-locale variants would need separate routes.
  * Spanish is the app's default locale, so we use it.
  *
- * The icon is declared with `sizes: "any"` so the same 500x500 PNG covers
- * every surface (home screen, splash, share sheet). Browsers downscale on
- * the fly. If we ever ship maskable icons or finer-grained sizes, add more
- * entries here.
+ * The base icon is declared with `sizes: "any"` so the same 500x500 PNG
+ * covers every surface (home screen, splash, share sheet); browsers downscale
+ * on the fly. The maskable variants place the logo inside an 80% safe zone
+ * over the theme background so Android's circle/squircle masks don't crop it
+ * (regenerate with scripts/generate-maskable-icons.mjs).
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -28,6 +29,18 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "any",
         type: "image/png",
         purpose: "any",
+      },
+      {
+        src: "/icon-maskable-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "maskable",
+      },
+      {
+        src: "/icon-maskable-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
       },
     ],
   };

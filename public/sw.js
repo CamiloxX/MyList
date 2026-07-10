@@ -5,16 +5,18 @@
 //  - Navigations (HTML): network-first, falling back to cache then "/" offline.
 //  - Everything else (APIs, cross-origin TMDB/Supabase): pass-through.
 
-const VERSION = "v4";
+const VERSION = "v5";
 const CACHE = `mylist-${VERSION}`;
-const OFFLINE_FALLBACK = "/";
+// Dedicated static page precached at install; "/" stays cached too as a
+// second-chance fallback for navigations that were cached earlier.
+const OFFLINE_FALLBACK = "/offline.html";
 
 self.addEventListener("install", (event) => {
-  // Seed the offline fallback; ignore failure so install never blocks on it.
+  // Seed the offline fallbacks; ignore failure so install never blocks on it.
   event.waitUntil(
     caches
       .open(CACHE)
-      .then((cache) => cache.add(OFFLINE_FALLBACK))
+      .then((cache) => cache.addAll([OFFLINE_FALLBACK, "/"]))
       .catch(() => undefined),
   );
   self.skipWaiting();
