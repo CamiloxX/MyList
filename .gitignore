@@ -46,3 +46,12 @@ next-env.d.ts
 
 # Supabase CLI local temp
 supabase/.temp/
+
+# Jikan debug dumps (manual API responses saved while debugging scripts)
+/v_*.json
+/clannad_search.json
+
+# Playwright
+/test-results/
+/playwright-report/
+tests/e2e/.auth/

@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Sidebar } from "@/features/library-v2/components/sidebar";
 import { redirect } from "@/i18n/navigation";
@@ -8,6 +9,9 @@ import { createClient } from "@/lib/supabase/server";
  * regular (app) layout on purpose: it replaces the top header + bottom nav with
  * a left sidebar, so it must not inherit them. Auth is re-checked here since we
  * skip the shared (app) gate.
+ *
+ * The route is a dev-only sandbox: the production desktop shell already renders
+ * the same components from /library, so outside development it 404s.
  */
 export default async function LibraryV2Layout({
   children,
@@ -16,6 +20,8 @@ export default async function LibraryV2Layout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
+  if (process.env.NODE_ENV !== "development") notFound();
+
   const { locale } = await params;
   const supabase = await createClient();
   const {
